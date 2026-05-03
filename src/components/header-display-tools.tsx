@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { EllipsisVertical, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@wrksz/themes/client";
 
 import { Button } from "@/components/button";
 import {
