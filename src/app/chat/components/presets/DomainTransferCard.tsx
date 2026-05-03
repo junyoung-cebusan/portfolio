@@ -60,31 +60,32 @@ export function DomainTransferCard({ data }: DomainTransferCardProps) {
           <CareerPanel
             key={`${mapping.pastProject}-${mapping.jdRequirement}-${index}`}
             tone="purple"
+            variant="elevated"
             interactive
-            className="group relative overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 p-5"
+            className="group relative overflow-hidden p-5"
           >
             <div className="absolute right-0 top-0 h-full w-1 bg-gradient-to-b from-purple-500 to-pink-600" />
 
             <div className="mb-4 flex items-start gap-3">
               <div className="flex-1">
-                <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-400">
+                <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-700 dark:text-purple-400">
                   <CheckCircle2 className="h-3 w-3" />
                   {mapping.strength}% Alignment
                 </div>
-                <h4 className="mb-1 text-sm font-semibold text-slate-200">
+                <h4 className="mb-1 text-sm font-semibold text-foreground dark:text-slate-200">
                   {mapping.pastProject}
                 </h4>
               </div>
             </div>
 
-            <div className="my-3 flex items-center gap-2 text-slate-600">
-              <div className="h-px flex-1 bg-slate-700" />
+            <div className="my-3 flex items-center gap-2 text-muted-foreground dark:text-slate-600">
+              <div className="h-px flex-1 bg-border dark:bg-slate-700" />
               <ArrowRight className="h-4 w-4" />
-              <div className="h-px flex-1 bg-slate-700" />
+              <div className="h-px flex-1 bg-border dark:bg-slate-700" />
             </div>
 
             <InfoBlock label="JD Requirement" className="mb-3">
-              <p className="text-sm font-medium text-cyan-400">
+              <p className="text-sm font-medium text-cyan-700 dark:text-cyan-400">
                 {mapping.jdRequirement}
               </p>
             </InfoBlock>
@@ -92,9 +93,10 @@ export function DomainTransferCard({ data }: DomainTransferCardProps) {
             <InfoBlock
               label="Correlation Proof"
               labelTone="emerald"
-              className="bg-emerald-500/5"
+              tone="emerald"
+              variant="tinted"
             >
-              <p className="text-xs leading-relaxed text-slate-300">
+              <p className="text-xs leading-relaxed text-foreground dark:text-slate-300">
                 {mapping.proof}
               </p>
             </InfoBlock>

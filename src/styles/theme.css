@@ -1,6 +1,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  color-scheme: light;
   --font-size: 16px;
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
@@ -39,9 +40,19 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --graph-dot-color: #94a3b8;
+  --graph-controls-background: #ffffff;
+  --graph-controls-background-hover: #cffafe;
+  --graph-controls-border: #cbd5e1;
+  --graph-controls-color: #0f172a;
+  --graph-controls-color-hover: #020617;
+  --analysis-chart-grid: #cbd5e1;
+  --analysis-chart-label: #334155;
+  --analysis-chart-muted: #64748b;
 }
 
 .dark {
+  color-scheme: dark;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
@@ -76,6 +87,15 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+  --graph-dot-color: #334155;
+  --graph-controls-background: #0f172a;
+  --graph-controls-background-hover: #1e293b;
+  --graph-controls-border: #334155;
+  --graph-controls-color: #cbd5e1;
+  --graph-controls-color-hover: #f8fafc;
+  --analysis-chart-grid: #334155;
+  --analysis-chart-label: #94a3b8;
+  --analysis-chart-muted: #64748b;
 }
 
 @theme inline {

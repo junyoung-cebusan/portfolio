@@ -80,7 +80,7 @@ export function TechAlignmentCard({ data }: TechAlignmentCardProps) {
 
       <div className="p-6">
         <InfoBlock className="mb-6 p-6">
-          <h4 className="mb-4 text-sm font-semibold text-slate-300">
+          <h4 className="mb-4 text-sm font-semibold text-foreground dark:text-slate-300">
             Skills Comparison
           </h4>
           <div className="h-[420px] w-full">
@@ -92,15 +92,15 @@ export function TechAlignmentCard({ data }: TechAlignmentCardProps) {
                 outerRadius="92%"
                 margin={{ top: 8, right: 16, bottom: 8, left: 16 }}
               >
-                <PolarGrid stroke="#334155" />
+                <PolarGrid stroke="var(--analysis-chart-grid)" />
                 <PolarAngleAxis
                   dataKey="skill"
-                  tick={{ fill: "#94a3b8", fontSize: 12 }}
+                  tick={{ fill: "var(--analysis-chart-label)", fontSize: 12 }}
                 />
                 <PolarRadiusAxis
                   angle={90}
                   domain={[0, 100]}
-                  tick={{ fill: "#64748b", fontSize: 11 }}
+                  tick={{ fill: "var(--analysis-chart-muted)", fontSize: 11 }}
                   tickCount={6}
                 />
                 <Radar
@@ -129,14 +129,15 @@ export function TechAlignmentCard({ data }: TechAlignmentCardProps) {
         </InfoBlock>
 
         <InfoBlock className="p-6">
-          <h4 className="mb-4 text-sm font-semibold text-slate-300">
+          <h4 className="mb-4 text-sm font-semibold text-foreground dark:text-slate-300">
             Ready-to-Go Tech Stack
           </h4>
           <div className="space-y-2">
             {techStack.map((tech) => (
               <CareerPanel
                 key={tech.name}
-                className="flex items-center gap-3 rounded-lg bg-slate-800/50 p-3 transition-colors hover:bg-slate-800"
+                variant="elevated"
+                className="flex items-center gap-3 rounded-lg p-3"
               >
                 {tech.ready ? (
                   <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-500" />
@@ -144,11 +145,13 @@ export function TechAlignmentCard({ data }: TechAlignmentCardProps) {
                   <Circle className="h-5 w-5 shrink-0 text-amber-500" />
                 )}
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-200">
+                  <p className="text-sm font-medium text-foreground dark:text-slate-200">
                     {tech.name}
                   </p>
                   {tech.note && (
-                    <p className="text-xs text-slate-500">{tech.note}</p>
+                    <p className="text-xs text-muted-foreground dark:text-slate-500">
+                      {tech.note}
+                    </p>
                   )}
                 </div>
               </CareerPanel>

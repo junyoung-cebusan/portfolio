@@ -42,7 +42,7 @@ export function DetailExperience() {
           <Button
             asChild
             variant="ghost"
-            className="rounded-lg px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+            className="rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-foreground dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
           >
             <Link href="/chat">
               <ArrowLeft className="h-5 w-5" />
@@ -51,33 +51,40 @@ export function DetailExperience() {
           </Button>
 
           <div
-            className="flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/70 px-3 py-2"
+            className="flex items-center gap-3 rounded-lg border border-border bg-card/80 px-3 py-2 shadow-sm dark:border-slate-800 dark:bg-slate-900/70 dark:shadow-none"
             aria-label="Detail view mode"
           >
             <TextSelect
               className={cn(
                 "h-4 w-4",
-                isGraphView ? "text-slate-500" : "text-emerald-400",
+                isGraphView
+                  ? "text-muted-foreground dark:text-slate-500"
+                  : "text-emerald-700 dark:text-emerald-400",
               )}
             />
             <span
               className={cn(
-                "text-sm",
-                isGraphView ? "text-slate-500" : "text-slate-200",
+                "text-sm font-medium",
+                isGraphView
+                  ? "text-muted-foreground dark:text-slate-500"
+                  : "text-emerald-700 dark:text-emerald-400",
               )}
             >
               Text
             </span>
             <Switch
+              variant="viewMode"
               checked={isGraphView}
               onCheckedChange={setIsGraphView}
               aria-label="Toggle graph view"
-              className="h-6 w-11 bg-slate-700 data-[state=checked]:bg-cyan-500"
+              className="h-6 w-11"
             />
             <span
               className={cn(
-                "text-sm",
-                isGraphView ? "text-slate-200" : "text-slate-500",
+                "text-sm font-medium",
+                isGraphView
+                  ? "text-cyan-700 dark:text-cyan-400"
+                  : "text-muted-foreground dark:text-slate-500",
               )}
             >
               Graph
@@ -85,7 +92,9 @@ export function DetailExperience() {
             <Network
               className={cn(
                 "h-4 w-4",
-                isGraphView ? "text-cyan-400" : "text-slate-500",
+                isGraphView
+                  ? "text-cyan-700 dark:text-cyan-400"
+                  : "text-muted-foreground dark:text-slate-500",
               )}
             />
           </div>
@@ -96,14 +105,14 @@ export function DetailExperience() {
 
       <main className="mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col px-4 py-8 sm:px-6">
         <div className="mx-auto mb-6 w-full max-w-4xl shrink-0">
-          <p className="text-xs font-medium uppercase text-slate-500">
+          <p className="text-xs font-medium uppercase text-muted-foreground dark:text-slate-500">
             Current JD
           </p>
           <div className="mt-1 flex items-center justify-between gap-4">
-            <h1 className="truncate text-xl font-semibold text-slate-100">
+            <h1 className="truncate text-xl font-semibold text-foreground dark:text-slate-100">
               {snapshot.title}
             </h1>
-            <span className="shrink-0 text-xs text-slate-500">
+            <span className="shrink-0 text-xs text-muted-foreground dark:text-slate-500">
               {textAnalysisQuery.isFetching
                 ? "Running text analysis..."
                 : "Analysis ready"}

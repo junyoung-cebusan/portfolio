@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { EllipsisVertical, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
 import { Button } from "@/components/button";
 import {
@@ -29,10 +30,11 @@ type HeaderDisplayToolsProps = {
 
 export function HeaderDisplayTools({ className }: HeaderDisplayToolsProps) {
   const [language, setLanguage] = useState<Language>("EN");
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDarkMode = resolvedTheme !== "light";
 
   const handleThemeToggle = () => {
-    setIsDarkMode((currentMode) => !currentMode);
+    setTheme(isDarkMode ? "light" : "dark");
   };
 
   return (
@@ -44,14 +46,14 @@ export function HeaderDisplayTools({ className }: HeaderDisplayToolsProps) {
           onValueChange={(value) => {
             if (value) setLanguage(value as Language);
           }}
-          className="rounded-lg bg-slate-800/50 p-1"
+          className="rounded-lg bg-muted p-1 dark:bg-slate-800/50"
         >
           {languages.map((code) => (
             <ToggleGroupItem
               key={code}
               value={code}
               aria-label={`Set language to ${code}`}
-              className="h-7 rounded-md px-3 text-xs text-slate-400 hover:bg-slate-700 hover:text-slate-200 data-[state=on]:bg-cyan-500 data-[state=on]:text-white"
+              className="h-7 rounded-md px-3 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground data-[state=on]:bg-cyan-500 data-[state=on]:text-white dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 dark:data-[state=on]:bg-cyan-500 dark:data-[state=on]:text-white dark:data-[state=on]:hover:bg-cyan-500 dark:data-[state=on]:hover:text-white"
             >
               {code}
             </ToggleGroupItem>
@@ -61,7 +63,7 @@ export function HeaderDisplayTools({ className }: HeaderDisplayToolsProps) {
 
       <Separator
         orientation="vertical"
-        className="hidden h-6 bg-slate-700 sm:block"
+        className="hidden h-6 bg-border dark:bg-slate-700 sm:block"
       />
 
       <DropdownMenu>
@@ -70,7 +72,7 @@ export function HeaderDisplayTools({ className }: HeaderDisplayToolsProps) {
             type="button"
             variant="ghost"
             size="icon"
-            className="rounded-lg bg-slate-800/50 text-slate-400 hover:bg-slate-700 hover:text-slate-200 sm:hidden"
+            className="rounded-lg bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:bg-slate-800/50 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 sm:hidden"
             aria-label="Open display settings"
           >
             <EllipsisVertical className="h-4 w-4" />
@@ -79,9 +81,9 @@ export function HeaderDisplayTools({ className }: HeaderDisplayToolsProps) {
         <DropdownMenuContent
           align="end"
           sideOffset={8}
-          className="w-52 border-slate-700 bg-slate-900 text-slate-200 shadow-xl shadow-slate-950/40"
+          className="w-52 border-border bg-popover text-popover-foreground shadow-xl dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:shadow-slate-950/40"
         >
-          <DropdownMenuLabel className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+          <DropdownMenuLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground dark:text-slate-500">
             Language
           </DropdownMenuLabel>
           <DropdownMenuRadioGroup
@@ -92,18 +94,18 @@ export function HeaderDisplayTools({ className }: HeaderDisplayToolsProps) {
               <DropdownMenuRadioItem
                 key={code}
                 value={code}
-                className="cursor-pointer focus:bg-slate-800 focus:text-slate-100"
+                className="cursor-pointer focus:bg-accent focus:text-accent-foreground dark:focus:bg-slate-800 dark:focus:text-slate-100"
               >
                 {code}
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>
 
-          <DropdownMenuSeparator className="bg-slate-800" />
+          <DropdownMenuSeparator className="bg-border dark:bg-slate-800" />
 
           <DropdownMenuItem
             onClick={handleThemeToggle}
-            className="cursor-pointer focus:bg-slate-800 focus:text-slate-100"
+            className="cursor-pointer focus:bg-accent focus:text-accent-foreground dark:focus:bg-slate-800 dark:focus:text-slate-100"
           >
             {isDarkMode ? (
               <Sun className="h-4 w-4" />
@@ -122,7 +124,7 @@ export function HeaderDisplayTools({ className }: HeaderDisplayToolsProps) {
             variant="ghost"
             size="icon"
             onClick={handleThemeToggle}
-            className="hidden rounded-lg bg-slate-800/50 text-slate-400 hover:bg-slate-700 hover:text-slate-200 sm:inline-flex"
+            className="hidden rounded-lg bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:bg-slate-800/50 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 sm:inline-flex"
             aria-label={
               isDarkMode ? "Switch to light mode" : "Switch to dark mode"
             }
@@ -136,8 +138,8 @@ export function HeaderDisplayTools({ className }: HeaderDisplayToolsProps) {
         </TooltipTrigger>
         <TooltipContent
           sideOffset={6}
-          className="bg-slate-800 text-slate-200"
-          arrowClassName="bg-slate-800 fill-slate-800"
+          className="bg-popover text-popover-foreground dark:bg-slate-800 dark:text-slate-200"
+          arrowClassName="bg-popover fill-popover dark:bg-slate-800 dark:fill-slate-800"
         >
           {isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
         </TooltipContent>

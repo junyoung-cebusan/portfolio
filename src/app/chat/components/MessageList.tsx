@@ -34,7 +34,10 @@ function AnalysisResult({ message }: { message: Message }) {
 
   if (!analysis && fallbackContent) {
     return (
-      <CareerPanel className="whitespace-pre-wrap rounded-lg bg-slate-800/50 p-4 text-sm leading-6 text-slate-300">
+      <CareerPanel
+        variant="elevated"
+        className="whitespace-pre-wrap rounded-lg p-4 text-sm leading-6"
+      >
         {fallbackContent}
       </CareerPanel>
     );
@@ -62,26 +65,26 @@ function AnalysisResult({ message }: { message: Message }) {
   }
 
   return (
-    <CareerPanel className="space-y-4 rounded-lg bg-slate-800/50 p-4">
+    <CareerPanel variant="elevated" className="space-y-4 rounded-lg p-4">
       <div className="grid gap-3 sm:grid-cols-[120px_1fr]">
         <div className="rounded-lg border border-cyan-500/20 bg-cyan-500/10 p-3">
-          <p className="text-xs text-cyan-200">Fit Score</p>
-          <p className="mt-1 text-3xl font-bold text-cyan-100">
+          <p className="text-xs text-cyan-700 dark:text-cyan-200">Fit Score</p>
+          <p className="mt-1 text-3xl font-bold text-cyan-800 dark:text-cyan-100">
             {genericAnalysis?.overallMatchScore ?? "--"}
           </p>
         </div>
         <div>
-          <p className="text-xs font-medium uppercase text-slate-500">
+          <p className="text-xs font-medium uppercase text-muted-foreground dark:text-slate-500">
             Summary
           </p>
-          <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-slate-200">
+          <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-foreground dark:text-slate-200">
             {genericAnalysis?.summary ?? (message.content || "Analyzing...")}
           </p>
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-medium uppercase text-slate-500">
+        <p className="text-xs font-medium uppercase text-muted-foreground dark:text-slate-500">
           Matched Skills
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -89,19 +92,21 @@ function AnalysisResult({ message }: { message: Message }) {
             matchedSkills.map((skill) => (
               <span
                 key={skill}
-                className="rounded-md bg-emerald-500/15 px-2 py-1 text-xs font-medium text-emerald-200"
+                className="rounded-md bg-emerald-500/15 px-2 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-200"
               >
                 {skill}
               </span>
             ))
           ) : (
-            <span className="text-xs text-slate-500">Analyzing...</span>
+            <span className="text-xs text-muted-foreground dark:text-slate-500">
+              Analyzing...
+            </span>
           )}
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-medium uppercase text-slate-500">
+        <p className="text-xs font-medium uppercase text-muted-foreground dark:text-slate-500">
           Missing Skills
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -109,13 +114,15 @@ function AnalysisResult({ message }: { message: Message }) {
             missingSkills.map((skill) => (
               <span
                 key={skill}
-                className="rounded-md bg-amber-500/15 px-2 py-1 text-xs font-medium text-amber-200"
+                className="rounded-md bg-amber-500/15 px-2 py-1 text-xs font-medium text-amber-700 dark:text-amber-200"
               >
                 {skill}
               </span>
             ))
           ) : (
-            <span className="text-xs text-slate-500">No gaps detected yet.</span>
+            <span className="text-xs text-muted-foreground dark:text-slate-500">
+              No gaps detected yet.
+            </span>
           )}
         </div>
       </div>
@@ -148,8 +155,8 @@ export function MessageList({
       {messages.map((message) => (
         <div key={message.id} className="flex gap-4">
           {message.role === "user" ? (
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-700">
-              <User className="h-4 w-4 text-slate-300" />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted dark:bg-slate-700">
+              <User className="h-4 w-4 text-muted-foreground dark:text-slate-300" />
             </div>
           ) : (
             <GradientIcon icon={Bot} className="h-8 w-8" />
@@ -157,17 +164,17 @@ export function MessageList({
 
           <div className="flex-1">
             <div className="mb-1 flex items-center gap-2">
-              <span className="text-sm font-semibold text-slate-100">
+              <span className="text-sm font-semibold text-foreground dark:text-slate-100">
                 {message.role === "user" ? "You" : "AI Agent"}
               </span>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-muted-foreground dark:text-slate-500">
                 {message.timestamp}
               </span>
             </div>
 
             {message.kind === "quick-actions" ? (
-              <CareerPanel className="rounded-lg bg-slate-800/50 p-4">
-                <p className="mb-4 text-sm text-slate-200">
+              <CareerPanel variant="elevated" className="rounded-lg p-4">
+                <p className="mb-4 text-sm text-foreground dark:text-slate-200">
                   {message.content}
                 </p>
                 <PresetButtons
@@ -180,7 +187,10 @@ export function MessageList({
             ) : message.presetType ? (
               renderPresetContent(message.presetType)
             ) : (
-              <CareerPanel className="whitespace-pre-wrap rounded-lg bg-slate-800/50 p-4 text-sm leading-6 text-slate-300">
+              <CareerPanel
+                variant="elevated"
+                className="whitespace-pre-wrap rounded-lg p-4 text-sm leading-6"
+              >
                 {message.content}
               </CareerPanel>
             )}

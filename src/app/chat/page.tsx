@@ -159,7 +159,7 @@ export default function ChatPage() {
             onSessionChange={handleSessionChange}
           />
         ) : (
-          <div className="flex flex-1 items-center justify-center text-sm text-slate-500">
+          <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground dark:text-slate-500">
             Create a new analysis to start.
           </div>
         )}

@@ -29,7 +29,7 @@ export function Sidebar({
     <>
       <div
         className={cn(
-          "fixed inset-x-0 bottom-0 top-16 z-30 bg-slate-950/70 backdrop-blur-sm transition-opacity lg:hidden",
+          "fixed inset-x-0 bottom-0 top-16 z-30 bg-background/70 backdrop-blur-sm transition-opacity dark:bg-slate-950/70 lg:hidden",
           isOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0",
@@ -40,18 +40,20 @@ export function Sidebar({
 
       <aside
         className={cn(
-          "fixed bottom-0 left-0 top-16 z-40 flex w-[min(20rem,calc(100vw-3rem))] flex-col border-r border-slate-800 bg-slate-900 shadow-2xl shadow-slate-950/50 transition-transform duration-200 ease-out lg:static lg:z-auto lg:h-auto lg:w-80 lg:translate-x-0 lg:bg-slate-900/50 lg:shadow-none lg:backdrop-blur-sm",
+          "fixed bottom-0 left-0 top-16 z-40 flex w-[min(20rem,calc(100vw-3rem))] flex-col border-r border-border bg-card shadow-2xl shadow-slate-950/10 transition-transform duration-200 ease-out dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-950/50 lg:static lg:z-auto lg:h-auto lg:w-80 lg:translate-x-0 lg:bg-card/60 lg:shadow-none lg:backdrop-blur-sm dark:lg:bg-slate-900/50",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
         aria-label="Chat sessions"
       >
-        <div className="border-b border-slate-800 p-4">
+        <div className="border-b border-border p-4 dark:border-slate-800">
           <div className="mb-4 flex items-center gap-3">
             <div>
-              <h1 className="text-base font-bold text-slate-100">
+              <h1 className="text-base font-bold text-foreground dark:text-slate-100">
                 AI Career Agent
               </h1>
-              <p className="text-xs text-slate-500">JD Matching Assistant</p>
+              <p className="text-xs text-muted-foreground dark:text-slate-500">
+                JD Matching Assistant
+              </p>
             </div>
           </div>
 
@@ -67,7 +69,7 @@ export function Sidebar({
 
         <ScrollArea className="flex-1 overflow-hidden">
           <div className="space-y-1 p-3">
-            <div className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-slate-500">
+            <div className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground dark:text-slate-500">
               Recent Sessions
             </div>
             {sessions.map((session) => (
@@ -76,8 +78,8 @@ export function Sidebar({
                 className={cn(
                   "group flex w-full items-start gap-2 rounded-lg pr-2 transition-colors",
                   session.id === activeSessionId
-                    ? "bg-slate-800"
-                    : "hover:bg-slate-800/50",
+                    ? "bg-accent dark:bg-slate-800"
+                    : "hover:bg-accent/50 dark:hover:bg-slate-800/50",
                 )}
               >
                 <button
@@ -86,8 +88,8 @@ export function Sidebar({
                   className={cn(
                     "flex h-auto min-w-0 flex-1 cursor-pointer items-center justify-start gap-2 rounded-lg px-3 py-2.5 text-left transition-colors",
                     session.id === activeSessionId
-                      ? "text-slate-100"
-                      : "text-slate-400 group-hover:text-slate-200",
+                      ? "text-accent-foreground dark:text-slate-100"
+                      : "text-muted-foreground group-hover:text-foreground dark:text-slate-400 dark:group-hover:text-slate-200",
                   )}
                 >
                   <MessageSquare className="mt-0.5 h-4 w-4 shrink-0 text-cyan-500" />
@@ -95,7 +97,7 @@ export function Sidebar({
                     <span className="block truncate text-sm font-medium">
                       {session.title}
                     </span>
-                    <span className="block text-xs text-slate-500">
+                    <span className="block text-xs text-muted-foreground dark:text-slate-500">
                       {session.timestamp}
                     </span>
                   </span>
@@ -105,7 +107,7 @@ export function Sidebar({
                   variant="ghost"
                   size="icon"
                   onClick={() => onDeleteSession(session.id)}
-                  className="mt-2.5 h-6 w-6 shrink-0 rounded text-slate-500 opacity-0 hover:bg-slate-700 hover:text-red-400 group-hover:opacity-100"
+                  className="mt-2.5 h-6 w-6 shrink-0 rounded text-muted-foreground opacity-0 hover:bg-accent hover:text-red-500 group-hover:opacity-100 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-red-400"
                   aria-label={`Delete ${session.title}`}
                 >
                   <Trash2 className="h-3.5 w-3.5" />

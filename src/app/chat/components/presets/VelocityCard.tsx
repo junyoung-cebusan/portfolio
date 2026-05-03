@@ -152,10 +152,12 @@ function getCapacityStatus(row: CapacityRow, config: BarConfig) {
 
 function getCapacityTone(config: BarConfig) {
   if (config.bothZero) {
-    return "text-slate-400";
+    return "text-muted-foreground dark:text-slate-400";
   }
 
-  return config.delta >= 0 ? "text-cyan-400" : "text-amber-400";
+  return config.delta >= 0
+    ? "text-cyan-700 dark:text-cyan-400"
+    : "text-amber-600 dark:text-amber-400";
 }
 
 function mapPipelineSteps(data?: Partial<VelocityAnalysis>): PipelineStep[] {
@@ -188,8 +190,8 @@ function SectionTitle({
 }) {
   return (
     <div className="mb-4 flex items-center gap-2">
-      {Icon && <Icon className="h-5 w-5 text-cyan-400" />}
-      <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
+      {Icon && <Icon className="h-5 w-5 text-cyan-700 dark:text-cyan-400" />}
+      <h4 className="text-sm font-semibold uppercase tracking-wider text-foreground dark:text-slate-300">
         {title}
       </h4>
     </div>
@@ -200,19 +202,19 @@ function CapacityLegend({ row }: { row: CapacityRow }) {
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
       <div className="flex items-center gap-1.5">
-        <div className="h-2.5 w-2.5 rounded-sm bg-slate-700 ring-1 ring-slate-600" />
-        <span className="text-slate-500">
+        <div className="h-2.5 w-2.5 rounded-sm bg-slate-300 ring-1 ring-slate-400 dark:bg-slate-700 dark:ring-slate-600" />
+        <span className="text-muted-foreground dark:text-slate-500">
           JD:{" "}
-          <span className="font-semibold text-slate-400">
+          <span className="font-semibold text-slate-600 dark:text-slate-400">
             {row.jd_required} {row.unit}
           </span>
         </span>
       </div>
       <div className="flex items-center gap-1.5">
         <div className="h-2.5 w-2.5 rounded-sm bg-gradient-to-r from-cyan-500 to-blue-600 shadow-sm shadow-cyan-500/50" />
-        <span className="font-bold text-cyan-400">
+        <span className="font-bold text-cyan-700 dark:text-cyan-400">
           Actual:{" "}
-          <span className="text-cyan-300">
+          <span className="text-cyan-700 dark:text-cyan-300">
             {row.candidate_actual} {row.unit}
           </span>
         </span>
@@ -230,7 +232,7 @@ function CapacityBar({
 }) {
   if (config.bothZero) {
     return (
-      <div className="flex h-full items-center justify-center text-xs font-medium text-slate-500">
+      <div className="flex h-full items-center justify-center text-xs font-medium text-muted-foreground dark:text-slate-500">
         No comparable data
       </div>
     );
@@ -240,7 +242,7 @@ function CapacityBar({
     <>
       <div
         className={cn(
-          "absolute left-0 top-0 h-12 rounded-lg bg-slate-700/75 ring-1 ring-slate-600/70 transition-all duration-700",
+          "absolute left-0 top-0 h-12 rounded-lg bg-slate-300/85 ring-1 ring-slate-400/70 transition-all duration-700 dark:bg-slate-700/75 dark:ring-slate-600/70",
           config.exactMatch && "hidden",
           config.jdIsZero
             ? "z-20"
@@ -251,7 +253,7 @@ function CapacityBar({
         style={{ width: `${config.jdPercent}%` }}
       >
         {config.jdPercent > 18 && (
-          <div className="flex h-full items-center justify-center px-3 text-xs font-medium text-slate-300">
+          <div className="flex h-full items-center justify-center px-3 text-xs font-medium text-slate-700 dark:text-slate-300">
             JD Requirement
           </div>
         )}
@@ -292,13 +294,13 @@ function CapacityComparison({ rows }: { rows: CapacityRow[] }) {
               key={`${row.label}-${row.jd_required}-${row.candidate_actual}`}
             >
               <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between">
-                <span className="text-sm font-medium text-slate-300">
+                <span className="text-sm font-medium text-foreground dark:text-slate-300">
                   {row.label}
                 </span>
                 <CapacityLegend row={row} />
               </div>
 
-              <div className="relative h-12 overflow-hidden rounded-lg bg-slate-800/80 ring-1 ring-slate-700">
+              <div className="relative h-12 overflow-hidden rounded-lg bg-slate-100 ring-1 ring-slate-300 dark:bg-slate-800/80 dark:ring-slate-700">
                 <CapacityBar config={config} status={status} />
               </div>
 
@@ -324,43 +326,45 @@ function Pipeline({ steps }: { steps: PipelineStep[] }) {
     <InfoBlock className="p-6">
       <SectionTitle title="Accelerated JD Workflow (SDLC)" />
       <div className="relative space-y-4">
-        <div className="absolute bottom-8 left-6 top-8 w-px bg-gradient-to-b from-cyan-500/60 via-slate-600 to-emerald-500/50" />
+        <div className="absolute bottom-8 left-6 top-8 w-px bg-gradient-to-b from-cyan-500/60 via-slate-300 to-emerald-500/50 dark:via-slate-600" />
         {steps.map((step) => (
           <div key={step.id} className="relative flex gap-4">
             <GradientIcon
               icon={step.icon}
               tone={step.tone}
-              className="relative z-10 h-12 w-12 ring-4 ring-slate-950"
+              className="relative z-10 h-12 w-12 ring-4 ring-background dark:ring-slate-950"
             />
 
             <CareerPanel
               tone={step.tone}
               interactive
-              className="flex-1 border-blue-500/20 bg-blue-950/25 p-5 shadow-lg shadow-blue-950/30 hover:bg-blue-950/35"
+              className="flex-1 border-blue-500/20 bg-blue-50 p-5 shadow-lg shadow-blue-500/10 hover:bg-blue-100/70 dark:bg-blue-950/25 dark:shadow-blue-950/30 dark:hover:bg-blue-950/35"
             >
               <div className="mb-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <h5 className="text-base font-semibold text-slate-100">
+                <h5 className="text-base font-semibold text-foreground dark:text-slate-100">
                   {step.title}
                 </h5>
                 {step.subtitle && (
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-muted-foreground dark:text-slate-500">
                     {step.subtitle}
                   </span>
                 )}
               </div>
 
               <InfoBlock label="JD Context" className="mb-3">
-                <p className="text-sm text-slate-400">{step.jdContext}</p>
+                <p className="text-sm text-muted-foreground dark:text-slate-400">
+                  {step.jdContext}
+                </p>
               </InfoBlock>
 
-              <InfoBlock className="border border-cyan-500/20 bg-cyan-500/10">
+              <InfoBlock tone="cyan" variant="tinted">
                 <div className="mb-1 flex items-center gap-2">
-                  <Rocket className="h-4 w-4 text-cyan-400" />
-                  <p className="text-xs font-bold uppercase tracking-wider text-cyan-400">
+                  <Rocket className="h-4 w-4 text-cyan-700 dark:text-cyan-400" />
+                  <p className="text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-400">
                     Velocity Accelerator: {step.accelerator}
                   </p>
                 </div>
-                <p className="text-sm font-medium leading-relaxed text-slate-200">
+                <p className="text-sm font-medium leading-relaxed text-foreground dark:text-slate-200">
                   {step.impact}
                 </p>
               </InfoBlock>
@@ -387,22 +391,25 @@ function VelocityMultipliers({
           <CareerPanel
             key={`${multiplier}-${index}`}
             tone="cyan"
-            className="flex min-h-11 items-center gap-2 border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300 shadow-lg shadow-cyan-500/10"
+            variant="soft"
+            className="flex min-h-11 items-center gap-2 px-4 py-2 text-sm font-medium text-cyan-700 shadow-lg shadow-cyan-500/10 dark:text-cyan-300"
           >
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-cyan-400" />
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-cyan-600 dark:text-cyan-400" />
             <span>{multiplier}</span>
           </CareerPanel>
         ))}
       </div>
-      <p className="mt-4 text-xs leading-relaxed text-slate-400">
+      <p className="mt-4 text-xs leading-relaxed text-muted-foreground dark:text-slate-400">
         {note ?? (
           <>
             These factors indicate a{" "}
-            <span className="font-semibold text-cyan-400">
+            <span className="font-semibold text-cyan-700 dark:text-cyan-400">
               fast onboarding process
             </span>{" "}
             and{" "}
-            <span className="font-semibold text-cyan-400">high throughput</span>
+            <span className="font-semibold text-cyan-700 dark:text-cyan-400">
+              high throughput
+            </span>
             , reducing management overhead and dependency delays.
           </>
         )}

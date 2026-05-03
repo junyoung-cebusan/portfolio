@@ -34,11 +34,12 @@ type GraphNodeData = {
 };
 
 const graphControlsStyle = {
-  "--xy-controls-button-background-color": "#f8fafc",
-  "--xy-controls-button-background-color-hover": "#cffafe",
-  "--xy-controls-button-border-color": "#94a3b8",
-  "--xy-controls-button-color": "#0f172a",
-  "--xy-controls-button-color-hover": "#020617",
+  "--xy-controls-button-background-color": "var(--graph-controls-background)",
+  "--xy-controls-button-background-color-hover":
+    "var(--graph-controls-background-hover)",
+  "--xy-controls-button-border-color": "var(--graph-controls-border)",
+  "--xy-controls-button-color": "var(--graph-controls-color)",
+  "--xy-controls-button-color-hover": "var(--graph-controls-color-hover)",
 } as CSSProperties;
 
 function getNodeStyle(
@@ -167,10 +168,10 @@ export function GraphView({ results = analysisResults }: GraphViewProps) {
     <CareerPanel className="flex min-h-0 flex-1 flex-col rounded-2xl p-4">
       <div className="mb-4 flex shrink-0 items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-slate-100">
+          <h2 className="text-xl font-bold text-foreground dark:text-slate-100">
             Correlation Network
           </h2>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-muted-foreground dark:text-slate-400">
             Interactive skill ecosystem visualization
           </p>
         </div>
@@ -194,10 +195,10 @@ export function GraphView({ results = analysisResults }: GraphViewProps) {
             variant={BackgroundVariant.Dots}
             gap={16}
             size={1}
-            color="#334155"
+            color="var(--graph-dot-color, #94a3b8)"
           />
           <Controls
-            className="rounded-lg border border-slate-700 bg-slate-900"
+            className="rounded-lg border border-slate-300 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900"
             style={graphControlsStyle}
           />
         </ReactFlow>

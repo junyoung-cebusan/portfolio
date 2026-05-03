@@ -55,11 +55,9 @@ export function PresetButtons({ onPresetClick, disabled }: PresetButtonsProps) {
         <CareerPanel
           key={preset.id}
           tone={preset.tone}
+          variant="elevated"
           interactive={!disabled}
-          className={cn(
-            "group relative overflow-hidden bg-slate-800/50 transition-all duration-300",
-            "shadow-lg shadow-cyan-500/10",
-          )}
+          className="group relative overflow-hidden transition-all duration-300"
         >
           <Button
             type="button"
@@ -74,10 +72,10 @@ export function PresetButtons({ onPresetClick, disabled }: PresetButtonsProps) {
                 tone={preset.tone}
                 className="mb-3"
               />
-              <span className="mb-1 block text-wrap text-sm font-semibold leading-5 text-slate-100">
+              <span className="mb-1 block text-wrap text-sm font-semibold leading-5 text-foreground dark:text-slate-100">
                 {preset.label}
               </span>
-              <span className="block text-wrap text-xs leading-5 text-slate-400">
+              <span className="block text-wrap text-xs leading-5 text-muted-foreground dark:text-slate-400">
                 {preset.description}
               </span>
             </span>

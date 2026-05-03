@@ -3,7 +3,13 @@ import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/shadcn/utils";
 
-type CareerTone = "cyan" | "emerald" | "amber" | "purple" | "red" | "slate";
+export type CareerTone =
+  | "cyan"
+  | "emerald"
+  | "amber"
+  | "purple"
+  | "red"
+  | "slate";
 
 const toneStyles = {
   cyan: {
@@ -12,7 +18,7 @@ const toneStyles = {
     border: "border-cyan-500/20",
     hoverBorder: "hover:border-cyan-500/50",
     shadow: "shadow-cyan-500/30",
-    text: "text-cyan-400",
+    text: "text-cyan-700 dark:text-cyan-400",
     icon: "text-cyan-500",
     bg: "bg-cyan-500",
     wash: "bg-cyan-500/10",
@@ -23,7 +29,7 @@ const toneStyles = {
     border: "border-emerald-500/20",
     hoverBorder: "hover:border-emerald-500/50",
     shadow: "shadow-emerald-500/30",
-    text: "text-emerald-400",
+    text: "text-emerald-700 dark:text-emerald-400",
     icon: "text-emerald-500",
     bg: "bg-emerald-500",
     wash: "bg-emerald-500/10",
@@ -34,7 +40,7 @@ const toneStyles = {
     border: "border-amber-500/20",
     hoverBorder: "hover:border-amber-500/50",
     shadow: "shadow-amber-500/30",
-    text: "text-amber-400",
+    text: "text-amber-700 dark:text-amber-400",
     icon: "text-amber-500",
     bg: "bg-amber-500",
     wash: "bg-amber-500/10",
@@ -45,7 +51,7 @@ const toneStyles = {
     border: "border-purple-500/20",
     hoverBorder: "hover:border-purple-500/50",
     shadow: "shadow-purple-500/30",
-    text: "text-purple-400",
+    text: "text-purple-700 dark:text-purple-400",
     icon: "text-purple-500",
     bg: "bg-purple-500",
     wash: "bg-purple-500/10",
@@ -56,23 +62,38 @@ const toneStyles = {
     border: "border-red-500/20",
     hoverBorder: "hover:border-red-500/50",
     shadow: "shadow-red-500/30",
-    text: "text-red-400",
+    text: "text-red-700 dark:text-red-400",
     icon: "text-red-500",
     bg: "bg-red-500",
     wash: "bg-red-500/10",
   },
   slate: {
     gradient: "from-slate-700 to-slate-800",
-    soft: "from-slate-800/70 to-slate-900/70",
-    border: "border-slate-700",
-    hoverBorder: "hover:border-slate-600",
-    shadow: "shadow-slate-950/20",
-    text: "text-slate-300",
-    icon: "text-slate-400",
+    soft: "from-muted/70 to-card/70 dark:from-slate-800/70 dark:to-slate-900/70",
+    border: "border-border dark:border-slate-700",
+    hoverBorder: "hover:border-ring/50 dark:hover:border-slate-600",
+    shadow: "shadow-slate-950/10 dark:shadow-slate-950/20",
+    text: "text-muted-foreground dark:text-slate-300",
+    icon: "text-muted-foreground dark:text-slate-400",
     bg: "bg-slate-700",
-    wash: "bg-slate-800/50",
+    wash: "bg-muted dark:bg-slate-800/50",
   },
 } satisfies Record<CareerTone, Record<string, string>>;
+
+const panelVariantStyles = {
+  default:
+    "border-border bg-card/70 text-card-foreground dark:border-slate-700 dark:bg-slate-900/50",
+  elevated:
+    "border-border bg-card text-card-foreground shadow-lg shadow-slate-950/10 dark:border-slate-700 dark:bg-slate-800/50 dark:shadow-slate-950/20",
+  soft: "",
+  subtle: "border-border bg-muted/50 dark:border-slate-700 dark:bg-slate-950/50",
+} satisfies Record<string, string>;
+
+const infoBlockVariantStyles = {
+  default: "bg-muted/50 dark:bg-slate-950/50",
+  plain: "bg-transparent",
+  tinted: "",
+} satisfies Record<string, string>;
 
 type CareerShellProps<TElement extends ElementType> = {
   as?: TElement;
@@ -88,7 +109,10 @@ export function CareerShell<TElement extends ElementType = "div">({
 
   return (
     <Comp
-      className={cn("min-h-screen bg-slate-950 text-slate-100", className)}
+      className={cn(
+        "min-h-screen bg-background text-foreground dark:bg-slate-950 dark:text-slate-100",
+        className,
+      )}
       {...props}
     />
   );
@@ -98,7 +122,7 @@ export function AppHeader({ className, ...props }: ComponentProps<"header">) {
   return (
     <header
       className={cn(
-        "border-b border-slate-800 bg-slate-950/80 backdrop-blur-xl",
+        "border-b border-border bg-background/80 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/80",
         className,
       )}
       {...props}
@@ -162,11 +186,13 @@ export function IconTile({
 
 type CareerPanelProps = ComponentProps<"div"> & {
   tone?: CareerTone;
+  variant?: "default" | "elevated" | "soft" | "subtle";
   interactive?: boolean;
 };
 
 export function CareerPanel({
   tone = "slate",
+  variant = "default",
   interactive,
   className,
   ...props
@@ -174,11 +200,15 @@ export function CareerPanel({
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-700 bg-slate-900/50",
-        "transition-all hover:bg-slate-800 hover:shadow-lg",
+        "rounded-xl border transition-all",
+        variant === "soft"
+          ? cn("bg-gradient-to-br", toneStyles[tone].soft, toneStyles[tone].border)
+          : panelVariantStyles[variant],
+        "transition-all hover:bg-accent/50 hover:shadow-lg dark:hover:bg-slate-800",
         toneStyles[tone].hoverBorder,
         className,
       )}
+      data-interactive={interactive ? "" : undefined}
       {...props}
     />
   );
@@ -196,9 +226,11 @@ export function AnalysisCard({
   return (
     <section
       className={cn(
-        "overflow-hidden rounded-2xl border bg-gradient-to-br from-slate-900 to-slate-800 shadow-2xl",
+        "overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-2xl dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800",
         toneStyles[tone].border,
-        tone === "slate" ? "shadow-slate-950/20" : toneStyles[tone].shadow,
+        tone === "slate"
+          ? "shadow-slate-950/10 dark:shadow-slate-950/20"
+          : toneStyles[tone].shadow,
         className,
       )}
       {...props}
@@ -221,14 +253,23 @@ export function AnalysisCardHeader({
 }: AnalysisCardHeaderProps) {
   return (
     <div
-      className={cn("border-b border-slate-700 bg-slate-900/50 p-6", className)}
+      className={cn(
+        "border-b border-border bg-muted/50 p-6 dark:border-slate-700 dark:bg-slate-900/50",
+        className,
+      )}
       {...props}
     >
       <div className="flex flex-col items-start justify-between gap-2 pb-2 sm:flex-row sm:gap-4">
-        <h3 className="text-xl font-bold text-slate-100">{title}</h3>
+        <h3 className="text-xl font-bold text-foreground dark:text-slate-100">
+          {title}
+        </h3>
         {action}
       </div>
-      {description && <p className="text-sm text-slate-400">{description}</p>}
+      {description && (
+        <p className="text-sm text-muted-foreground dark:text-slate-400">
+          {description}
+        </p>
+      )}
     </div>
   );
 }
@@ -263,10 +304,12 @@ export function GradientBadge({
 
 type StatusPillProps = ComponentProps<"div"> & {
   tone?: CareerTone;
+  variant?: "default" | "solid";
 };
 
 export function StatusPill({
   tone = "cyan",
+  variant = "default",
   className,
   children,
   ...props
@@ -275,13 +318,17 @@ export function StatusPill({
     <div
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs",
-        toneStyles[tone].wash,
+        variant === "solid"
+          ? cn("text-white", toneStyles[tone].bg)
+          : toneStyles[tone].wash,
         className,
       )}
       {...props}
     >
       <span className={cn("h-2 w-2 rounded-full", toneStyles[tone].bg)} />
-      <span className={toneStyles[tone].text}>{children}</span>
+      <span className={variant === "solid" ? "text-white" : toneStyles[tone].text}>
+        {children}
+      </span>
     </div>
   );
 }
@@ -307,7 +354,9 @@ export function LegendItem({
           toneStyles[tone].bg,
         )}
       />
-      <span className="text-slate-400">{label}</span>
+      <span className="text-muted-foreground dark:text-slate-400">
+        {label}
+      </span>
     </div>
   );
 }
@@ -315,23 +364,36 @@ export function LegendItem({
 type InfoBlockProps = ComponentProps<"div"> & {
   label?: string;
   labelTone?: CareerTone;
+  tone?: CareerTone;
+  variant?: "default" | "plain" | "tinted";
 };
 
 export function InfoBlock({
   label,
   labelTone = "slate",
+  tone = "slate",
+  variant = "default",
   className,
   children,
   ...props
 }: InfoBlockProps) {
   return (
-    <div className={cn("rounded-lg bg-slate-950/50 p-3", className)} {...props}>
+    <div
+      className={cn(
+        "rounded-lg p-3",
+        variant === "tinted"
+          ? cn(toneStyles[tone].wash, toneStyles[tone].border, "border")
+          : infoBlockVariantStyles[variant],
+        className,
+      )}
+      {...props}
+    >
       {label && (
         <p
           className={cn(
             "mb-1 text-xs font-medium uppercase tracking-wider",
             labelTone === "slate"
-              ? "text-slate-500"
+              ? "text-muted-foreground dark:text-slate-500"
               : toneStyles[labelTone].text,
           )}
         >
@@ -356,7 +418,10 @@ export function ProgressMeter({
 }: ProgressMeterProps) {
   return (
     <div
-      className={cn("h-2 overflow-hidden rounded-full bg-slate-700", className)}
+      className={cn(
+        "h-2 overflow-hidden rounded-full bg-muted dark:bg-slate-700",
+        className,
+      )}
       {...props}
     >
       <div
@@ -403,9 +468,15 @@ export function MetricTile({
       />
       <div className="relative">
         <GradientIcon icon={Icon} tone={tone} className="mb-3" />
-        <div className="mb-1 text-3xl font-bold text-slate-100">{value}</div>
-        <div className="mb-0.5 text-xs font-medium text-slate-300">{label}</div>
-        <div className="text-xs text-slate-500">{comparison}</div>
+        <div className="mb-1 text-3xl font-bold text-foreground dark:text-slate-100">
+          {value}
+        </div>
+        <div className="mb-0.5 text-xs font-medium text-foreground/80 dark:text-slate-300">
+          {label}
+        </div>
+        <div className="text-xs text-muted-foreground dark:text-slate-500">
+          {comparison}
+        </div>
       </div>
     </CareerPanel>
   );
@@ -434,8 +505,12 @@ export function EmptyHero({
       {...props}
     >
       <GradientIcon icon={icon} className="mb-8 h-20 w-20 rounded-2xl" />
-      <h1 className="mb-3 text-3xl font-bold text-slate-100">{title}</h1>
-      <p className="mb-12 max-w-md text-center text-slate-400">{description}</p>
+      <h1 className="mb-3 text-3xl font-bold text-foreground dark:text-slate-100">
+        {title}
+      </h1>
+      <p className="mb-12 max-w-md text-center text-muted-foreground dark:text-slate-400">
+        {description}
+      </p>
       {children}
     </div>
   );

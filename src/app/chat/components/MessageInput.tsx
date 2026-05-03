@@ -110,11 +110,11 @@ export function MessageInput({
       <div className="mx-auto max-w-4xl">
         <CareerPanel
           className={cn(
-            "group relative flex w-full flex-col rounded-2xl bg-slate-900/80 p-3 shadow-2xl transition-all focus-within:border-cyan-500 focus-within:shadow-cyan-500/20 hover:border-slate-600",
+            "group relative flex w-full flex-col rounded-2xl bg-card/90 p-3 shadow-2xl transition-all focus-within:border-cyan-500 focus-within:shadow-cyan-500/20 hover:border-border dark:bg-slate-900/80 dark:hover:border-slate-600",
             isDraggingFile &&
               (canDropFile
                 ? "border-cyan-300 shadow-cyan-500/30"
-                : "border-slate-500 shadow-slate-950/30"),
+                : "border-border shadow-slate-950/10 dark:border-slate-500 dark:shadow-slate-950/30"),
           )}
         >
           {showExpandButton && (
@@ -123,7 +123,7 @@ export function MessageInput({
               variant="ghost"
               size="icon"
               onClick={() => setIsExpanded((current) => !current)}
-              className="absolute right-3 top-3 z-10 h-8 w-8 rounded-lg bg-slate-950/80 text-slate-300 shadow-lg hover:bg-slate-800 hover:text-cyan-300"
+              className="absolute right-3 top-3 z-10 h-8 w-8 rounded-lg bg-background/80 text-muted-foreground shadow-lg hover:bg-accent hover:text-cyan-500 dark:bg-slate-950/80 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-cyan-300"
               aria-label={
                 isExpanded ? "Collapse message input" : "Enlarge message input"
               }
@@ -141,7 +141,7 @@ export function MessageInput({
             disabled={disabled}
             placeholder="Paste a JD or ask about your career fit..."
             className={cn(
-              "w-full resize-none bg-transparent px-3 py-2 text-sm leading-5 text-slate-100 outline-none placeholder:text-slate-500 disabled:cursor-not-allowed disabled:opacity-60",
+              "w-full resize-none bg-transparent px-3 py-2 text-sm leading-5 text-foreground outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-60 dark:text-slate-100 dark:placeholder:text-slate-500",
               showExpandButton && "pr-12",
               isExpanded && "overscroll-contain",
             )}
@@ -152,29 +152,29 @@ export function MessageInput({
           {isDraggingFile && (
             <div
               className={cn(
-                "pointer-events-none absolute inset-2 z-20 flex items-center justify-center rounded-xl border-2 border-dashed bg-slate-950/80 backdrop-blur-sm",
+                "pointer-events-none absolute inset-2 z-20 flex items-center justify-center rounded-xl border-2 border-dashed bg-background/80 backdrop-blur-sm dark:bg-slate-950/80",
                 canDropFile
                   ? "border-cyan-300/90 shadow-lg shadow-cyan-950/30"
-                  : "border-slate-500/80 shadow-lg shadow-slate-950/30",
+                  : "border-border shadow-lg shadow-slate-950/10 dark:border-slate-500/80 dark:shadow-slate-950/30",
               )}
             >
-              <div className="flex items-center gap-3 rounded-xl border border-slate-700/80 bg-slate-900/90 px-4 py-3 text-left shadow-xl">
+              <div className="flex items-center gap-3 rounded-xl border border-border bg-card/90 px-4 py-3 text-left shadow-xl dark:border-slate-700/80 dark:bg-slate-900/90">
                 <div
                   className={cn(
                     "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border",
                     canDropFile
-                      ? "border-cyan-300/40 bg-cyan-400/15 text-cyan-100"
-                      : "border-slate-500/50 bg-slate-800 text-slate-300",
+                      ? "border-cyan-300/40 bg-cyan-400/15 text-cyan-700 dark:text-cyan-100"
+                      : "border-border bg-muted text-muted-foreground dark:border-slate-500/50 dark:bg-slate-800 dark:text-slate-300",
                   )}
                 >
                   <UploadCloud className="h-5 w-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-slate-50">
+                  <p className="text-sm font-semibold text-foreground dark:text-slate-50">
                     {canDropFile ? "Drop file to upload" : "Upload in progress"}
                   </p>
-                  <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-300">
-                    <FileText className="h-3.5 w-3.5 text-cyan-300" />
+                  <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground dark:text-slate-300">
+                    <FileText className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-300" />
                     PDF or DOCX only
                   </p>
                 </div>
@@ -197,7 +197,7 @@ export function MessageInput({
                 size="icon"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={disabled}
-                className="h-9 w-9 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-cyan-400"
+                className="h-9 w-9 rounded-lg text-muted-foreground hover:bg-accent hover:text-cyan-500 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-cyan-400"
                 title="Upload JD"
                 aria-label="Upload JD"
               >
@@ -219,7 +219,7 @@ export function MessageInput({
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-96 rounded-2xl border-slate-700 bg-slate-900/95 p-4 shadow-2xl backdrop-blur-xl"
+                  className="w-96 rounded-2xl border-border bg-popover p-4 text-popover-foreground shadow-2xl backdrop-blur-xl dark:border-slate-700 dark:bg-slate-900/95"
                   sideOffset={12}
                 >
                   <div className="mb-3 flex items-center gap-2">
@@ -228,7 +228,7 @@ export function MessageInput({
                       tone="amber"
                       className="h-7 w-7 shadow-none"
                     />
-                    <h3 className="font-semibold text-slate-100">
+                    <h3 className="font-semibold text-foreground dark:text-slate-100">
                       Quick Actions
                     </h3>
                   </div>

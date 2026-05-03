@@ -198,7 +198,9 @@ export function TextView({
       )}
     >
       <div className="flex shrink-0 flex-col items-start justify-between gap-2 pb-2 sm:flex-row sm:gap-4">
-        <h2 className="text-2xl font-bold text-slate-100">JD Analysis</h2>
+        <h2 className="text-2xl font-bold text-foreground dark:text-slate-100">
+          JD Analysis
+        </h2>
         <div className="flex flex-wrap gap-2">
           {Object.entries(analysisCategoryMeta).map(([category, meta]) => (
             <StatusPill key={category} tone={meta.tone}>
@@ -208,12 +210,12 @@ export function TextView({
         </div>
       </div>
 
-      <CareerPanel className="min-h-0 flex-1 overflow-y-auto rounded-2xl p-8 leading-relaxed text-slate-300">
+      <CareerPanel className="min-h-0 flex-1 overflow-y-auto rounded-2xl p-8 leading-relaxed text-slate-700 dark:text-slate-300">
         {renderTextWithHighlights()}
       </CareerPanel>
 
-      <CareerPanel className="mt-6 shrink-0 border-cyan-500/20 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 p-4">
-        <div className="flex items-center gap-3 text-sm text-slate-300">
+      <CareerPanel tone="cyan" variant="soft" className="mt-6 shrink-0 p-4">
+        <div className="flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300">
           <LegendItem
             label={
               hasHighlights

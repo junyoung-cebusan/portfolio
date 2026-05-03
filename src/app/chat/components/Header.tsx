@@ -43,7 +43,7 @@ export function Header({
                   variant="ghost"
                   size="icon"
                   onClick={onToggleSidebar}
-                  className="shrink-0 rounded-lg bg-slate-800/50 text-slate-300 hover:bg-slate-700 hover:text-slate-100 lg:hidden"
+                  className="shrink-0 rounded-lg bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:bg-slate-800/50 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-slate-100 lg:hidden"
                   aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
                   aria-expanded={isSidebarOpen}
                 >
@@ -56,8 +56,8 @@ export function Header({
               </TooltipTrigger>
               <TooltipContent
                 sideOffset={6}
-                className="bg-slate-800 text-slate-200"
-                arrowClassName="bg-slate-800 fill-slate-800"
+                className="bg-popover text-popover-foreground dark:bg-slate-800 dark:text-slate-200"
+                arrowClassName="bg-popover fill-popover dark:bg-slate-800 dark:fill-slate-800"
               >
                 {isSidebarOpen ? "Close sidebar" : "Open sidebar"}
               </TooltipContent>
@@ -68,18 +68,22 @@ export function Header({
             <>
               <IconTile icon={FileText} tone="cyan" />
               <div className="min-w-0">
-                <h2 className="truncate text-sm font-semibold text-slate-100">
+                <h2 className="truncate text-sm font-semibold text-foreground dark:text-slate-100">
                   {currentJD}
                 </h2>
-                <p className="text-xs text-slate-500">Current Analysis</p>
+                <p className="text-xs text-muted-foreground dark:text-slate-500">
+                  Current Analysis
+                </p>
               </div>
             </>
           ) : (
             <div className="min-w-0">
-              <h2 className="text-sm font-medium text-slate-500">
+              <h2 className="text-sm font-medium text-muted-foreground dark:text-slate-500">
                 No JD Selected
               </h2>
-              <p className="text-xs text-slate-600">Upload or paste a JD</p>
+              <p className="text-xs text-muted-foreground/80 dark:text-slate-600">
+                Upload or paste a JD
+              </p>
             </div>
           )}
         </div>
@@ -89,7 +93,7 @@ export function Header({
 
           <Separator
             orientation="vertical"
-            className="hidden h-6 bg-slate-700 sm:block"
+            className="hidden h-6 bg-border dark:bg-slate-700 sm:block"
           />
 
           <Tooltip>
@@ -103,7 +107,7 @@ export function Header({
                     "rounded-lg px-4 py-2 text-sm font-semibold shadow-lg",
                     hasJDUploaded
                       ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-cyan-500/30 hover:brightness-110 hover:shadow-cyan-500/50"
-                      : "bg-slate-800/50 text-slate-600 shadow-none",
+                      : "bg-muted text-muted-foreground shadow-none dark:bg-slate-800/50 dark:text-slate-600",
                   )}
                 >
                   <ExternalLink className="h-4 w-4" />
@@ -114,8 +118,8 @@ export function Header({
             {!hasJDUploaded && (
               <TooltipContent
                 sideOffset={6}
-                className="bg-slate-800 text-slate-200"
-                arrowClassName="bg-slate-800 fill-slate-800"
+                className="bg-popover text-popover-foreground dark:bg-slate-800 dark:text-slate-200"
+                arrowClassName="bg-popover fill-popover dark:bg-slate-800 dark:fill-slate-800"
               >
                 Upload a JD to enable detailed analysis
               </TooltipContent>

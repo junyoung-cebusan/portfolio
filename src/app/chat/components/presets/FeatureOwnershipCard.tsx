@@ -64,12 +64,16 @@ export function FeatureOwnershipCard({ data }: FeatureOwnershipCardProps) {
           data?.summary ??
           "End-to-end lifecycle ownership and cross-functional delivery."
         }
-        action={<GradientBadge tone="emerald">{data?.fitLabel ?? "Strong Fit"}</GradientBadge>}
+        action={
+          <GradientBadge tone="emerald">
+            {data?.fitLabel ?? "Strong Fit"}
+          </GradientBadge>
+        }
       />
 
       <div className="p-6">
-        <CareerPanel className="mb-6 border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 p-4">
-          <p className="text-sm leading-relaxed text-slate-300">
+        <CareerPanel tone="emerald" variant="soft" className="mb-6 p-4">
+          <p className="text-sm leading-relaxed text-foreground dark:text-slate-300">
             <ToneText tone="emerald" className="font-semibold">
               {data?.fitLabel ?? "Strong alignment"}
             </ToneText>{" "}
@@ -83,38 +87,49 @@ export function FeatureOwnershipCard({ data }: FeatureOwnershipCardProps) {
             const AreaIcon = areaIcons[index % areaIcons.length];
 
             return (
-            <CareerPanel
-              key={area.title}
-              tone="emerald"
-              interactive
-              className="bg-slate-800/50 p-5"
-            >
-              <div className="mb-3 flex items-start gap-4">
-                <GradientIcon
-                  icon={AreaIcon}
-                  tone="emerald"
-                  className="h-12 w-12"
-                />
-                <div className="flex-1">
-                  <h4 className="mb-1 text-base font-semibold text-slate-100">
-                    {area.title}
-                  </h4>
-                  <p className="text-sm text-slate-400">{area.description}</p>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-emerald-400">
-                    {area.alignment}%
+              <CareerPanel
+                key={area.title}
+                tone="emerald"
+                variant="elevated"
+                interactive
+                className="p-5"
+              >
+                <div className="mb-3 flex items-start gap-4">
+                  <GradientIcon
+                    icon={AreaIcon}
+                    tone="emerald"
+                    className="h-12 w-12"
+                  />
+                  <div className="flex-1">
+                    <h4 className="mb-1 text-base font-semibold text-foreground dark:text-slate-100">
+                      {area.title}
+                    </h4>
+                    <p className="text-sm text-muted-foreground dark:text-slate-400">
+                      {area.description}
+                    </p>
                   </div>
-                  <div className="text-xs text-slate-500">Alignment</div>
+                  <div className="text-right">
+                    <ToneText tone="emerald" className="text-2xl font-bold">
+                      {area.alignment}%
+                    </ToneText>
+                    <div className="text-xs text-muted-foreground dark:text-slate-500">
+                      Alignment
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <ProgressMeter value={area.alignment} tone="emerald" className="mb-3" />
+                <ProgressMeter
+                  value={area.alignment}
+                  tone="emerald"
+                  className="mb-3"
+                />
 
-              <InfoBlock label="Evidence">
-                <p className="mt-1 text-sm text-slate-300">{area.evidence}</p>
-              </InfoBlock>
-            </CareerPanel>
+                <InfoBlock label="Evidence">
+                  <p className="mt-1 text-sm text-foreground dark:text-slate-300">
+                    {area.evidence}
+                  </p>
+                </InfoBlock>
+              </CareerPanel>
             );
           })}
         </div>

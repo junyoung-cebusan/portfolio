@@ -60,20 +60,20 @@ export function CustomEdge({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="group h-6 w-6 rounded-full border-2 border-slate-700 bg-slate-800 p-0 shadow-lg transition-all hover:scale-125 hover:border-cyan-500 hover:bg-slate-700 hover:shadow-cyan-500/50"
+                  className="group h-6 w-6 rounded-full border-2 border-slate-300 bg-white p-0 shadow-lg transition-all hover:scale-125 hover:border-cyan-500 hover:bg-cyan-50 hover:shadow-cyan-500/30 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:hover:shadow-cyan-500/50"
                   style={{
                     borderColor: style?.stroke || "#64748b",
                   }}
                 >
                   <Link2
-                    className="h-3 w-3 text-slate-400 transition-colors group-hover:text-cyan-400"
+                    className="h-3 w-3 text-slate-600 transition-colors group-hover:text-cyan-600 dark:text-slate-400 dark:group-hover:text-cyan-400"
                     strokeWidth={2.5}
                   />
                 </Button>
               </TooltipTrigger>
               <TooltipContent
-                className="max-w-xs rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-sm leading-relaxed text-slate-200 shadow-2xl"
-                arrowClassName="bg-slate-800 fill-slate-800"
+                className="max-w-xs rounded-lg border border-border bg-popover px-4 py-3 text-sm leading-relaxed text-popover-foreground shadow-2xl dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                arrowClassName="bg-popover fill-popover dark:bg-slate-800 dark:fill-slate-800"
                 sideOffset={8}
               >
                 {data?.context ?? "Connection between nodes"}
