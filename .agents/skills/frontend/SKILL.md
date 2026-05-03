@@ -37,7 +37,12 @@ type ExampleCardProps = ComponentProps<"article"> & {
   description?: string;
 };
 
-export function ExampleCard({ title, description, className, ...props }: ExampleCardProps) {
+export function ExampleCard({
+  title,
+  description,
+  className,
+  ...props
+}: ExampleCardProps) {
   return (
     <article className={className} {...props}>
       <h2>{title}</h2>
@@ -48,6 +53,7 @@ export function ExampleCard({ title, description, className, ...props }: Example
 ```
 
 Prefer:
+
 - Named exports over anonymous defaults for reusable components.
 - Explicit `Props` types near the component.
 - Native element props via `ComponentProps<"button">`, `ComponentProps<"section">`, etc. when wrapping HTML.
@@ -56,6 +62,7 @@ Prefer:
 - Conditional rendering with `condition && <Element />` when the false branch renders nothing; avoid `condition ? <Element /> : null` because `null` adds no meaning.
 
 Avoid:
+
 - Large prop bags with unclear shape.
 - Hidden module-level mutable state.
 - Unnecessary `useEffect` for derived values.
@@ -68,13 +75,13 @@ Any client-side fetch or remote data access must use TanStack Query through a de
 
 Do not use `useQuery`, `useSuspenseQuery`, `useMutation`, `useQueryClient`, or raw query keys directly in UI components. Always create a dedicated feature hook, then consume that hook from the component.
 
-All query keys must be defined in `src/lib/react-query/queryUtils.ts`. Do not define query keys inside components or feature hooks. Feature hooks import key factories from `queryUtils.ts`.
+All query keys must be defined in `src/lib/react-query/query-utils.ts`. Do not define query keys inside components or feature hooks. Feature hooks import key factories from `query-utils.ts`.
 
 Use this shape for queries:
 
 ```ts
 import { useQuery } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/react-query/queryUtils";
+import { queryKeys } from "@/lib/react-query/query-utils";
 
 async function fetchProfile(userId: string) {
   const response = await fetch(`/api/profiles/${userId}`);
@@ -91,7 +98,7 @@ export function useProfileQuery(userId: string) {
 }
 ```
 
-Use this shape in `src/lib/react-query/queryUtils.ts`:
+Use this shape in `src/lib/react-query/query-utils.ts`:
 
 ```ts
 export const queryKeys = {
@@ -106,7 +113,7 @@ Use this shape for mutations:
 
 ```ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/react-query/queryUtils";
+import { queryKeys } from "@/lib/react-query/query-utils";
 
 export function useUpdateProfileMutation(userId: string) {
   const queryClient = useQueryClient();
@@ -114,15 +121,18 @@ export function useUpdateProfileMutation(userId: string) {
   return useMutation({
     mutationFn: updateProfile,
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.profile.detail(userId) });
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.profile.detail(userId),
+      });
     },
   });
 }
 ```
 
 Rules:
+
 - Any new client-side data fetching must be implemented with TanStack Query unless it is a deliberate streaming/command exception.
-- Query keys live in `src/lib/react-query/queryUtils.ts` and are imported by dedicated hooks.
+- Query keys live in `src/lib/react-query/query-utils.ts` and are imported by dedicated hooks.
 - Dedicated hooks may use `useQueryClient` for invalidation, prefetching, or cache updates, but UI components must not.
 - Components consume `useProfileQuery()` or `useUpdateProfileMutation()`, not `useQuery()` or `useQueryClient()`.
 - Keep fetchers small, typed, and outside React components.
@@ -134,11 +144,13 @@ Rules:
 Use Zustand only when data must be stored as client UI/application state across components and TanStack Query is not the right owner.
 
 Good Zustand use cases:
+
 - UI preferences and controls: selected tab, sidebar state, filters, draft wizard state, local layout settings.
 - Cross-component ephemeral state that does not belong in the URL and is not remote server data.
 - Optimistic local workflow state that needs to outlive one component.
 
 Avoid Zustand for:
+
 - Data fetched from APIs that TanStack Query can cache.
 - Values that can be derived from props, URL params, query results, or component state.
 - Secrets or server-only data.
@@ -160,6 +172,7 @@ export const useCareerChatStore = create<CareerChatState>((set) => ({
 ```
 
 Rules:
+
 - Keep stores focused by feature, not global catch-all stores.
 - Export selectors or small hooks when the same selection is reused.
 - Store the minimum state needed; derive everything else in selectors/components.
@@ -184,6 +197,7 @@ export async function POST(req: Request) {
 ```
 
 For Route Handlers:
+
 - Check required env vars before provider calls.
 - Never expose secret values in responses or client code.
 - Validate JSON and search params at runtime.
@@ -198,17 +212,19 @@ Use this shape for new actions:
 ```ts
 "use server";
 
-type ActionResult =
-  | { ok: true }
-  | { ok: false; error: string };
+type ActionResult = { ok: true } | { ok: false; error: string };
 
-export async function saveThing(_prevState: ActionResult, formData: FormData): Promise<ActionResult> {
+export async function saveThing(
+  _prevState: ActionResult,
+  formData: FormData,
+): Promise<ActionResult> {
   // validate formData before mutation
   return { ok: true };
 }
 ```
 
 For Server Actions:
+
 - Keep actions in server-only files.
 - Validate and normalize `FormData`/input before mutation.
 - Return serializable results.
@@ -220,6 +236,7 @@ For Server Actions:
 An agent-friendly component is optimized for future automated edits: its behavior is explicit, its boundaries are small, and an agent can modify one concern without rereading the whole feature.
 
 File-splitting rule:
+
 - Keep tiny, component-specific helpers in the same component file when they only clarify local rendering or event flow.
 - Move pure data transforms, array updates, API-shape mappers, formatters, validators, and behavior-heavy helpers into a nearby `utils` file when they are reusable, testable without React, or make the component harder to scan.
 - Move shared types into a feature-level `types.ts` when more than one file imports them.
@@ -227,6 +244,7 @@ File-splitting rule:
 - Avoid one large generic `utils.ts`; use specific files such as `messageUtils.ts`, `chatMappers.ts`, or `dateFormatters.ts`.
 
 Best pattern:
+
 - One primary responsibility per file. Split `Container`, repeated item components, and pure helpers when a component grows past a quick scan.
 - Clear server/client boundary. Keep data loading and secrets in Server Components/actions/routes; keep interaction-only state in Client Components.
 - Typed props are the public contract. Use narrow names, required fields for required UI, optional fields only when the fallback is obvious.

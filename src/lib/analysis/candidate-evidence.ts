@@ -65,6 +65,10 @@ async function getCVContent(language: PromptLanguage) {
 
 export async function getCandidateEvidenceForText(text: string) {
   const language = getTextLanguage(text);
+  return getCandidateEvidenceForLanguage(language);
+}
+
+export async function getCandidateEvidenceForLanguage(language: PromptLanguage) {
   const candidateEvidence = await getCVContent(language);
 
   return [

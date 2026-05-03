@@ -3,12 +3,15 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Network, TextSelect } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/button";
 import { AppHeader, CareerShell } from "@/components/career-ui";
 import { HeaderDisplayTools } from "@/components/header-display-tools";
+import { LocaleToggle } from "@/components/locale-toggle";
 import { Switch } from "@/components/switch";
 import { cn } from "@/lib/shadcn/utils";
+import { useAppLocale } from "@/lib/i18n/use-app-locale";
 
 import {
   getEmptyDetailJDSnapshot,
@@ -25,6 +28,8 @@ import { useDetailAnalysisQuery } from "../hooks/useDetailAnalysisQuery";
 import { useClientHydration } from "@/app/chat/hooks/useClientHydration";
 
 export function DetailExperience() {
+  const t = useTranslations("common");
+  const { locale } = useAppLocale();
   const [isGraphView, setIsGraphView] = useState(false);
   const storedSnapshot = useClientHydration(
     subscribeToDetailStorage,
@@ -35,7 +40,7 @@ export function DetailExperience() {
     () => parseDetailJDSnapshot(storedSnapshot) ?? getEmptyDetailJDSnapshot(),
     [storedSnapshot],
   );
-  const textAnalysisQuery = useDetailAnalysisQuery(snapshot.jdText);
+  const textAnalysisQuery = useDetailAnalysisQuery(snapshot.jdText, locale);
   const results = textAnalysisQuery.data ?? [];
   const isInitialAnalysisLoading =
     textAnalysisQuery.isLoading && !textAnalysisQuery.data;
@@ -51,13 +56,15 @@ export function DetailExperience() {
           >
             <Link href="/chat">
               <ArrowLeft className="h-5 w-5" />
-              <span className="hidden font-medium sm:inline">Back to Chat</span>
+              <span className="hidden font-medium sm:inline">
+                {t("backToChat")}
+              </span>
             </Link>
           </Button>
 
           <div
             className="flex items-center gap-3 rounded-lg border border-border bg-card/80 px-3 py-2 shadow-sm dark:border-slate-800 dark:bg-slate-900/70 dark:shadow-none"
-            aria-label="Detail view mode"
+            aria-label={t("detailViewMode")}
           >
             <TextSelect
               className={cn(
@@ -75,13 +82,13 @@ export function DetailExperience() {
                   : "text-emerald-700 dark:text-emerald-400",
               )}
             >
-              Text
+              {t("text")}
             </span>
             <Switch
               variant="viewMode"
               checked={isGraphView}
               onCheckedChange={setIsGraphView}
-              aria-label="Toggle graph view"
+              aria-label={t("detailViewMode")}
               className="h-6 w-11"
             />
             <span
@@ -92,7 +99,7 @@ export function DetailExperience() {
                   : "text-muted-foreground dark:text-slate-500",
               )}
             >
-              Graph
+              {t("graph")}
             </span>
             <Network
               className={cn(
@@ -104,18 +111,25 @@ export function DetailExperience() {
             />
           </div>
 
-          <HeaderDisplayTools />
+          <div className="flex items-center gap-3">
+            <LocaleToggle />
+            <HeaderDisplayTools />
+          </div>
         </div>
       </AppHeader>
 
       <main className="mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col px-4 py-8 sm:px-6">
         <div className="mx-auto mb-6 w-full max-w-4xl shrink-0">
           <p className="text-xs font-medium uppercase text-muted-foreground dark:text-slate-500">
-            Current JD
+            {t("currentJd")}
           </p>
           <div className="mt-1 flex items-center justify-between gap-4">
             <h1 className="truncate text-xl font-semibold text-foreground dark:text-slate-100">
-              {snapshot.title}
+              {snapshot.title === "No Job Description"
+                ? t("noJobDescription")
+                : snapshot.title === "Current Job Description"
+                  ? t("currentJobDescription")
+                  : snapshot.title}
             </h1>
           </div>
         </div>

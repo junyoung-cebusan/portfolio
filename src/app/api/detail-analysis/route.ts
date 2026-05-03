@@ -15,10 +15,10 @@ import {
   buildDetailAnalysisPrompt,
   buildDetailAnalysisSystemPrompt,
   detailAnalysisSchema,
-  getTextLanguage,
   type RawDetailAnalysisResult,
 } from "@/lib/analysis/prompts";
-import { getCandidateEvidenceForText } from "@/lib/analysis/candidate-evidence";
+import { getCandidateEvidenceForLanguage } from "@/lib/analysis/candidate-evidence";
+import { defaultLocale, type Locale } from "@/lib/i18n/messages";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -109,13 +109,14 @@ function extractJSONObject(text: string) {
   return trimmed.slice(start, end + 1);
 }
 
-async function runDetailAnalysis(jdText: string) {
+async function runDetailAnalysis(jdText: string, locale: Locale) {
   if (!hasLLMConfig()) {
     throw new Error("Missing detail analysis provider configuration.");
   }
 
-  const responseLanguage = getTextLanguage(jdText);
-  const candidateEvidence = await getCandidateEvidenceForText(jdText);
+  const responseLanguage = locale;
+  const candidateEvidence =
+    await getCandidateEvidenceForLanguage(responseLanguage);
   const content = await collectChatCompletionText({
     messages: [
       {
@@ -150,8 +151,9 @@ async function runDetailAnalysis(jdText: string) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { jdText } = detailAnalysisRequestSchema.parse(body);
-    const analysisResults = await runDetailAnalysis(jdText);
+    const { jdText, locale = defaultLocale } =
+      detailAnalysisRequestSchema.parse(body);
+    const analysisResults = await runDetailAnalysis(jdText, locale);
 
     return Response.json({
       analysis_results: analysisResults,

@@ -1,4 +1,5 @@
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import {
   AnalysisCard,
@@ -38,19 +39,21 @@ type DomainTransferCardProps = {
 };
 
 export function DomainTransferCard({ data }: DomainTransferCardProps) {
+  const tCategory = useTranslations("analysis.categories.domainTransfer");
+  const tPreset = useTranslations("analysis.presets");
   const mappings = data?.mappings?.length ? data.mappings : defaultMappings;
 
   return (
     <AnalysisCard tone="purple">
       <AnalysisCardHeader
-        title="Domain Transfer"
+        title={tCategory("title")}
         description={
           data?.summary ??
-          "Gap-aware transfer analysis with practical ramp-up proof."
+          tCategory("description")
         }
         action={
           <GradientBadge tone="purple">
-            {data?.matchLabel ?? "Direct Match"}
+            {data?.matchLabel ?? tPreset("directMatch")}
           </GradientBadge>
         }
       />
@@ -70,7 +73,7 @@ export function DomainTransferCard({ data }: DomainTransferCardProps) {
               <div className="flex-1">
                 <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-700 dark:text-purple-400">
                   <CheckCircle2 className="h-3 w-3" />
-                  {mapping.strength}% Alignment
+                  {tPreset("alignment", { score: String(mapping.strength) })}
                 </div>
                 <h4 className="mb-1 text-sm font-semibold text-foreground dark:text-slate-200">
                   {mapping.pastProject}
@@ -84,14 +87,14 @@ export function DomainTransferCard({ data }: DomainTransferCardProps) {
               <div className="h-px flex-1 bg-border dark:bg-slate-700" />
             </div>
 
-            <InfoBlock label="JD Requirement" className="mb-3">
+            <InfoBlock label={tPreset("jdRequirement")} className="mb-3">
               <p className="text-sm font-medium text-cyan-700 dark:text-cyan-400">
                 {mapping.jdRequirement}
               </p>
             </InfoBlock>
 
             <InfoBlock
-              label="Correlation Proof"
+              label={tPreset("correlationProof")}
               labelTone="emerald"
               tone="emerald"
               variant="tinted"

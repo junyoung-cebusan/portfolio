@@ -1,11 +1,13 @@
 import { type ChangeEvent, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import {
   createDetailJDSnapshot,
   saveDetailJDSnapshot,
 } from "@/app/detail/[id]/utils/detailSessionStorage";
 import { EmptyHero } from "@/components/career-ui";
+import { useAppLocale } from "@/lib/i18n/use-app-locale";
 import type { JDMatchAnalysis } from "@/lib/llm/jd-match-schema";
 import type { PresetId } from "@/lib/llm/preset-analysis-schema";
 
@@ -38,6 +40,9 @@ function getSessionTitle(title: string, messages: Message[]) {
 }
 
 export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
+  const tCommon = useTranslations("common");
+  const tChat = useTranslations("chat");
+  const { locale } = useAppLocale();
   const [input, setInput] = useState("");
   const [presetsOpen, setPresetsOpen] = useState(false);
   const [jdFile, setJdFile] = useState<File | null>(null);
@@ -64,11 +69,11 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
   const hasPerformedAnalysis = session.hasPerformedAnalysis;
   const hasJDContext = Boolean(jdText || input.trim());
   const guidanceTitle = hasJDContext
-    ? "✨ JD Detected! Choose an analysis perspective to see your fit score."
-    : "To start, please upload a Job Description (PDF/Word) or paste the JD text below.";
+    ? tChat("guidanceDetected")
+    : tChat("guidanceStart");
   const guidanceHint = hasJDContext
-    ? "Analysis Tools are active. Click a card for structured scoring, or press send for natural chat."
-    : "Once a JD is detected, the Analysis Tools below will be activated.";
+    ? tChat("hintActive")
+    : tChat("hintInactive");
 
   const tryParseAnalysis = (rawContent: string) => {
     try {
@@ -90,7 +95,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
       return {
         ...currentSession,
         title: getSessionTitle(currentSession.title, nextMessages),
-        timestamp: "Just now",
+        timestamp: tCommon("justNow"),
         messages: nextMessages,
       };
     });
@@ -102,7 +107,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
     onSessionChange((currentSession) => ({
       ...currentSession,
       title,
-      timestamp: "Just now",
+      timestamp: tCommon("justNow"),
       jdTitle: title,
       jdText: nextJDText,
     }));
@@ -117,7 +122,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
       ...nextMessages,
       createMessage(
         "assistant",
-        "JD detected! Which perspective should I analyze first?",
+        tChat("quickActionQuestion"),
         undefined,
         "quick-actions",
       ),
@@ -139,12 +144,12 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
 
     const nextJDText = jdFile ? jdText : jdText || trimmedInput;
     if (!jdFile && !jdText) {
-      updateJDContext(trimmedInput, "Pasted Job Description");
+      updateJDContext(trimmedInput, tCommon("pastedJobDescription"));
     }
     saveDetailJDSnapshot(
       createDetailJDSnapshot(
         nextJDText,
-        session.jdTitle ?? "Pasted Job Description",
+        session.jdTitle ?? tCommon("pastedJobDescription"),
       ),
     );
 
@@ -166,6 +171,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
         mode: "chat",
         jdText: nextJDText,
         file: jdFile ?? undefined,
+        locale,
         message: trimmedInput,
         onChunk: (content) => {
           updateSessionMessages((currentMessages) =>
@@ -178,8 +184,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
         updateMessageContent(
           currentMessages,
           assistantMessage.id,
-          assistantContent ||
-            "I could not generate a response. Please try again.",
+          assistantContent || tChat("responseFallback"),
         ),
       );
     } catch (error) {
@@ -187,7 +192,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Sorry, I could not reach the AI service. Please try again in a moment.";
+          : tChat("aiServiceError");
       updateSessionMessages((currentMessages) =>
         updateMessageContent(
           currentMessages,
@@ -201,11 +206,13 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
   const showInvalidUploadMessage = (fileName?: string) => {
     const uploadMessage = createMessage(
       "user",
-      fileName ? `Uploaded: ${fileName}` : "Uploaded unsupported file",
+      fileName
+        ? tCommon("uploadedFile", { fileName })
+        : tCommon("unsupportedFileUpload"),
     );
     const errorMessage = createMessage(
       "assistant",
-      "Sorry, I can only read PDF or .docx files.",
+      tChat("invalidFile"),
     );
 
     updateSessionMessages((currentMessages) => [
@@ -226,8 +233,11 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
 
     setIsReadingDocument(true);
     setJdFile(file);
-    const uploadMessage = createMessage("user", `Uploaded: ${file.name}`);
-    const readingMessage = createMessage("assistant", "Reading uploaded JD...");
+    const uploadMessage = createMessage(
+      "user",
+      tCommon("uploadedFile", { fileName: file.name }),
+    );
+    const readingMessage = createMessage("assistant", tChat("readingJd"));
 
     updateSessionMessages((currentMessages) => [
       ...currentMessages,
@@ -247,7 +257,10 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
           updateMessageContent(
             currentMessages,
             readingMessage.id,
-            `JD ready: extracted ${document.text.length.toLocaleString()} characters from ${file.name}.`,
+            tChat("jdReady", {
+              count: document.text.length.toLocaleString(locale),
+              fileName: file.name,
+            }),
           ),
         ),
       );
@@ -258,7 +271,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Sorry, I could not read that document. Please upload a PDF or .docx file.";
+          : tChat("readDocumentError");
 
       updateSessionMessages((currentMessages) =>
         updateMessageContent(currentMessages, readingMessage.id, errorMessage),
@@ -290,12 +303,12 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
     if ((!jdFile && !activeJDText) || isBusy) return;
 
     if (!jdFile && !jdText) {
-      updateJDContext(activeJDText, "Pasted Job Description");
+      updateJDContext(activeJDText, tCommon("pastedJobDescription"));
     }
     saveDetailJDSnapshot(
       createDetailJDSnapshot(
         activeJDText,
-        session.jdTitle ?? "Pasted Job Description",
+        session.jdTitle ?? tCommon("pastedJobDescription"),
       ),
     );
 
@@ -310,7 +323,10 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
       "analysis",
       presetId,
     );
-    const userMessage = createMessage("user", `Analyze: ${preset}`);
+    const userMessage = createMessage(
+      "user",
+      tChat("analyzePrefix", { preset }),
+    );
 
     setActiveAnalysisMessageId(assistantMessage.id);
     updateSessionMessages((currentMessages) => [
@@ -327,6 +343,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
         mode: "analyze",
         jdText: activeJDText,
         file: jdFile ?? undefined,
+        locale,
         preset: presetId,
         onChunk: (nextContent) => {
           const analysis = tryParseAnalysis(nextContent);
@@ -359,7 +376,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Sorry, I could not generate the structured analysis. Please try again in a moment.";
+          : tChat("structuredAnalysisError");
       updateSessionMessages((currentMessages) =>
         updateMessageContent(
           currentMessages,
@@ -382,8 +399,8 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
         {messages.length === 0 ? (
           <EmptyHero
             icon={Sparkles}
-            title="AI Career Agent"
-            description="AI-powered portfolio-to-role fit analysis for Junyoung Hwang."
+            title={tCommon("aiCareerAgent")}
+            description={tChat("heroDescription")}
             className="h-auto min-h-full justify-start py-8 sm:justify-center"
           >
             <div className="mb-5 text-center">
@@ -394,9 +411,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
                 {guidanceHint}
               </p>
               <p className="mx-auto mt-4 max-w-2xl rounded-md border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm leading-6 text-cyan-700 shadow-sm shadow-cyan-950/10 dark:text-cyan-100 dark:shadow-cyan-950/20">
-                Built as Junyoung Hwang&apos;s portfolio assistant. For your
-                privacy, all resumes and JDs are processed securely within your
-                browser session and are never saved to our servers.
+                {tChat("privacy")}
               </p>
             </div>
             <PresetButtons

@@ -1,4 +1,5 @@
 import { CheckCircle2, Circle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   RadarChart,
   PolarGrid,
@@ -58,6 +59,8 @@ function normalizeRadarData(data: TechAlignmentAnalysis["radarData"]) {
 }
 
 export function TechAlignmentCard({ data }: TechAlignmentCardProps) {
+  const tCategory = useTranslations("analysis.categories.techAlignment");
+  const tPreset = useTranslations("analysis.presets");
   const radarData = normalizeRadarData(
     data?.radarData?.length ? data.radarData : defaultRadarData,
   );
@@ -66,14 +69,14 @@ export function TechAlignmentCard({ data }: TechAlignmentCardProps) {
   return (
     <AnalysisCard tone="cyan">
       <AnalysisCardHeader
-        title="Tech Alignment"
+        title={tCategory("title")}
         description={
           data?.summary ??
-          "Direct JD-to-CV stack overlap with architecture impact proof."
+          tCategory("description")
         }
         action={
           <GradientBadge tone="emerald">
-            {data?.matchScore ?? "--"}% Match
+            {tPreset("match", { score: String(data?.matchScore ?? "--") })}
           </GradientBadge>
         }
       />
@@ -81,7 +84,7 @@ export function TechAlignmentCard({ data }: TechAlignmentCardProps) {
       <div className="p-6">
         <InfoBlock className="mb-6 p-6">
           <h4 className="mb-4 text-sm font-semibold text-foreground dark:text-slate-300">
-            Skills Comparison
+            {tPreset("skillsComparison")}
           </h4>
           <div className="h-[420px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -104,7 +107,7 @@ export function TechAlignmentCard({ data }: TechAlignmentCardProps) {
                   tickCount={6}
                 />
                 <Radar
-                  name="You"
+                  name={tPreset("actual")}
                   dataKey="yourLevel"
                   stroke="#06b6d4"
                   fill="#06b6d4"
@@ -112,7 +115,7 @@ export function TechAlignmentCard({ data }: TechAlignmentCardProps) {
                   strokeWidth={2}
                 />
                 <Radar
-                  name="Required"
+                  name={tPreset("jdRequirement")}
                   dataKey="required"
                   stroke="#10b981"
                   fill="#10b981"
@@ -123,14 +126,14 @@ export function TechAlignmentCard({ data }: TechAlignmentCardProps) {
             </ResponsiveContainer>
           </div>
           <div className="mt-4 flex justify-center gap-6 text-xs">
-            <LegendItem tone="cyan" label="Your Level" />
-            <LegendItem tone="emerald" label="Required Level" />
+            <LegendItem tone="cyan" label={tPreset("actual")} />
+            <LegendItem tone="emerald" label={tPreset("jdRequirement")} />
           </div>
         </InfoBlock>
 
         <InfoBlock className="p-6">
           <h4 className="mb-4 text-sm font-semibold text-foreground dark:text-slate-300">
-            Ready-to-Go Tech Stack
+            {tPreset("readyTechStack")}
           </h4>
           <div className="space-y-2">
             {techStack.map((tech) => (

@@ -16,6 +16,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/button";
 import { CareerPanel, GradientIcon } from "@/components/career-ui";
@@ -69,6 +70,7 @@ export function MessageInput({
   isDraggingFile,
   canDropFile,
 }: MessageInputProps) {
+  const t = useTranslations("input");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasOverflow, setHasOverflow] = useState(false);
@@ -125,9 +127,11 @@ export function MessageInput({
               onClick={() => setIsExpanded((current) => !current)}
               className="absolute right-3 top-3 z-10 h-8 w-8 rounded-lg bg-background/80 text-muted-foreground shadow-lg hover:bg-accent hover:text-cyan-500 dark:bg-slate-950/80 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-cyan-300"
               aria-label={
-                isExpanded ? "Collapse message input" : "Enlarge message input"
+                isExpanded
+                  ? t("collapseMessageInput")
+                  : t("enlargeMessageInput")
               }
-              title={isExpanded ? "Collapse" : "Enlarge"}
+              title={isExpanded ? t("collapse") : t("enlarge")}
             >
               <ExpandIcon className="h-4 w-4" />
             </Button>
@@ -139,7 +143,7 @@ export function MessageInput({
             onChange={(event) => onChange(event.target.value)}
             onKeyDown={handleKeyDown}
             disabled={disabled}
-            placeholder="Paste a JD or ask about your career fit..."
+            placeholder={t("placeholder")}
             className={cn(
               "w-full resize-none bg-transparent px-3 py-2 text-sm leading-5 text-foreground outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-60 dark:text-slate-100 dark:placeholder:text-slate-500",
               showExpandButton && "pr-12",
@@ -171,11 +175,11 @@ export function MessageInput({
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-foreground dark:text-slate-50">
-                    {canDropFile ? "Drop file to upload" : "Upload in progress"}
+                    {canDropFile ? t("dropFileToUpload") : t("uploadInProgress")}
                   </p>
                   <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground dark:text-slate-300">
                     <FileText className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-300" />
-                    PDF or DOCX only
+                    {t("pdfOrDocxOnly")}
                   </p>
                 </div>
               </div>
@@ -198,8 +202,8 @@ export function MessageInput({
                 onClick={() => fileInputRef.current?.click()}
                 disabled={disabled}
                 className="h-9 w-9 rounded-lg text-muted-foreground hover:bg-accent hover:text-cyan-500 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-cyan-400"
-                title="Upload JD"
-                aria-label="Upload JD"
+                title={t("uploadJd")}
+                aria-label={t("uploadJd")}
               >
                 <Paperclip className="h-4 w-4" />
               </Button>
@@ -212,8 +216,8 @@ export function MessageInput({
                     size="icon"
                     disabled={disabled}
                     className="h-9 w-9 rounded-lg text-amber-400 hover:bg-amber-500/10 hover:text-amber-300"
-                    title="Analysis Tools"
-                    aria-label="Open analysis tools"
+                    title={t("analysisTools")}
+                    aria-label={t("openAnalysisTools")}
                   >
                     <Sparkles className="h-4 w-4" />
                   </Button>
@@ -229,7 +233,7 @@ export function MessageInput({
                       className="h-7 w-7 shadow-none"
                     />
                     <h3 className="font-semibold text-foreground dark:text-slate-100">
-                      Quick Actions
+                      {t("quickActions")}
                     </h3>
                   </div>
                   <PresetButtons
@@ -245,7 +249,7 @@ export function MessageInput({
               onClick={onSend}
               disabled={!canSend || disabled}
               className="h-10 w-10 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 p-0 text-white shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 disabled:shadow-none"
-              aria-label={disabled ? "Sending message" : "Send message"}
+              aria-label={disabled ? t("sendingMessage") : t("sendMessage")}
             >
               <Send className="h-4 w-4" />
             </Button>

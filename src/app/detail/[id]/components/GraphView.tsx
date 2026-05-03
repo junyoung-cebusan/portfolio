@@ -1,6 +1,7 @@
 "use client";
 
 import { type CSSProperties, useEffect, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import {
   ReactFlow,
   Controls,
@@ -20,6 +21,8 @@ import {
   analysisCategoryMeta,
   candidateGraphNodes,
   type AnalysisResult,
+  type CandidateGraphNodeLabelKey,
+  type DetailAnalysisTranslationKey,
 } from "../utils/detailAnalysisConfig";
 import CustomEdge from "./CustomEdge";
 import { CustomBackground } from "./CustomBackground";
@@ -57,7 +60,17 @@ function getNodeStyle(
   };
 }
 
-function buildGraph(results: AnalysisResult[]) {
+type TranslationLookup = {
+  categoryTitle: (key: DetailAnalysisTranslationKey) => string;
+  graphNodeLabel: (
+    key: CandidateGraphNodeLabelKey | "jdRequirements",
+  ) => string;
+};
+
+function buildGraph(
+  results: AnalysisResult[],
+  translations: TranslationLookup,
+) {
   const requirementNodes: Node<GraphNodeData>[] = results.map(
     (result, index) => {
       const meta = analysisCategoryMeta[result.category];
@@ -79,7 +92,7 @@ function buildGraph(results: AnalysisResult[]) {
 
       return {
         id: node.id,
-        data: { label: node.label },
+        data: { label: translations.graphNodeLabel(node.labelKey) },
         position: {
           x: 90 + (index % 4) * 230,
           y: 560 + Math.floor(index / 4) * 110,
@@ -92,7 +105,7 @@ function buildGraph(results: AnalysisResult[]) {
   const nodes: Node<GraphNodeData>[] = [
     {
       id: "jd_requirements",
-      data: { label: "JD Requirements" },
+      data: { label: translations.graphNodeLabel("jdRequirements") },
       position: { x: 400, y: 30 },
       style: getNodeStyle("#0ea5e9", true),
     },
@@ -108,14 +121,14 @@ function buildGraph(results: AnalysisResult[]) {
       source: "jd_requirements",
       target: result.id,
       type: "custom",
-      animated: true,
+      // animated: true,
       style: {
         stroke: meta.color,
         strokeWidth: 1 + result.graph_data.strength / 32,
       },
       markerEnd: { type: MarkerType.ArrowClosed, color: meta.color },
       data: {
-        context: `${meta.title} (${result.graph_data.strength}%): ${result.insight}`,
+        context: `${translations.categoryTitle(meta.translationKey)} (${result.graph_data.strength}%): ${result.insight}`,
       },
     };
   });
@@ -128,9 +141,7 @@ function buildGraph(results: AnalysisResult[]) {
       source: result.id,
       target: connection,
       type: "custom",
-      animated:
-        result.category === "Risk" ||
-        result.category === "Velocity & Pipeline Acceleration",
+      animated: result.category === "Risk",
       style: {
         stroke: meta.color,
         strokeWidth: 1 + result.graph_data.strength / 40,
@@ -147,7 +158,19 @@ function buildGraph(results: AnalysisResult[]) {
 }
 
 export function GraphView({ results = analysisResults }: GraphViewProps) {
-  const initialGraph = useMemo(() => buildGraph(results), [results]);
+  const tDetail = useTranslations("detail");
+  const tCategories = useTranslations("analysis.categories");
+  const initialGraph = useMemo(
+    () =>
+      buildGraph(results, {
+        categoryTitle: (key) => tCategories(`${key}.title`),
+        graphNodeLabel: (key) =>
+          key === "jdRequirements"
+            ? tDetail("jdRequirements")
+            : tDetail(`graphNodes.${key}`),
+      }),
+    [results, tCategories, tDetail],
+  );
   const [nodes, setNodes, onNodesChange] = useNodesState(initialGraph.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialGraph.edges);
 
@@ -168,15 +191,19 @@ export function GraphView({ results = analysisResults }: GraphViewProps) {
       <div className="mb-4 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <h2 className="text-xl font-bold text-foreground dark:text-slate-100">
-            Correlation Network
+            {tDetail("correlationNetwork")}
           </h2>
           <p className="text-sm text-muted-foreground dark:text-slate-400">
-            Interactive skill ecosystem visualization
+            {tDetail("graphDescription")}
           </p>
         </div>
         <div className="flex flex-wrap gap-3 text-xs">
           {Object.entries(analysisCategoryMeta).map(([category, meta]) => (
-            <LegendItem key={category} tone={meta.tone} label={meta.label} />
+            <LegendItem
+              key={category}
+              tone={meta.tone}
+              label={tCategories(`${meta.translationKey}.label`)}
+            />
           ))}
         </div>
       </div>

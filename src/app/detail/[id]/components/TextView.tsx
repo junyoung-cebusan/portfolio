@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ReactElement } from "react";
+import { useTranslations } from "next-intl";
 
 import {
   CareerPanel,
@@ -108,6 +109,8 @@ export function TextView({
   results = analysisResults,
   className,
 }: TextViewProps) {
+  const tDetail = useTranslations("detail");
+  const tCategories = useTranslations("analysis.categories");
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const hasHighlights = results.length > 0;
 
@@ -127,6 +130,7 @@ export function TextView({
 
       const meta = analysisCategoryMeta[result.category];
       const Icon = meta.icon;
+      const categoryTitle = tCategories(`${meta.translationKey}.title`);
 
       parts.push(
         <Popover
@@ -154,17 +158,19 @@ export function TextView({
             <div className="mb-3 flex items-start justify-between gap-3">
               <div className="flex items-center gap-2">
                 <Icon className={cn("h-5 w-5", iconColor[meta.tone])} />
-                <h4 className="font-semibold text-slate-100">{meta.title}</h4>
+                <h4 className="font-semibold text-slate-100">
+                  {categoryTitle}
+                </h4>
               </div>
               <StatusPill tone={meta.tone}>{result.badge}</StatusPill>
             </div>
 
-            <InfoBlock label="AI Insight">
+            <InfoBlock label={tDetail("aiInsight")}>
               <p className="text-sm text-slate-300">{result.insight}</p>
             </InfoBlock>
 
             <InfoBlock
-              label="Correlation Proof"
+              label={tDetail("correlationProof")}
               labelTone={meta.tone}
               className="mt-3"
             >
@@ -199,12 +205,12 @@ export function TextView({
     >
       <div className="flex shrink-0 flex-col items-start justify-between gap-2 pb-2 sm:flex-row sm:gap-4">
         <h2 className="text-2xl font-bold text-foreground dark:text-slate-100">
-          JD Analysis
+          {tDetail("jdAnalysis")}
         </h2>
         <div className="flex flex-wrap gap-2">
           {Object.entries(analysisCategoryMeta).map(([category, meta]) => (
             <StatusPill key={category} tone={meta.tone}>
-              {meta.label}
+              {tCategories(`${meta.translationKey}.label`)}
             </StatusPill>
           ))}
         </div>
@@ -219,8 +225,8 @@ export function TextView({
           <LegendItem
             label={
               hasHighlights
-                ? "Click highlighted keywords for analysis"
-                : "No exact JD keyword matches found for detail analysis"
+                ? tDetail("clickHighlights")
+                : tDetail("noHighlights")
             }
             shape="dot"
           />

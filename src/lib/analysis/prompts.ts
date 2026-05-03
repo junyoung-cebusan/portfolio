@@ -5,6 +5,7 @@ import {
   presetAnalysisSchemas,
   type PresetId,
 } from "@/lib/llm/preset-analysis-schema";
+import { messages } from "@/lib/i18n/messages";
 
 export type PromptLanguage = "en" | "ja";
 
@@ -71,6 +72,7 @@ function getLanguageAlignmentInstruction(language: PromptLanguage) {
       "JDから抜き出す keyword など、原文一致が要求される値は翻訳しないこと。",
       "JSON schemaで固定されたenum、id、category、statusなどの値は、許可された値をそのまま使うこと。",
       "英語の定型ラベルを使わず、日本語UIとして自然な短い表現にすること。",
+      messages.ja.prompt.glossary,
     ].join("\n");
   }
 
@@ -78,6 +80,7 @@ function getLanguageAlignmentInstruction(language: PromptLanguage) {
     "Output language: English.",
     "Write every user-facing natural-language string in English.",
     "Keep exact JD keywords verbatim when exact extraction is required.",
+    messages.en.prompt.glossary,
   ].join("\n");
 }
 

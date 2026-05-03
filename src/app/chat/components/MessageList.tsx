@@ -1,4 +1,5 @@
 import { Bot, User } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { CareerPanel, GradientIcon } from "@/components/career-ui";
 
@@ -33,6 +34,7 @@ function AnalysisResult({
   message: Message;
   isLoading: boolean;
 }) {
+  const t = useTranslations("analysis.generic");
   const analysis = message.analysis;
   const genericAnalysis =
     analysis && "overallMatchScore" in analysis ? analysis : undefined;
@@ -81,24 +83,26 @@ function AnalysisResult({
     <CareerPanel variant="elevated" className="space-y-4 rounded-lg p-4">
       <div className="grid gap-3 sm:grid-cols-[120px_1fr]">
         <div className="rounded-lg border border-cyan-500/20 bg-cyan-500/10 p-3">
-          <p className="text-xs text-cyan-700 dark:text-cyan-200">Fit Score</p>
+          <p className="text-xs text-cyan-700 dark:text-cyan-200">
+            {t("fitScore")}
+          </p>
           <p className="mt-1 text-3xl font-bold text-cyan-800 dark:text-cyan-100">
             {genericAnalysis?.overallMatchScore ?? "--"}
           </p>
         </div>
         <div>
           <p className="text-xs font-medium uppercase text-muted-foreground dark:text-slate-500">
-            Summary
+            {t("summary")}
           </p>
           <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-foreground dark:text-slate-200">
-            {genericAnalysis?.summary ?? (message.content || "Analyzing...")}
+            {genericAnalysis?.summary ?? (message.content || t("analyzing"))}
           </p>
         </div>
       </div>
 
       <div>
         <p className="text-xs font-medium uppercase text-muted-foreground dark:text-slate-500">
-          Matched Skills
+          {t("matchedSkills")}
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
           {matchedSkills.length ? (
@@ -112,7 +116,7 @@ function AnalysisResult({
             ))
           ) : (
             <span className="text-xs text-muted-foreground dark:text-slate-500">
-              Analyzing...
+              {t("analyzing")}
             </span>
           )}
         </div>
@@ -120,7 +124,7 @@ function AnalysisResult({
 
       <div>
         <p className="text-xs font-medium uppercase text-muted-foreground dark:text-slate-500">
-          Missing Skills
+          {t("missingSkills")}
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
           {missingSkills.length ? (
@@ -134,7 +138,7 @@ function AnalysisResult({
             ))
           ) : (
             <span className="text-xs text-muted-foreground dark:text-slate-500">
-              No gaps detected yet.
+              {t("noGapsDetected")}
             </span>
           )}
         </div>
@@ -149,6 +153,8 @@ export function MessageList({
   loadingAnalysisMessageId,
   onPresetClick,
 }: MessageListProps) {
+  const tCommon = useTranslations("common");
+
   const renderPresetContent = (presetType: string) => {
     switch (presetType) {
       case "tech-alignment":
@@ -179,7 +185,7 @@ export function MessageList({
           <div className="flex-1">
             <div className="mb-1 flex items-center gap-2">
               <span className="text-sm font-semibold text-foreground dark:text-slate-100">
-                {message.role === "user" ? "You" : "AI Agent"}
+                {message.role === "user" ? tCommon("you") : tCommon("aiAgent")}
               </span>
               <span className="text-xs text-muted-foreground dark:text-slate-500">
                 {message.timestamp}

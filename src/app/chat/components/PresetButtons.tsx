@@ -1,4 +1,5 @@
 import { Code, Briefcase, Target, Zap } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { CareerPanel, GradientIcon } from "@/components/career-ui";
 import { Button } from "@/components/button";
@@ -14,35 +15,36 @@ const presets = [
   {
     id: "tech-alignment" satisfies PresetId,
     icon: Code,
-    label: "Tech Alignment",
-    description: "Direct JD-to-CV stack overlap with architecture impact proof.",
+    labelKey: "techAlignment.title",
+    descriptionKey: "techAlignment.description",
     tone: "cyan",
   },
   {
     id: "domain-transfer" satisfies PresetId,
     icon: Briefcase,
-    label: "Domain Transfer",
-    description: "Gap-aware transfer analysis with practical ramp-up proof.",
+    labelKey: "domainTransfer.title",
+    descriptionKey: "domainTransfer.description",
     tone: "purple",
   },
   {
     id: "ro-synergy" satisfies PresetId,
     icon: Target,
-    label: "Feature Ownership",
-    description: "End-to-end lifecycle ownership and cross-functional delivery.",
+    labelKey: "featureOwnership.title",
+    descriptionKey: "featureOwnership.description",
     tone: "emerald",
   },
   {
     id: "velocity" satisfies PresetId,
     icon: Zap,
-    label: "Velocity",
-    description:
-      "Capacity margin and SDLC pipeline acceleration analysis.",
+    labelKey: "velocity.title",
+    descriptionKey: "velocity.description",
     tone: "amber",
   },
 ] as const;
 
 export function PresetButtons({ onPresetClick, disabled }: PresetButtonsProps) {
+  const t = useTranslations("analysis.categories");
+
   return (
     <div
       className={cn(
@@ -63,7 +65,7 @@ export function PresetButtons({ onPresetClick, disabled }: PresetButtonsProps) {
             type="button"
             variant="ghost"
             disabled={disabled}
-            onClick={() => onPresetClick?.(preset.label, preset.id)}
+            onClick={() => onPresetClick?.(t(preset.labelKey), preset.id)}
             className="relative h-auto w-full justify-start whitespace-normal rounded-xl p-4 text-left hover:bg-transparent"
           >
             <span className="block min-w-0">
@@ -73,10 +75,10 @@ export function PresetButtons({ onPresetClick, disabled }: PresetButtonsProps) {
                 className="mb-3"
               />
               <span className="mb-1 block text-wrap text-sm font-semibold leading-5 text-foreground dark:text-slate-100">
-                {preset.label}
+                {t(preset.labelKey)}
               </span>
               <span className="block text-wrap text-xs leading-5 text-muted-foreground dark:text-slate-400">
-                {preset.description}
+                {t(preset.descriptionKey)}
               </span>
             </span>
           </Button>

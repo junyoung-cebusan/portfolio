@@ -8,8 +8,8 @@ const chatKeys = {
 
 const detailKeys = {
   all: ["detail"] as const,
-  analysis: (jdText: string) =>
-    [...detailKeys.all, "analysis", jdText] as const,
+  analysis: (jdText: string, locale: string) =>
+    [...detailKeys.all, "analysis", locale, jdText] as const,
 };
 
 export const queryKeys = {

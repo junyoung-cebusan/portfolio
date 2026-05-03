@@ -8,6 +8,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import {
   AnalysisCard,
@@ -103,6 +104,7 @@ type PipelineStep = {
 };
 
 type BarConfig = ReturnType<typeof calculateBarConfig>;
+type PresetTranslator = ReturnType<typeof useTranslations>;
 
 function calculateBarConfig(jdRequired: number, candidateActual: number) {
   const maxScale = Math.max(jdRequired, candidateActual, 1);
@@ -126,28 +128,46 @@ function calculateBarConfig(jdRequired: number, candidateActual: number) {
   };
 }
 
-function getCapacityStatus(row: CapacityRow, config: BarConfig) {
+function getCapacityStatus(
+  row: CapacityRow,
+  config: BarConfig,
+  t: PresetTranslator,
+) {
   if (row.rationale) {
     return row.rationale;
   }
 
   if (config.bothZero) {
-    return `No comparable ${row.unit.toLowerCase()} requirement provided`;
+    return t("noComparableRequirement", {
+      unit: row.unit.toLowerCase(),
+    });
   }
 
   if (config.exactMatch) {
-    return `Exact Match: ${row.candidate_actual} ${row.unit}`;
+    return t("exactMatch", {
+      actual: String(row.candidate_actual),
+      unit: row.unit,
+    });
   }
 
   if (config.jdIsZero) {
-    return `No explicit JD baseline / candidate has ${row.candidate_actual} ${row.unit}`;
+    return t("noExplicitBaseline", {
+      actual: String(row.candidate_actual),
+      unit: row.unit,
+    });
   }
 
   if (config.delta >= 0) {
-    return `+${config.delta.toFixed(1)} ${row.unit} Efficiency Surplus`;
+    return t("efficiencySurplus", {
+      delta: config.delta.toFixed(1),
+      unit: row.unit,
+    });
   }
 
-  return `${Math.abs(config.delta).toFixed(1)} ${row.unit} Learning Gap`;
+  return t("learningGap", {
+    delta: Math.abs(config.delta).toFixed(1),
+    unit: row.unit,
+  });
 }
 
 function getCapacityTone(config: BarConfig) {
@@ -198,25 +218,28 @@ function SectionTitle({
   );
 }
 
-function CapacityLegend({ row }: { row: CapacityRow }) {
+function CapacityLegend({
+  row,
+  t,
+}: {
+  row: CapacityRow;
+  t: PresetTranslator;
+}) {
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
       <div className="flex items-center gap-1.5">
         <div className="h-2.5 w-2.5 rounded-sm bg-slate-300 ring-1 ring-slate-400 dark:bg-slate-700 dark:ring-slate-600" />
         <span className="text-muted-foreground dark:text-slate-500">
-          JD:{" "}
-          <span className="font-semibold text-slate-600 dark:text-slate-400">
-            {row.jd_required} {row.unit}
-          </span>
+          {t("jdLegend", { required: String(row.jd_required), unit: row.unit })}
         </span>
       </div>
       <div className="flex items-center gap-1.5">
         <div className="h-2.5 w-2.5 rounded-sm bg-gradient-to-r from-cyan-500 to-blue-600 shadow-sm shadow-cyan-500/50" />
         <span className="font-bold text-cyan-700 dark:text-cyan-400">
-          Actual:{" "}
-          <span className="text-cyan-700 dark:text-cyan-300">
-            {row.candidate_actual} {row.unit}
-          </span>
+          {t("actualLegend", {
+            actual: String(row.candidate_actual),
+            unit: row.unit,
+          })}
         </span>
       </div>
     </div>
@@ -226,14 +249,16 @@ function CapacityLegend({ row }: { row: CapacityRow }) {
 function CapacityBar({
   config,
   status,
+  t,
 }: {
   config: BarConfig;
   status: string;
+  t: PresetTranslator;
 }) {
   if (config.bothZero) {
     return (
       <div className="flex h-full items-center justify-center text-xs font-medium text-muted-foreground dark:text-slate-500">
-        No comparable data
+        {t("noComparableData")}
       </div>
     );
   }
@@ -254,7 +279,7 @@ function CapacityBar({
       >
         {config.jdPercent > 18 && (
           <div className="flex h-full items-center justify-center px-3 text-xs font-medium text-slate-700 dark:text-slate-300">
-            JD Requirement
+            {t("jdRequirementLabel")}
           </div>
         )}
       </div>
@@ -269,7 +294,7 @@ function CapacityBar({
       >
         {config.actualPercent > 18 && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2 whitespace-nowrap text-xs font-bold text-white drop-shadow-lg">
-            Actual
+            {t("actual")}
           </div>
         )}
       </div>
@@ -277,17 +302,23 @@ function CapacityBar({
   );
 }
 
-function CapacityComparison({ rows }: { rows: CapacityRow[] }) {
+function CapacityComparison({
+  rows,
+  t,
+}: {
+  rows: CapacityRow[];
+  t: PresetTranslator;
+}) {
   return (
     <InfoBlock className="p-6">
-      <SectionTitle title="Requirement vs. Capacity" />
+      <SectionTitle title={t("requirementVsCapacity")} />
       <div className="space-y-6">
         {rows.map((row) => {
           const config = calculateBarConfig(
             row.jd_required,
             row.candidate_actual,
           );
-          const status = getCapacityStatus(row, config);
+          const status = getCapacityStatus(row, config, t);
 
           return (
             <div
@@ -297,11 +328,11 @@ function CapacityComparison({ rows }: { rows: CapacityRow[] }) {
                 <span className="text-sm font-medium text-foreground dark:text-slate-300">
                   {row.label}
                 </span>
-                <CapacityLegend row={row} />
+                <CapacityLegend row={row} t={t} />
               </div>
 
               <div className="relative h-12 overflow-hidden rounded-lg bg-slate-100 ring-1 ring-slate-300 dark:bg-slate-800/80 dark:ring-slate-700">
-                <CapacityBar config={config} status={status} />
+                <CapacityBar config={config} status={status} t={t} />
               </div>
 
               <p
@@ -321,10 +352,16 @@ function CapacityComparison({ rows }: { rows: CapacityRow[] }) {
   );
 }
 
-function Pipeline({ steps }: { steps: PipelineStep[] }) {
+function Pipeline({
+  steps,
+  t,
+}: {
+  steps: PipelineStep[];
+  t: PresetTranslator;
+}) {
   return (
     <InfoBlock className="p-6">
-      <SectionTitle title="Accelerated JD Workflow (SDLC)" />
+      <SectionTitle title={t("acceleratedWorkflow")} />
       <div className="relative space-y-4">
         <div className="absolute bottom-8 left-6 top-8 w-px bg-gradient-to-b from-cyan-500/60 via-slate-300 to-emerald-500/50 dark:via-slate-600" />
         {steps.map((step) => (
@@ -351,7 +388,7 @@ function Pipeline({ steps }: { steps: PipelineStep[] }) {
                 )}
               </div>
 
-              <InfoBlock label="JD Context" className="mb-3">
+              <InfoBlock label={t("jdContext")} className="mb-3">
                 <p className="text-sm text-muted-foreground dark:text-slate-400">
                   {step.jdContext}
                 </p>
@@ -361,7 +398,9 @@ function Pipeline({ steps }: { steps: PipelineStep[] }) {
                 <div className="mb-1 flex items-center gap-2">
                   <Rocket className="h-4 w-4 text-cyan-700 dark:text-cyan-400" />
                   <p className="text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-400">
-                    Velocity Accelerator: {step.accelerator}
+                    {t("velocityAccelerator", {
+                      accelerator: step.accelerator,
+                    })}
                   </p>
                 </div>
                 <p className="text-sm font-medium leading-relaxed text-foreground dark:text-slate-200">
@@ -379,13 +418,15 @@ function Pipeline({ steps }: { steps: PipelineStep[] }) {
 function VelocityMultipliers({
   multipliers,
   note,
+  t,
 }: {
   multipliers: string[];
   note?: string;
+  t: PresetTranslator;
 }) {
   return (
     <InfoBlock className="p-6">
-      <SectionTitle icon={Sparkles} title="Key Velocity Multipliers" />
+      <SectionTitle icon={Sparkles} title={t("keyVelocityMultipliers")} />
       <div className="grid gap-2 sm:grid-cols-2">
         {multipliers.map((multiplier, index) => (
           <CareerPanel
@@ -400,25 +441,15 @@ function VelocityMultipliers({
         ))}
       </div>
       <p className="mt-4 text-xs leading-relaxed text-muted-foreground dark:text-slate-400">
-        {note ?? (
-          <>
-            These factors indicate a{" "}
-            <span className="font-semibold text-cyan-700 dark:text-cyan-400">
-              fast onboarding process
-            </span>{" "}
-            and{" "}
-            <span className="font-semibold text-cyan-700 dark:text-cyan-400">
-              high throughput
-            </span>
-            , reducing management overhead and dependency delays.
-          </>
-        )}
+        {note ?? t("velocityNote")}
       </p>
     </InfoBlock>
   );
 }
 
 export function VelocityCard({ data }: VelocityCardProps) {
+  const tCategory = useTranslations("analysis.categories.velocity");
+  const tPreset = useTranslations("analysis.presets");
   const capacityRows = data?.widget1_capacity?.length
     ? data.widget1_capacity
     : requirementBars;
@@ -430,24 +461,25 @@ export function VelocityCard({ data }: VelocityCardProps) {
   return (
     <AnalysisCard tone="cyan">
       <AnalysisCardHeader
-        title={"Velocity"}
+        title={tCategory("title")}
         description={
           data?.workflowSummary ??
-          "Capacity margin and SDLC pipeline acceleration analysis."
+          tCategory("description")
         }
         action={
           <GradientBadge tone="cyan" icon={Zap}>
-            {data?.velocityLabel ?? "High Velocity"}
+            {data?.velocityLabel ?? tPreset("highVelocity")}
           </GradientBadge>
         }
       />
 
       <div className="space-y-6 p-6">
-        <CapacityComparison rows={capacityRows} />
-        <Pipeline steps={mappedPipelineSteps} />
+        <CapacityComparison rows={capacityRows} t={tPreset} />
+        <Pipeline steps={mappedPipelineSteps} t={tPreset} />
         <VelocityMultipliers
           multipliers={multipliers}
           note={data?.overallSynergyNote}
+          t={tPreset}
         />
       </div>
     </AnalysisCard>

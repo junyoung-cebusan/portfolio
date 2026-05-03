@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/react-query/queryUtils";
+import { queryKeys } from "@/lib/react-query/query-utils";
 import type { ChatApiMessage } from "../types";
 
 type SendChatMessageInput = {

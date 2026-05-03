@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { CareerShell } from "@/components/career-ui";
 import {
@@ -48,6 +49,7 @@ function toChatPageState(
 }
 
 export default function ChatPage() {
+  const tCommon = useTranslations("common");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const isStorageReady = useClientHydration();
   const storedStateSnapshot = useClientHydration(
@@ -165,7 +167,7 @@ export default function ChatPage() {
           />
         ) : (
           <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground dark:text-slate-500">
-            Create a new analysis to start.
+            {tCommon("createNewAnalysisToStart")}
           </div>
         )}
       </div>

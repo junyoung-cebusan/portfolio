@@ -1,4 +1,5 @@
 import { Target, Users, Calendar, TrendingUp } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import {
   AnalysisCard,
@@ -54,19 +55,21 @@ type FeatureOwnershipCardProps = {
 };
 
 export function FeatureOwnershipCard({ data }: FeatureOwnershipCardProps) {
+  const tCategory = useTranslations("analysis.categories.featureOwnership");
+  const tPreset = useTranslations("analysis.presets");
   const roAreas = data?.areas?.length ? data.areas : defaultROAreas;
 
   return (
     <AnalysisCard tone="emerald">
       <AnalysisCardHeader
-        title="Feature Ownership"
+        title={tCategory("title")}
         description={
           data?.summary ??
-          "End-to-end lifecycle ownership and cross-functional delivery."
+          tCategory("description")
         }
         action={
           <GradientBadge tone="emerald">
-            {data?.fitLabel ?? "Strong Fit"}
+            {data?.fitLabel ?? tPreset("strongFit")}
           </GradientBadge>
         }
       />
@@ -75,10 +78,9 @@ export function FeatureOwnershipCard({ data }: FeatureOwnershipCardProps) {
         <CareerPanel tone="emerald" variant="soft" className="mb-6 p-4">
           <p className="text-sm leading-relaxed text-foreground dark:text-slate-300">
             <ToneText tone="emerald" className="font-semibold">
-              {data?.fitLabel ?? "Strong alignment"}
+              {data?.fitLabel ?? tPreset("strongAlignment")}
             </ToneText>{" "}
-            {data?.summary ??
-              "for senior roles requiring independent decision-making. Your experience matches self-directed leadership and cross-functional coordination."}
+            {data?.summary ?? tPreset("defaultOwnershipSummary")}
           </p>
         </CareerPanel>
 
@@ -113,7 +115,7 @@ export function FeatureOwnershipCard({ data }: FeatureOwnershipCardProps) {
                       {area.alignment}%
                     </ToneText>
                     <div className="text-xs text-muted-foreground dark:text-slate-500">
-                      Alignment
+                      {tPreset("alignmentLabel")}
                     </div>
                   </div>
                 </div>
@@ -124,7 +126,7 @@ export function FeatureOwnershipCard({ data }: FeatureOwnershipCardProps) {
                   className="mb-3"
                 />
 
-                <InfoBlock label="Evidence">
+                <InfoBlock label={tPreset("evidence")}>
                   <p className="mt-1 text-sm text-foreground dark:text-slate-300">
                     {area.evidence}
                   </p>

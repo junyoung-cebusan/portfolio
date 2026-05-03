@@ -28,7 +28,8 @@ import {
   getAnalyzeJSONSchemaInstruction,
   getTextLanguage,
 } from "@/lib/analysis/prompts";
-import { getCandidateEvidenceForText } from "@/lib/analysis/candidate-evidence";
+import { getCandidateEvidenceForLanguage } from "@/lib/analysis/candidate-evidence";
+import { defaultLocale, isLocale, type Locale } from "@/lib/i18n/messages";
 
 export const runtime = "nodejs";
 export const maxDuration = 180;
@@ -89,6 +90,7 @@ async function getJDTextFromRequest(
     const message =
       typeof body.message === "string" ? body.message.trim() : undefined;
     const mode = body.mode === "chat" ? "chat" : "analyze";
+    const locale = isLocale(body.locale) ? body.locale : defaultLocale;
 
     if (mode === "analyze" && (typeof jdText !== "string" || !jdText.trim())) {
       return {
@@ -104,6 +106,7 @@ async function getJDTextFromRequest(
       jdText: typeof jdText === "string" ? jdText.trim() : "",
       message,
       preset: isPresetId(body.preset) ? body.preset : undefined,
+      locale,
     };
   }
 
@@ -124,6 +127,8 @@ async function getJDTextFromRequest(
   const messageValue = formData.get("message");
   const presetValue = formData.get("preset");
   const fallbackJDText = formData.get("jdText");
+  const localeValue = formData.get("locale");
+  const locale = isLocale(localeValue) ? localeValue : defaultLocale;
 
   if (!(file instanceof File) && typeof fallbackJDText !== "string") {
     return {
@@ -162,6 +167,7 @@ async function getJDTextFromRequest(
     jdText,
     message: typeof messageValue === "string" ? messageValue.trim() : undefined,
     preset: isPresetId(presetValue) ? presetValue : undefined,
+    locale,
   };
 }
 
@@ -310,11 +316,13 @@ async function streamLocalText(
   options?: {
     message?: string;
     mode?: "chat" | "text-only";
+    locale?: Locale;
   },
 ) {
   const languageSource = jdText || options?.message || "";
-  const responseLanguage = getTextLanguage(languageSource);
-  const candidateEvidence = await getCandidateEvidenceForText(languageSource);
+  const responseLanguage = options?.locale ?? getTextLanguage(languageSource);
+  const candidateEvidence =
+    await getCandidateEvidenceForLanguage(responseLanguage);
 
   return createTextStreamResponse(
     streamChatCompletionText({
@@ -355,10 +363,15 @@ async function streamLocalText(
   );
 }
 
-async function getStructuredAnalysisJSON(jdText: string, preset?: PresetId) {
+async function getStructuredAnalysisJSON(
+  jdText: string,
+  preset?: PresetId,
+  locale: Locale = defaultLocale,
+) {
   try {
-    const responseLanguage = getTextLanguage(jdText);
-    const candidateEvidence = await getCandidateEvidenceForText(jdText);
+    const responseLanguage = locale;
+    const candidateEvidence =
+      await getCandidateEvidenceForLanguage(responseLanguage);
     const content = await collectChatCompletionText({
       messages: [
         {
@@ -398,8 +411,12 @@ async function getStructuredAnalysisJSON(jdText: string, preset?: PresetId) {
   }
 }
 
-async function streamLocalStructured(jdText: string, preset?: PresetId) {
-  const content = await getStructuredAnalysisJSON(jdText, preset);
+async function streamLocalStructured(
+  jdText: string,
+  preset?: PresetId,
+  locale: Locale = defaultLocale,
+) {
+  const content = await getStructuredAnalysisJSON(jdText, preset, locale);
 
   return createTextStreamResponse(
     (async function* streamValidatedStructuredJSON() {
@@ -457,8 +474,13 @@ export async function POST(req: Request) {
     return await streamLocalText(requestInput.jdText, {
       message: requestInput.message,
       mode: "chat",
+      locale: requestInput.locale,
     });
   }
 
-  return await streamLocalStructured(requestInput.jdText, requestInput.preset);
+  return await streamLocalStructured(
+    requestInput.jdText,
+    requestInput.preset,
+    requestInput.locale,
+  );
 }

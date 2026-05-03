@@ -2,10 +2,12 @@
 
 import { ExternalLink, FileText, Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/button";
 import { AppHeader, IconTile } from "@/components/career-ui";
 import { HeaderDisplayTools } from "@/components/header-display-tools";
+import { LocaleToggle } from "@/components/locale-toggle";
 import { Separator } from "@/components/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip";
 import { cn } from "@/lib/shadcn/utils";
@@ -24,6 +26,7 @@ export function Header({
   onToggleSidebar,
 }: HeaderProps) {
   const router = useRouter();
+  const t = useTranslations("common");
 
   const handleViewDetail = () => {
     if (hasJDUploaded) {
@@ -44,7 +47,9 @@ export function Header({
                   size="icon"
                   onClick={onToggleSidebar}
                   className="shrink-0 rounded-lg bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:bg-slate-800/50 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-slate-100 lg:hidden"
-                  aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
+                  aria-label={
+                    isSidebarOpen ? t("closeSidebar") : t("openSidebar")
+                  }
                   aria-expanded={isSidebarOpen}
                 >
                   {isSidebarOpen ? (
@@ -59,7 +64,7 @@ export function Header({
                 className="bg-popover text-popover-foreground dark:bg-slate-800 dark:text-slate-200"
                 arrowClassName="bg-popover fill-popover dark:bg-slate-800 dark:fill-slate-800"
               >
-                {isSidebarOpen ? "Close sidebar" : "Open sidebar"}
+                {isSidebarOpen ? t("closeSidebar") : t("openSidebar")}
               </TooltipContent>
             </Tooltip>
           )}
@@ -72,23 +77,24 @@ export function Header({
                   {currentJD}
                 </h2>
                 <p className="text-xs text-muted-foreground dark:text-slate-500">
-                  Current Analysis
+                  {t("currentAnalysis")}
                 </p>
               </div>
             </>
           ) : (
             <div className="min-w-0">
               <h2 className="text-sm font-medium text-muted-foreground dark:text-slate-500">
-                No JD Selected
+                {t("noJdSelected")}
               </h2>
               <p className="text-xs text-muted-foreground/80 dark:text-slate-600">
-                Upload or paste a JD
+                {t("uploadOrPasteJd")}
               </p>
             </div>
           )}
         </div>
 
         <div className="flex shrink-0 items-center gap-3">
+          <LocaleToggle />
           <HeaderDisplayTools />
 
           <Separator
@@ -111,7 +117,7 @@ export function Header({
                   )}
                 >
                   <ExternalLink className="h-4 w-4" />
-                  <span className="hidden sm:inline">View Detail</span>
+                  <span className="hidden sm:inline">{t("viewDetail")}</span>
                 </Button>
               </span>
             </TooltipTrigger>
@@ -121,7 +127,7 @@ export function Header({
                 className="bg-popover text-popover-foreground dark:bg-slate-800 dark:text-slate-200"
                 arrowClassName="bg-popover fill-popover dark:bg-slate-800 dark:fill-slate-800"
               >
-                Upload a JD to enable detailed analysis
+                {t("uploadJdToEnableDetail")}
               </TooltipContent>
             )}
           </Tooltip>

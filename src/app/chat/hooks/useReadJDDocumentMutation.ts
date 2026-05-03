@@ -2,7 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 
 import { readDocument } from "@/lib/api/generated";
 import type { ApiError, ReadDocumentResponse } from "@/lib/api/generated";
-import { queryKeys } from "@/lib/react-query/queryUtils";
+import { messages } from "@/lib/i18n/messages";
+import { queryKeys } from "@/lib/react-query/query-utils";
 
 function getUploadError(error: unknown) {
   if (typeof error === "object" && error !== null && "error" in error) {
@@ -12,7 +13,7 @@ function getUploadError(error: unknown) {
 
   if (error instanceof Error) return error.message;
 
-  return "Failed to read the uploaded document.";
+  return messages.ja.errors.failedToReadDocument;
 }
 
 async function readJDDocument(file: File): Promise<ReadDocumentResponse> {
