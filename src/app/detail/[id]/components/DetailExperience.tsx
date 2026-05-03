@@ -18,7 +18,9 @@ import {
   subscribeToDetailStorage,
 } from "../utils/detailSessionStorage";
 import { GraphView } from "./GraphView";
+import GraphViewSkeleton from "./GraphViewSkeleton";
 import { TextView } from "./TextView";
+import { TextViewSkeleton } from "./TextViewSkeleton";
 import { useDetailAnalysisQuery } from "../hooks/useDetailAnalysisQuery";
 
 export function DetailExperience() {
@@ -34,6 +36,8 @@ export function DetailExperience() {
   );
   const textAnalysisQuery = useDetailAnalysisQuery(snapshot.jdText);
   const results = textAnalysisQuery.data ?? [];
+  const isInitialAnalysisLoading =
+    textAnalysisQuery.isLoading && !textAnalysisQuery.data;
 
   return (
     <CareerShell className="flex h-dvh flex-col overflow-hidden">
@@ -112,22 +116,25 @@ export function DetailExperience() {
             <h1 className="truncate text-xl font-semibold text-foreground dark:text-slate-100">
               {snapshot.title}
             </h1>
-            <span className="shrink-0 text-xs text-muted-foreground dark:text-slate-500">
-              {textAnalysisQuery.isFetching
-                ? "Running text analysis..."
-                : "Analysis ready"}
-            </span>
           </div>
         </div>
 
         <div className="flex min-h-0 flex-1 transition-all duration-300 ease-out">
           {isGraphView ? (
             <section className="flex min-h-0 flex-1 animate-in fade-in duration-300">
-              <GraphView results={results} />
+              {isInitialAnalysisLoading ? (
+                <GraphViewSkeleton />
+              ) : (
+                <GraphView results={results} />
+              )}
             </section>
           ) : (
             <section className="flex min-h-0 flex-1 animate-in fade-in duration-300">
-              <TextView jdText={snapshot.jdText} results={results} />
+              {isInitialAnalysisLoading ? (
+                <TextViewSkeleton />
+              ) : (
+                <TextView jdText={snapshot.jdText} results={results} />
+              )}
             </section>
           )}
         </div>

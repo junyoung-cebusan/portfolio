@@ -4,11 +4,9 @@ import { type CSSProperties, useEffect, useMemo } from "react";
 import {
   ReactFlow,
   Controls,
-  Background,
   useNodesState,
   useEdgesState,
   MarkerType,
-  BackgroundVariant,
   type Edge,
   type EdgeTypes,
   type Node,
@@ -24,6 +22,7 @@ import {
   type AnalysisResult,
 } from "../utils/detailAnalysisConfig";
 import CustomEdge from "./CustomEdge";
+import { CustomBackground } from "./CustomBackground";
 
 type GraphViewProps = {
   results?: AnalysisResult[];
@@ -191,12 +190,7 @@ export function GraphView({ results = analysisResults }: GraphViewProps) {
           onEdgesChange={onEdgesChange}
           fitView
         >
-          <Background
-            variant={BackgroundVariant.Dots}
-            gap={16}
-            size={1}
-            color="var(--graph-dot-color, #94a3b8)"
-          />
+          <CustomBackground />
           <Controls
             className="rounded-lg border border-slate-300 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900"
             style={graphControlsStyle}

@@ -405,6 +405,18 @@ export function InfoBlock({
   );
 }
 
+export function CareerSkeleton({ className, ...props }: ComponentProps<"div">) {
+  return (
+    <div
+      className={cn(
+        "animate-pulse rounded-md bg-muted dark:bg-slate-700/70",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
 type ProgressMeterProps = ComponentProps<"div"> & {
   value: number;
   tone?: CareerTone;

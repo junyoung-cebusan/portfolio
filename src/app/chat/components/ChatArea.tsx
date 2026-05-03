@@ -297,7 +297,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
     }));
     const assistantMessage = createMessage(
       "assistant",
-      "Analyzing fit score...",
+      "analyzing",
       undefined,
       "analysis",
       presetId,
@@ -383,9 +383,9 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
                 {guidanceHint}
               </p>
               <p className="mx-auto mt-4 max-w-2xl rounded-md border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm leading-6 text-cyan-700 shadow-sm shadow-cyan-950/10 dark:text-cyan-100 dark:shadow-cyan-950/20">
-                Built as Junyoung Hwang&apos;s portfolio assistant. For your privacy,
-                all resumes and JDs are processed securely within your browser
-                session and are never saved to our servers.
+                Built as Junyoung Hwang&apos;s portfolio assistant. For your
+                privacy, all resumes and JDs are processed securely within your
+                browser session and are never saved to our servers.
               </p>
             </div>
             <PresetButtons

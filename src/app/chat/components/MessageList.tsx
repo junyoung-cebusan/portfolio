@@ -4,6 +4,7 @@ import { CareerPanel, GradientIcon } from "@/components/career-ui";
 
 import DomainTransferCard from "./presets/DomainTransferCard";
 import FeatureOwnershipCard from "./presets/FeatureOwnershipCard";
+import PresetAnalysisSkeleton from "./presets/PresetAnalysisSkeleton";
 import TechAlignmentCard from "./presets/TechAlignmentCard";
 import VelocityCard from "./presets/VelocityCard";
 import type { Message } from "../types";
@@ -31,6 +32,12 @@ function AnalysisResult({ message }: { message: Message }) {
   const matchedSkills = genericAnalysis?.matchedSkills ?? [];
   const missingSkills = genericAnalysis?.missingSkills ?? [];
   const fallbackContent = message.content.trim();
+  const isPresetAnalysisLoading =
+    Boolean(message.presetId) && !analysis && fallbackContent === "analyzing";
+
+  if (isPresetAnalysisLoading) {
+    return <PresetAnalysisSkeleton />;
+  }
 
   if (!analysis && fallbackContent) {
     return (
