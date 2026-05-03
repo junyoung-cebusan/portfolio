@@ -1,0 +1,194 @@
+import { Bot, User } from "lucide-react";
+
+import { CareerPanel, GradientIcon } from "@/components/career-ui";
+
+import DomainTransferCard from "./presets/DomainTransferCard";
+import FeatureOwnershipCard from "./presets/FeatureOwnershipCard";
+import TechAlignmentCard from "./presets/TechAlignmentCard";
+import VelocityCard from "./presets/VelocityCard";
+import type { Message } from "../types";
+import PresetButtons from "./PresetButtons";
+import type {
+  DomainTransferAnalysis,
+  PresetId,
+  ROSynergyAnalysis,
+  TechAlignmentAnalysis,
+  VelocityAnalysis,
+} from "@/lib/llm/preset-analysis-schema";
+
+export type { Message };
+
+interface MessageListProps {
+  messages: Message[];
+  canAnalyze: boolean;
+  onPresetClick: (preset: string, presetId: PresetId) => void;
+}
+
+function AnalysisResult({ message }: { message: Message }) {
+  const analysis = message.analysis;
+  const genericAnalysis =
+    analysis && "overallMatchScore" in analysis ? analysis : undefined;
+  const matchedSkills = genericAnalysis?.matchedSkills ?? [];
+  const missingSkills = genericAnalysis?.missingSkills ?? [];
+  const fallbackContent = message.content.trim();
+
+  if (!analysis && fallbackContent) {
+    return (
+      <CareerPanel className="whitespace-pre-wrap rounded-lg bg-slate-800/50 p-4 text-sm leading-6 text-slate-300">
+        {fallbackContent}
+      </CareerPanel>
+    );
+  }
+
+  switch (message.presetId) {
+    case "tech-alignment":
+      return (
+        <TechAlignmentCard data={analysis as Partial<TechAlignmentAnalysis>} />
+      );
+    case "domain-transfer":
+      return (
+        <DomainTransferCard
+          data={analysis as Partial<DomainTransferAnalysis>}
+        />
+      );
+    case "ro-synergy":
+      return (
+        <FeatureOwnershipCard data={analysis as Partial<ROSynergyAnalysis>} />
+      );
+    case "velocity":
+      return <VelocityCard data={analysis as Partial<VelocityAnalysis>} />;
+    default:
+      break;
+  }
+
+  return (
+    <CareerPanel className="space-y-4 rounded-lg bg-slate-800/50 p-4">
+      <div className="grid gap-3 sm:grid-cols-[120px_1fr]">
+        <div className="rounded-lg border border-cyan-500/20 bg-cyan-500/10 p-3">
+          <p className="text-xs text-cyan-200">Fit Score</p>
+          <p className="mt-1 text-3xl font-bold text-cyan-100">
+            {genericAnalysis?.overallMatchScore ?? "--"}
+          </p>
+        </div>
+        <div>
+          <p className="text-xs font-medium uppercase text-slate-500">
+            Summary
+          </p>
+          <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-slate-200">
+            {genericAnalysis?.summary ?? (message.content || "Analyzing...")}
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs font-medium uppercase text-slate-500">
+          Matched Skills
+        </p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {matchedSkills.length ? (
+            matchedSkills.map((skill) => (
+              <span
+                key={skill}
+                className="rounded-md bg-emerald-500/15 px-2 py-1 text-xs font-medium text-emerald-200"
+              >
+                {skill}
+              </span>
+            ))
+          ) : (
+            <span className="text-xs text-slate-500">Analyzing...</span>
+          )}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs font-medium uppercase text-slate-500">
+          Missing Skills
+        </p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {missingSkills.length ? (
+            missingSkills.map((skill) => (
+              <span
+                key={skill}
+                className="rounded-md bg-amber-500/15 px-2 py-1 text-xs font-medium text-amber-200"
+              >
+                {skill}
+              </span>
+            ))
+          ) : (
+            <span className="text-xs text-slate-500">No gaps detected yet.</span>
+          )}
+        </div>
+      </div>
+    </CareerPanel>
+  );
+}
+
+export function MessageList({
+  messages,
+  canAnalyze,
+  onPresetClick,
+}: MessageListProps) {
+  const renderPresetContent = (presetType: string) => {
+    switch (presetType) {
+      case "tech-alignment":
+        return <TechAlignmentCard />;
+      case "domain-transfer":
+        return <DomainTransferCard />;
+      case "ro-synergy":
+        return <FeatureOwnershipCard />;
+      case "velocity":
+        return <VelocityCard />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="mx-auto max-w-4xl space-y-6 px-6 py-8">
+      {messages.map((message) => (
+        <div key={message.id} className="flex gap-4">
+          {message.role === "user" ? (
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-700">
+              <User className="h-4 w-4 text-slate-300" />
+            </div>
+          ) : (
+            <GradientIcon icon={Bot} className="h-8 w-8" />
+          )}
+
+          <div className="flex-1">
+            <div className="mb-1 flex items-center gap-2">
+              <span className="text-sm font-semibold text-slate-100">
+                {message.role === "user" ? "You" : "AI Agent"}
+              </span>
+              <span className="text-xs text-slate-500">
+                {message.timestamp}
+              </span>
+            </div>
+
+            {message.kind === "quick-actions" ? (
+              <CareerPanel className="rounded-lg bg-slate-800/50 p-4">
+                <p className="mb-4 text-sm text-slate-200">
+                  {message.content}
+                </p>
+                <PresetButtons
+                  disabled={!canAnalyze}
+                  onPresetClick={onPresetClick}
+                />
+              </CareerPanel>
+            ) : message.kind === "analysis" ? (
+              <AnalysisResult message={message} />
+            ) : message.presetType ? (
+              renderPresetContent(message.presetType)
+            ) : (
+              <CareerPanel className="whitespace-pre-wrap rounded-lg bg-slate-800/50 p-4 text-sm leading-6 text-slate-300">
+                {message.content}
+              </CareerPanel>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default MessageList;

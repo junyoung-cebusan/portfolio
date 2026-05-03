@@ -1,0 +1,375 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Young Portfolio API",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/api/analyze": {
+      "post": {
+        "operationId": "analyzeJobDescription",
+        "summary": "Analyze or chat against a job description",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeJsonRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeFormRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeFormRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Streaming text or structured JSON text response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/api/chat": {
+      "post": {
+        "operationId": "createChatCompletion",
+        "summary": "Stream a chat completion",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Streaming text response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "502": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/api/detail-analysis": {
+      "post": {
+        "operationId": "createDetailAnalysis",
+        "summary": "Create detailed JD analysis data",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetailAnalysisRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Detailed analysis result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailAnalysisResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/api/read-document": {
+      "post": {
+        "operationId": "readDocument",
+        "summary": "Extract text from an uploaded JD document",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Extracted document text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadDocumentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "ApiError": {
+        "description": "API error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "ApiError": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      },
+      "AnalyzeFormRequest": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary"
+          },
+          "jdText": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/AnalyzeMode"
+          },
+          "preset": {
+            "$ref": "#/components/schemas/PresetId"
+          }
+        }
+      },
+      "AnalyzeJsonRequest": {
+        "type": "object",
+        "properties": {
+          "jdText": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/AnalyzeMode"
+          },
+          "preset": {
+            "$ref": "#/components/schemas/PresetId"
+          }
+        }
+      },
+      "AnalyzeMode": {
+        "type": "string",
+        "enum": ["analyze", "chat"]
+      },
+      "ChatMessage": {
+        "type": "object",
+        "required": ["role", "content"],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": ["system", "user", "assistant"]
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "ChatRequest": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            },
+            "minItems": 1
+          },
+          "prompt": {
+            "type": "string"
+          }
+        }
+      },
+      "DetailAnalysisRequest": {
+        "type": "object",
+        "required": ["jdText"],
+        "properties": {
+          "jdText": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "DetailAnalysisResponse": {
+        "type": "object",
+        "required": ["analysis_results"],
+        "properties": {
+          "analysis_results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailAnalysisResult"
+            }
+          }
+        }
+      },
+      "DetailAnalysisResult": {
+        "type": "object",
+        "required": [
+          "id",
+          "keyword",
+          "category",
+          "badge",
+          "insight",
+          "proof",
+          "source_range",
+          "graph_data"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "keyword": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/DetailAnalysisCategory"
+          },
+          "badge": {
+            "type": "string"
+          },
+          "insight": {
+            "type": "string"
+          },
+          "proof": {
+            "type": "string"
+          },
+          "source_range": {
+            "type": "object",
+            "required": ["start", "end"],
+            "properties": {
+              "start": {
+                "type": "number"
+              },
+              "end": {
+                "type": "number"
+              }
+            }
+          },
+          "graph_data": {
+            "type": "object",
+            "required": ["connections", "strength"],
+            "properties": {
+              "connections": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "strength": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "DetailAnalysisCategory": {
+        "type": "string",
+        "enum": [
+          "Tech Alignment",
+          "Domain Transfer",
+          "Feature Ownership",
+          "Velocity & Pipeline Acceleration",
+          "Risk"
+        ]
+      },
+      "PresetId": {
+        "type": "string",
+        "enum": [
+          "tech-alignment",
+          "domain-transfer",
+          "ro-synergy",
+          "velocity"
+        ]
+      },
+      "ReadDocumentResponse": {
+        "type": "object",
+        "required": ["title", "text"],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
