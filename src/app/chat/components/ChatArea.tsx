@@ -373,6 +373,7 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
             icon={Sparkles}
             title="AI Career Agent"
             description="AI-powered portfolio-to-role fit analysis for Junyoung Hwang."
+            className="h-auto min-h-full justify-start py-8 sm:justify-center"
           >
             <div className="mb-5 text-center">
               <p className="text-base font-semibold text-slate-100">

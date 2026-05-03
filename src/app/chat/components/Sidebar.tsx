@@ -80,12 +80,11 @@ export function Sidebar({
                     : "hover:bg-slate-800/50",
                 )}
               >
-                <Button
+                <button
                   type="button"
-                  variant="ghost"
                   onClick={() => onSelectSession(session.id)}
                   className={cn(
-                    "h-auto min-w-0 flex-1 justify-start rounded-lg px-3 py-2.5 text-left hover:bg-transparent",
+                    "flex h-auto min-w-0 flex-1 cursor-pointer items-center justify-start gap-2 rounded-lg px-3 py-2.5 text-left transition-colors",
                     session.id === activeSessionId
                       ? "text-slate-100"
                       : "text-slate-400 group-hover:text-slate-200",
@@ -100,7 +99,7 @@ export function Sidebar({
                       {session.timestamp}
                     </span>
                   </span>
-                </Button>
+                </button>
                 <Button
                   type="button"
                   variant="ghost"

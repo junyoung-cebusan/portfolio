@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { type CSSProperties, useEffect, useMemo } from "react";
 import {
   ReactFlow,
   Controls,
@@ -32,6 +32,14 @@ type GraphViewProps = {
 type GraphNodeData = {
   label: string;
 };
+
+const graphControlsStyle = {
+  "--xy-controls-button-background-color": "#f8fafc",
+  "--xy-controls-button-background-color-hover": "#cffafe",
+  "--xy-controls-button-border-color": "#94a3b8",
+  "--xy-controls-button-color": "#0f172a",
+  "--xy-controls-button-color-hover": "#020617",
+} as CSSProperties;
 
 function getNodeStyle(
   color: string,
@@ -156,8 +164,8 @@ export function GraphView({ results = analysisResults }: GraphViewProps) {
   );
 
   return (
-    <CareerPanel className="h-lvh rounded-2xl p-4">
-      <div className="mb-4 flex items-center justify-between">
+    <CareerPanel className="flex min-h-0 flex-1 flex-col rounded-2xl p-4">
+      <div className="mb-4 flex shrink-0 items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-slate-100">
             Correlation Network
@@ -167,15 +175,13 @@ export function GraphView({ results = analysisResults }: GraphViewProps) {
           </p>
         </div>
         <div className="flex gap-3 text-xs">
-          <LegendItem tone="cyan" label="Tech" />
-          <LegendItem tone="purple" label="Domain" />
-          <LegendItem tone="emerald" label="Ownership" />
-          <LegendItem tone="amber" label="Velocity" />
-          <LegendItem tone="red" label="Risk" />
+          {Object.entries(analysisCategoryMeta).map(([category, meta]) => (
+            <LegendItem key={category} tone={meta.tone} label={meta.label} />
+          ))}
         </div>
       </div>
 
-      <div className="h-[calc(100%-60px)] overflow-hidden rounded-xl">
+      <div className="min-h-0 flex-1 overflow-hidden rounded-xl">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -190,7 +196,10 @@ export function GraphView({ results = analysisResults }: GraphViewProps) {
             size={1}
             color="#334155"
           />
-          <Controls className="rounded-lg border border-slate-700 bg-slate-900" />
+          <Controls
+            className="rounded-lg border border-slate-700 bg-slate-900"
+            style={graphControlsStyle}
+          />
         </ReactFlow>
       </div>
     </CareerPanel>

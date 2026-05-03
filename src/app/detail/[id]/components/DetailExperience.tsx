@@ -6,6 +6,7 @@ import { ArrowLeft, Network, TextSelect } from "lucide-react";
 
 import { Button } from "@/components/button";
 import { AppHeader, CareerShell } from "@/components/career-ui";
+import { HeaderDisplayTools } from "@/components/header-display-tools";
 import { Switch } from "@/components/switch";
 import { cn } from "@/lib/shadcn/utils";
 
@@ -35,8 +36,8 @@ export function DetailExperience() {
   const results = textAnalysisQuery.data ?? [];
 
   return (
-    <CareerShell>
-      <AppHeader className="sticky top-0 z-50">
+    <CareerShell className="flex h-dvh flex-col overflow-hidden">
+      <AppHeader className="shrink-0">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <Button
             asChild
@@ -89,12 +90,12 @@ export function DetailExperience() {
             />
           </div>
 
-          <div className="hidden w-28 sm:block" />
+          <HeaderDisplayTools />
         </div>
       </AppHeader>
 
-      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
-        <div className="mx-auto mb-6 max-w-4xl">
+      <main className="mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col px-4 py-8 sm:px-6">
+        <div className="mx-auto mb-6 w-full max-w-4xl shrink-0">
           <p className="text-xs font-medium uppercase text-slate-500">
             Current JD
           </p>
@@ -110,13 +111,13 @@ export function DetailExperience() {
           </div>
         </div>
 
-        <div className="transition-all duration-300 ease-out">
+        <div className="flex min-h-0 flex-1 transition-all duration-300 ease-out">
           {isGraphView ? (
-            <section className="animate-in fade-in duration-300">
+            <section className="flex min-h-0 flex-1 animate-in fade-in duration-300">
               <GraphView results={results} />
             </section>
           ) : (
-            <section className="animate-in fade-in duration-300">
+            <section className="flex min-h-0 flex-1 animate-in fade-in duration-300">
               <TextView jdText={snapshot.jdText} results={results} />
             </section>
           )}

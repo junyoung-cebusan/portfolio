@@ -433,9 +433,7 @@ export function EmptyHero({
       )}
       {...props}
     >
-      <GradientIcon icon={icon} className="mb-8 h-20 w-20 rounded-2xl">
-        {null}
-      </GradientIcon>
+      <GradientIcon icon={icon} className="mb-8 h-20 w-20 rounded-2xl" />
       <h1 className="mb-3 text-3xl font-bold text-slate-100">{title}</h1>
       <p className="mb-12 max-w-md text-center text-slate-400">{description}</p>
       {children}

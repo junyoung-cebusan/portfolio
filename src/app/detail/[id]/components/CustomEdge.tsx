@@ -73,6 +73,7 @@ export function CustomEdge({
               </TooltipTrigger>
               <TooltipContent
                 className="max-w-xs rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-sm leading-relaxed text-slate-200 shadow-2xl"
+                arrowClassName="bg-slate-800 fill-slate-800"
                 sideOffset={8}
               >
                 {data?.context ?? "Connection between nodes"}

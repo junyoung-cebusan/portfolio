@@ -28,6 +28,7 @@ import {
 interface TextViewProps {
   jdText?: string;
   results?: AnalysisResult[];
+  className?: string;
 }
 
 const iconColor = {
@@ -105,6 +106,7 @@ function getHighlightRanges(
 export function TextView({
   jdText = detailJDText,
   results = analysisResults,
+  className,
 }: TextViewProps) {
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const hasHighlights = results.length > 0;
@@ -189,8 +191,13 @@ export function TextView({
   };
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <div className="flex flex-col items-start justify-between gap-2 pb-2 sm:flex-row sm:gap-4">
+    <div
+      className={cn(
+        "mx-auto flex min-h-0 w-full max-w-4xl flex-1 flex-col",
+        className,
+      )}
+    >
+      <div className="flex shrink-0 flex-col items-start justify-between gap-2 pb-2 sm:flex-row sm:gap-4">
         <h2 className="text-2xl font-bold text-slate-100">JD Analysis</h2>
         <div className="flex flex-wrap gap-2">
           {Object.entries(analysisCategoryMeta).map(([category, meta]) => (
@@ -201,11 +208,11 @@ export function TextView({
         </div>
       </div>
 
-      <CareerPanel className="rounded-2xl p-8 leading-relaxed text-slate-300">
+      <CareerPanel className="min-h-0 flex-1 overflow-y-auto rounded-2xl p-8 leading-relaxed text-slate-300">
         {renderTextWithHighlights()}
       </CareerPanel>
 
-      <CareerPanel className="mt-6 border-cyan-500/20 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 p-4">
+      <CareerPanel className="mt-6 shrink-0 border-cyan-500/20 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 p-4">
         <div className="flex items-center gap-3 text-sm text-slate-300">
           <LegendItem
             label={
