@@ -16,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/tooltip";
+import { EventHandler, MouseEventHandler, PointerEventHandler } from "react";
 
 type CustomEdgeData = {
   context?: string;
@@ -41,6 +42,10 @@ export function CustomEdge({
     targetPosition,
   });
 
+  const handleStopPropagation = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <>
       <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
@@ -52,6 +57,8 @@ export function CustomEdge({
             pointerEvents: "all",
           }}
           className="nodrag nopan"
+          onPointerDown={handleStopPropagation}
+          onClickCapture={handleStopPropagation}
         >
           <TooltipProvider delayDuration={200}>
             <Tooltip>

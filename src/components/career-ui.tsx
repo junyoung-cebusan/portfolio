@@ -86,7 +86,8 @@ const panelVariantStyles = {
   elevated:
     "border-border bg-card text-card-foreground shadow-lg shadow-slate-950/10 dark:border-slate-700 dark:bg-slate-800/50 dark:shadow-slate-950/20",
   soft: "",
-  subtle: "border-border bg-muted/50 dark:border-slate-700 dark:bg-slate-950/50",
+  subtle:
+    "border-border bg-muted/50 dark:border-slate-700 dark:bg-slate-950/50",
 } satisfies Record<string, string>;
 
 const infoBlockVariantStyles = {
@@ -202,9 +203,13 @@ export function CareerPanel({
       className={cn(
         "rounded-xl border transition-all",
         variant === "soft"
-          ? cn("bg-gradient-to-br", toneStyles[tone].soft, toneStyles[tone].border)
+          ? cn(
+              "bg-gradient-to-br",
+              toneStyles[tone].soft,
+              toneStyles[tone].border,
+            )
           : panelVariantStyles[variant],
-        "transition-all hover:bg-accent/50 hover:shadow-lg dark:hover:bg-slate-800",
+        "transition-all",
         toneStyles[tone].hoverBorder,
         className,
       )}
@@ -326,7 +331,9 @@ export function StatusPill({
       {...props}
     >
       <span className={cn("h-2 w-2 rounded-full", toneStyles[tone].bg)} />
-      <span className={variant === "solid" ? "text-white" : toneStyles[tone].text}>
+      <span
+        className={variant === "solid" ? "text-white" : toneStyles[tone].text}
+      >
         {children}
       </span>
     </div>
@@ -354,9 +361,7 @@ export function LegendItem({
           toneStyles[tone].bg,
         )}
       />
-      <span className="text-muted-foreground dark:text-slate-400">
-        {label}
-      </span>
+      <span className="text-muted-foreground dark:text-slate-400">{label}</span>
     </div>
   );
 }
