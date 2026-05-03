@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { CareerShell } from "@/components/career-ui";
 import {
@@ -9,6 +9,8 @@ import {
 } from "@/app/detail/[id]/utils/detailSessionStorage";
 
 import { ChatArea, Header, Sidebar } from "./components";
+import { ChatAreaStorageLoading } from "./components/ChatAreaStorageLoading";
+import { useClientHydration } from "./hooks/useClientHydration";
 import type { ChatSession } from "./types";
 import {
   createChatSession,
@@ -47,7 +49,8 @@ function toChatPageState(
 
 export default function ChatPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const storedStateSnapshot = useSyncExternalStore(
+  const isStorageReady = useClientHydration();
+  const storedStateSnapshot = useClientHydration(
     subscribeToChatSessionStorage,
     getChatSessionStorageSnapshot,
     getServerChatSessionStorageSnapshot,
@@ -152,7 +155,9 @@ export default function ChatPage() {
           isSidebarOpen={isSidebarOpen}
           onToggleSidebar={() => setIsSidebarOpen((isOpen) => !isOpen)}
         />
-        {activeSession ? (
+        {!isStorageReady ? (
+          <ChatAreaStorageLoading />
+        ) : activeSession ? (
           <ChatArea
             key={activeSession.id}
             session={activeSession}

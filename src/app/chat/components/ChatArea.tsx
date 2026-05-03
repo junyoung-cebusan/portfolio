@@ -46,8 +46,13 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
     string | null
   >(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const hasAnalysisMessage = session.messages.some(
+    (message) => message.kind === "analysis",
+  );
   const { scrollContainerRef, scrollToBottom } =
-    useScrollToBottom<HTMLDivElement>();
+    useScrollToBottom<HTMLDivElement>({
+      scrollOnMountWhen: hasAnalysisMessage,
+    });
   const analyzeJDMutation = useAnalyzeJDMutation(session.id);
   const readJDDocumentMutation = useReadJDDocumentMutation();
   const isSending = analyzeJDMutation.isPending;

@@ -1,10 +1,16 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 type ScrollToBottomOptions = {
   behavior?: ScrollBehavior;
 };
 
-export function useScrollToBottom<TElement extends HTMLElement>() {
+type UseScrollToBottomOptions = {
+  scrollOnMountWhen?: boolean;
+};
+
+export function useScrollToBottom<TElement extends HTMLElement>({
+  scrollOnMountWhen = false,
+}: UseScrollToBottomOptions = {}) {
   const scrollContainerRef = useRef<TElement>(null);
 
   const scrollToBottom = useCallback(
@@ -23,6 +29,12 @@ export function useScrollToBottom<TElement extends HTMLElement>() {
     },
     [],
   );
+
+  useEffect(() => {
+    if (!scrollOnMountWhen) return;
+
+    scrollToBottom({ behavior: "auto" });
+  }, [scrollOnMountWhen, scrollToBottom]);
 
   return {
     scrollContainerRef,

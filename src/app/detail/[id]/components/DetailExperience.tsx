@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Network, TextSelect } from "lucide-react";
 
@@ -22,10 +22,11 @@ import GraphViewSkeleton from "./GraphViewSkeleton";
 import { TextView } from "./TextView";
 import { TextViewSkeleton } from "./TextViewSkeleton";
 import { useDetailAnalysisQuery } from "../hooks/useDetailAnalysisQuery";
+import { useClientHydration } from "@/app/chat/hooks/useClientHydration";
 
 export function DetailExperience() {
   const [isGraphView, setIsGraphView] = useState(false);
-  const storedSnapshot = useSyncExternalStore(
+  const storedSnapshot = useClientHydration(
     subscribeToDetailStorage,
     getStoredDetailSnapshot,
     getServerDetailSnapshot,
