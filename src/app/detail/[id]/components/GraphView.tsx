@@ -164,9 +164,9 @@ export function GraphView({ results = analysisResults }: GraphViewProps) {
   );
 
   return (
-    <CareerPanel className="flex min-h-0 flex-1 flex-col rounded-2xl p-4">
-      <div className="mb-4 flex shrink-0 items-center justify-between">
-        <div>
+    <CareerPanel className="flex min-w-0 min-h-0 w-full flex-1 flex-col rounded-2xl p-4">
+      <div className="mb-4 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
           <h2 className="text-xl font-bold text-foreground dark:text-slate-100">
             Correlation Network
           </h2>
@@ -174,21 +174,23 @@ export function GraphView({ results = analysisResults }: GraphViewProps) {
             Interactive skill ecosystem visualization
           </p>
         </div>
-        <div className="flex gap-3 text-xs">
+        <div className="flex flex-wrap gap-3 text-xs">
           {Object.entries(analysisCategoryMeta).map(([category, meta]) => (
             <LegendItem key={category} tone={meta.tone} label={meta.label} />
           ))}
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-hidden rounded-xl">
+      <div className="min-w-0 min-h-0 w-full flex-1 overflow-hidden rounded-xl">
         <ReactFlow
+          className="h-full w-full"
           nodes={nodes}
           edges={edges}
           edgeTypes={edgeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           fitView
+          fitViewOptions={{ padding: 0.18 }}
         >
           <CustomBackground />
           <Controls

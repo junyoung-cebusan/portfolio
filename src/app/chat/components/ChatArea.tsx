@@ -42,6 +42,9 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
   const [presetsOpen, setPresetsOpen] = useState(false);
   const [jdFile, setJdFile] = useState<File | null>(null);
   const [isReadingDocument, setIsReadingDocument] = useState(false);
+  const [activeAnalysisMessageId, setActiveAnalysisMessageId] = useState<
+    string | null
+  >(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { scrollContainerRef, scrollToBottom } =
     useScrollToBottom<HTMLDivElement>();
@@ -297,13 +300,14 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
     }));
     const assistantMessage = createMessage(
       "assistant",
-      "analyzing",
+      "",
       undefined,
       "analysis",
       presetId,
     );
     const userMessage = createMessage("user", `Analyze: ${preset}`);
 
+    setActiveAnalysisMessageId(assistantMessage.id);
     updateSessionMessages((currentMessages) => [
       ...currentMessages,
       userMessage,
@@ -358,6 +362,8 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
           errorMessage,
         ),
       );
+    } finally {
+      setActiveAnalysisMessageId(null);
     }
   };
 
@@ -399,6 +405,9 @@ export function ChatArea({ session, onSessionChange }: ChatAreaProps) {
           <MessageList
             messages={messages}
             canAnalyze={hasJDContext}
+            loadingAnalysisMessageId={
+              analyzeJDMutation.isPending ? activeAnalysisMessageId : null
+            }
             onPresetClick={(preset, presetId) =>
               void handlePresetClick(preset, presetId)
             }

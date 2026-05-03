@@ -22,18 +22,24 @@ export type { Message };
 interface MessageListProps {
   messages: Message[];
   canAnalyze: boolean;
+  loadingAnalysisMessageId: string | null;
   onPresetClick: (preset: string, presetId: PresetId) => void;
 }
 
-function AnalysisResult({ message }: { message: Message }) {
+function AnalysisResult({
+  message,
+  isLoading,
+}: {
+  message: Message;
+  isLoading: boolean;
+}) {
   const analysis = message.analysis;
   const genericAnalysis =
     analysis && "overallMatchScore" in analysis ? analysis : undefined;
   const matchedSkills = genericAnalysis?.matchedSkills ?? [];
   const missingSkills = genericAnalysis?.missingSkills ?? [];
   const fallbackContent = message.content.trim();
-  const isPresetAnalysisLoading =
-    Boolean(message.presetId) && !analysis && fallbackContent === "analyzing";
+  const isPresetAnalysisLoading = Boolean(message.presetId) && !analysis && isLoading;
 
   if (isPresetAnalysisLoading) {
     return <PresetAnalysisSkeleton />;
@@ -140,6 +146,7 @@ function AnalysisResult({ message }: { message: Message }) {
 export function MessageList({
   messages,
   canAnalyze,
+  loadingAnalysisMessageId,
   onPresetClick,
 }: MessageListProps) {
   const renderPresetContent = (presetType: string) => {
@@ -190,7 +197,10 @@ export function MessageList({
                 />
               </CareerPanel>
             ) : message.kind === "analysis" ? (
-              <AnalysisResult message={message} />
+              <AnalysisResult
+                message={message}
+                isLoading={loadingAnalysisMessageId === message.id}
+              />
             ) : message.presetType ? (
               renderPresetContent(message.presetType)
             ) : (

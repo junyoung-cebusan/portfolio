@@ -119,9 +119,9 @@ export function DetailExperience() {
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-1 transition-all duration-300 ease-out">
+        <div className="flex min-w-0 min-h-0 w-full flex-1 transition-all duration-300 ease-out">
           {isGraphView ? (
-            <section className="flex min-h-0 flex-1 animate-in fade-in duration-300">
+            <section className="flex min-w-0 min-h-0 w-full flex-1 animate-in fade-in duration-300">
               {isInitialAnalysisLoading ? (
                 <GraphViewSkeleton />
               ) : (
@@ -129,7 +129,7 @@ export function DetailExperience() {
               )}
             </section>
           ) : (
-            <section className="flex min-h-0 flex-1 animate-in fade-in duration-300">
+            <section className="flex min-w-0 min-h-0 w-full flex-1 animate-in fade-in duration-300">
               {isInitialAnalysisLoading ? (
                 <TextViewSkeleton />
               ) : (
