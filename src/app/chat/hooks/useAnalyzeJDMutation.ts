@@ -65,7 +65,7 @@ async function analyzeJD({
 
     const response = sdkResponse.response;
     if (!response) {
-      throw new Error("No response from SDK");
+      throw new Error("No response from server");
     }
 
     if (!response.ok) {

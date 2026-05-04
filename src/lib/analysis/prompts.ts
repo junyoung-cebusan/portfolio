@@ -10,10 +10,10 @@ import { messages } from "@/lib/i18n/messages";
 export type PromptLanguage = "en" | "ja";
 
 const detailAnalysisCategorySchema = z.enum([
-  "Tech Alignment",
-  "Domain Transfer",
-  "Feature Ownership",
-  "Velocity & Pipeline Acceleration",
+  "TechAlignment",
+  "DomainTransfer",
+  "FeatureOwnership",
+  "Velocity",
   "Risk",
 ]);
 
@@ -280,8 +280,16 @@ export function buildDetailAnalysisPrompt(
   resumeEvidence: string,
 ) {
   return [
-    "You are a Senior Engineering Match Analyst for a detail page.",
+    "You are a High-fidelity Text Extraction Engine.",
+    "Your goal is to perform an exhaustive analysis of the JD text to identify every possible connection with the candidate resume.",
     "The output powers JD text highlights and a relationship graph, so each result must connect one exact JD phrase to one candidate capability or risk.",
+    "",
+    "### CRITICAL EXTRACTION RULES ###",
+    "1. EXACT MATCH ONLY: Every `keyword` MUST be an identical contiguous substring from the JD text. No paraphrasing.",
+    "2. EXHAUSTIVE VOLUME: Do not settle for obvious matches. Scan every paragraph and bullet point. Aim for maximum density (15+ highlights) to ensure the user gets a comprehensive view of their fit.",
+    "3. FULL SPECTRUM TARGETING:",
+    "   - Beyond tech stacks, extract phrases related to work culture, soft skills, specific leadership tasks, and implicit business needs.",
+    "   - Capture nuanced requirements like 'cross-functional sync,' 'legacy migration,' or 'rapid prototyping.'",
     "",
     "Critical extraction rule:",
     "- Every `keyword` MUST be copied verbatim from the JD text below.",
@@ -297,16 +305,18 @@ export function buildDetailAnalysisPrompt(
     resumeEvidence,
     "",
     "Analyze with exactly these category definitions:",
-    "1. Tech Alignment: highlight identical or directly overlapping JD tech stack requirements. Insight should infer company needs such as migration, SEO/performance, architecture stabilization, or technical debt. Proof should connect candidate years and architecture/component experience to that need.",
-    "2. Domain Transfer: highlight JD skills or domains where direct CV evidence is absent, minimal, or partial. Insight should infer why the company needs the skill, such as legacy maintenance, admin tools, reporting, or domain-specific systems. Proof should explain transferable core knowledge and a realistic ramp-up path.",
-    "3. Feature Ownership: highlight phrases requiring independent feature driving or coordination. Insight should infer a need for a proactive Tech Lead/Senior Engineer. Proof should show end-to-end ownership from spec-in or requirement clarification through delivery without claiming detailed functional design.",
-    "4. Velocity & Pipeline Acceleration: highlight years, delivery speed, CI/CD, testing, AI tooling, or process-flow phrases. Insight should explain capacity margin, learning gap, or SDLC acceleration. Proof should map CV evidence to Requirements & Sync, Architecture & Implementation, or Testing & Delivery.",
-    "5. Risk: highlight requirements that are true risks, constraints, or gaps. Insight should state the risk plainly. Proof should describe mitigation only from CV evidence.",
+    "1. TechAlignment: Direct technical overlaps. Highlight identical or directly overlapping JD tech stack requirements. Insight should infer company needs such as migration, SEO/performance, architecture stabilization, or technical debt. Proof should connect candidate years and architecture/component experience to that need.",
+    "2. DomainTransfer: Bridging phrases where core experience compensates for specific gaps. Highlight JD skills or domains where direct CV evidence is absent, minimal, or partial. Insight should infer why the company needs the skill, such as legacy maintenance, admin tools, reporting, or domain-specific systems. Proof should explain transferable core knowledge and a realistic ramp-up path.",
+    "3. FeatureOwnership: Phrases indicating end-to-end responsibility and coordination. Highlight phrases requiring independent feature driving or coordination. Insight should infer a need for a proactive Tech Lead/Senior Engineer. Proof should show end-to-end ownership from spec-in or requirement clarification through delivery without claiming detailed functional design.",
+    "4. Velocity: Phrases about speed, efficiency, and pipeline acceleration (e.g., CI/CD, AI tools). Highlight years, delivery speed, CI/CD, testing, AI tooling, or process-flow phrases. Insight should explain capacity margin, learning gap, or SDLC acceleration. Proof should map CV evidence to Requirements & Sync, Architecture & Implementation, or Testing & Delivery.",
+    "5. Risk: Constraints or high-pressure requirements that need active mitigation. Highlight requirements that are true risks, constraints, or gaps. Insight should state the risk plainly. Proof should describe mitigation only from CV evidence.",
     "",
     "Selection rules:",
-    "- Prefer 6-10 high-signal highlights if enough JD text exists.",
-    "- Cover at least Tech Alignment, Domain Transfer, Feature Ownership, and Velocity when exact JD phrases support them.",
-    "- Use Risk only for meaningful gaps or constraints, not as filler.",
+    "- EXHAUSTIVE VOLUME: Aim for 15+ highlights if enough JD text exists. Scan every paragraph and bullet point.",
+    "- FULL SPECTRUM: Cover TechAlignment, DomainTransfer, FeatureOwnership, Velocity, and Risk when exact JD phrases support them.",
+    "- Extract phrases related to work culture, soft skills, leadership tasks, and implicit business needs beyond just tech stacks.",
+    "- Capture nuanced requirements like 'cross-functional sync,' 'legacy migration,' 'rapid prototyping,' 'agile workflow,' 'stakeholder management.'",
+    "- Use Risk for meaningful gaps or constraints, not as filler.",
     "- Prioritize concise highlightable JD phrases that should open useful popovers.",
     "- Avoid duplicate or overlapping keywords.",
     "- The badge must be short and category-specific.",
@@ -336,9 +346,17 @@ export function buildDetailHighlightPrompt(
   resumeEvidence: string,
 ) {
   return [
-    "You are a Senior Engineering Match Analyst focused on text highlight extraction.",
+    "You are a High-fidelity Text Extraction Engine.",
+    "Your goal is to perform an exhaustive analysis of the JD text to identify every possible connection with the candidate resume.",
     "Your sole purpose is to extract exact JD phrases and match them to candidate capabilities.",
     "You do NOT generate graph relationships. That is handled by a separate process.",
+    "",
+    "### CRITICAL EXTRACTION RULES ###",
+    "1. EXACT MATCH ONLY: Every `keyword` MUST be an identical contiguous substring from the JD text. No paraphrasing.",
+    "2. EXHAUSTIVE VOLUME: Do not settle for obvious matches. Scan every paragraph and bullet point. Aim for maximum density (15+ highlights) to ensure the user gets a comprehensive view of their fit.",
+    "3. FULL SPECTRUM TARGETING:",
+    "   - Beyond tech stacks, extract phrases related to work culture, soft skills, specific leadership tasks, and implicit business needs.",
+    "   - Capture nuanced requirements like 'cross-functional sync,' 'legacy migration,' or 'rapid prototyping.'",
     "",
     "Critical extraction rule:",
     "- Every `keyword` MUST be copied verbatim from the JD text below.",
@@ -354,16 +372,18 @@ export function buildDetailHighlightPrompt(
     resumeEvidence,
     "",
     "Analyze with exactly these category definitions:",
-    "1. Tech Alignment: highlight identical or directly overlapping JD tech stack requirements. Insight should infer company needs such as migration, SEO/performance, architecture stabilization, or technical debt. Proof should connect candidate years and architecture/component experience to that need.",
-    "2. Domain Transfer: highlight JD skills or domains where direct CV evidence is absent, minimal, or partial. Insight should infer why the company needs the skill, such as legacy maintenance, admin tools, reporting, or domain-specific systems. Proof should explain transferable core knowledge and a realistic ramp-up path.",
-    "3. Feature Ownership: highlight phrases requiring independent feature driving or coordination. Insight should infer a need for a proactive Tech Lead/Senior Engineer. Proof should show end-to-end ownership from spec-in or requirement clarification through delivery without claiming detailed functional design.",
-    "4. Velocity & Pipeline Acceleration: highlight years, delivery speed, CI/CD, testing, AI tooling, or process-flow phrases. Insight should explain capacity margin, learning gap, or SDLC acceleration. Proof should map CV evidence to Requirements & Sync, Architecture & Implementation, or Testing & Delivery.",
-    "5. Risk: highlight requirements that are true risks, constraints, or gaps. Insight should state the risk plainly. Proof should describe mitigation only from CV evidence.",
+    "1. TechAlignment: Direct technical overlaps. Highlight identical or directly overlapping JD tech stack requirements. Insight should infer company needs such as migration, SEO/performance, architecture stabilization, or technical debt. Proof should connect candidate years and architecture/component experience to that need.",
+    "2. DomainTransfer: Bridging phrases where core experience compensates for specific gaps. Highlight JD skills or domains where direct CV evidence is absent, minimal, or partial. Insight should infer why the company needs the skill, such as legacy maintenance, admin tools, reporting, or domain-specific systems. Proof should explain transferable core knowledge and a realistic ramp-up path.",
+    "3. FeatureOwnership: Phrases indicating end-to-end responsibility and coordination. Highlight phrases requiring independent feature driving or coordination. Insight should infer a need for a proactive Tech Lead/Senior Engineer. Proof should show end-to-end ownership from spec-in or requirement clarification through delivery without claiming detailed functional design.",
+    "4. Velocity: Phrases about speed, efficiency, and pipeline acceleration (e.g., CI/CD, AI tools). Highlight years, delivery speed, CI/CD, testing, AI tooling, or process-flow phrases. Insight should explain capacity margin, learning gap, or SDLC acceleration. Proof should map CV evidence to Requirements & Sync, Architecture & Implementation, or Testing & Delivery.",
+    "5. Risk: Constraints or high-pressure requirements that need active mitigation. Highlight requirements that are true risks, constraints, or gaps. Insight should state the risk plainly. Proof should describe mitigation only from CV evidence.",
     "",
     "Selection rules:",
-    "- Prefer 6-10 high-signal highlights if enough JD text exists.",
-    "- Cover at least Tech Alignment, Domain Transfer, Feature Ownership, and Velocity when exact JD phrases support them.",
-    "- Use Risk only for meaningful gaps or constraints, not as filler.",
+    "- EXHAUSTIVE VOLUME: Aim for 15+ highlights if enough JD text exists. Scan every paragraph and bullet point.",
+    "- FULL SPECTRUM: Cover TechAlignment, DomainTransfer, FeatureOwnership, Velocity, and Risk when exact JD phrases support them.",
+    "- Extract phrases related to work culture, soft skills, leadership tasks, and implicit business needs beyond just tech stacks.",
+    "- Capture nuanced requirements like 'cross-functional sync,' 'legacy migration,' 'rapid prototyping,' 'agile workflow,' 'stakeholder management.'",
+    "- Use Risk for meaningful gaps or constraints, not as filler.",
     "- Prioritize concise highlightable JD phrases that should open useful popovers.",
     "- Avoid duplicate or overlapping keywords.",
     "- The badge must be short and category-specific.",
@@ -375,55 +395,72 @@ export function buildDetailHighlightPrompt(
   ].join("\n");
 }
 
-export const detailGraphSchema = z.object({
-  analysis_results: z.array(
-    z.object({
-      keyword: z
-        .string()
-        .min(1)
-        .describe(
-          "Exact contiguous substring copied verbatim from the JD text.",
-        ),
-      category: detailAnalysisCategorySchema.describe(
-        "One analysis type for the highlighted JD phrase.",
-      ),
-      badge: z
-        .string()
-        .min(1)
-        .describe(
-          "Short UI badge such as Direct Stack Match, Transfer Gap, E2E Ownership, Velocity Margin, or Risk.",
-        ),
-      insight: z
-        .string()
-        .min(1)
-        .describe(
-          "AI insight explaining the likely company need behind this JD phrase.",
-        ),
-      proof: z
-        .string()
-        .min(1)
-        .describe(
-          "CV-grounded correlation proof or credible gap/ramp-up explanation.",
-        ),
-      graph_data: z
-        .object({
-          connections: z
-            .array(z.string())
-            .describe("Array of node IDs or capability keys this connects to."),
-          strength: z
-            .number()
-            .min(0)
-            .max(100)
-            .describe("Connection strength from 0 to 100."),
-        })
-        .describe("Graph relationship data for this node."),
-    }),
-  ),
+// New schema for highly interconnected graph with nodes and edges
+const graphNodeSchema = z.object({
+  id: z.string().min(1).describe("Unique node ID, e.g., 'n1', 'n2', etc."),
+  label: z
+    .string()
+    .min(1)
+    .describe(
+      "Specific entity name, e.g., 'React/Next.js', 'AWS Infrastructure', 'Requirement Ownership'. Must NOT be broad category names.",
+    ),
+  category: z
+    .enum([
+      "TechAlignment",
+      "DomainTransfer",
+      "FeatureOwnership",
+      "Velocity",
+      "Risk",
+    ])
+    .describe("Node category."),
+  flow_level: z
+    .number()
+    .min(0)
+    .max(3)
+    .describe(
+      "Layout level (0-3): Level 0 (Input/Foundational): Core tech, years of experience (Left-most). Level 1 (Accelerators): AI tools, Velocity, specific frameworks. Level 2 (Execution): Feature Ownership, Domain transfer. Level 3 (Outcome/Risk Defense): Risk mitigation, Final delivery impact (Right-most).",
+    ),
+  detail: z
+    .string()
+    .min(1)
+    .describe(
+      "Explanation of how this node relates to JD requirements and candidate capabilities.",
+    ),
 });
 
-export type RawDetailGraphResult = z.infer<
-  typeof detailGraphSchema
->["analysis_results"][number];
+const graphEdgeSchema = z.object({
+  source: z.string().min(1).describe("Source node ID."),
+  target: z.string().min(1).describe("Target node ID."),
+  visual_intent: z
+    .enum(["dashed", "solid", "animated"])
+    .describe(
+      "dashed: Indirect Support / Knowledge Bridge. solid: Direct Engine / Main Highway. animated: Active Defense / Striking Risks.",
+    ),
+  tooltip: z
+    .string()
+    .min(1)
+    .describe(
+      "Descriptive tooltip explaining the relationship. Format: '[Dashed: Bridging] ...' or '[Solid: Direct Engine] ...' or '[Animated: Active Defense] ...'",
+    ),
+});
+
+export const detailGraphSchema = z.object({
+  nodes: z
+    .array(graphNodeSchema)
+    .min(8)
+    .max(12)
+    .describe(
+      "8 to 12 highly specific nodes extracted from JD and Resume. Must NOT be broad category names.",
+    ),
+  edges: z
+    .array(graphEdgeSchema)
+    .min(10)
+    .describe(
+      "Rich multi-depth edges showing cause-and-effect relationships. Build an interconnected web (Depth > 1), not simple 1-to-1 pairs.",
+    ),
+});
+
+export type RawDetailGraphResult = z.infer<typeof detailGraphSchema>;
 
 export function buildDetailGraphSystemPrompt(
   schema: z.ZodType,
@@ -443,44 +480,46 @@ export function buildDetailGraphPrompt(
   resumeEvidence: string,
 ) {
   return [
-    "You are a Senior Engineering Match Analyst focused on graph relationship generation.",
-    "Your sole purpose is to generate multi-depth node/edge graph data that connects JD phrases to candidate capabilities.",
-    "You do NOT extract text highlights. That is handled by a separate process.",
+    "You are an expert Data Visualization Architect for a Resume-JD matching graph.",
+    "Your task is to generate a highly interconnected JSON graph that maps specific items (skills, tools, responsibilities, risks) from the JD and Resume and shows the multi-layered relationships between them.",
     "",
-    "Critical rule:",
-    "- Every `keyword` MUST be copied verbatim from the JD text below.",
-    "- Keep the exact same language, casing, spelling, punctuation, and expression as the JD.",
-    "- Do NOT translate keywords.",
-    "- Do NOT paraphrase keywords.",
-    "- Do NOT output a keyword unless it appears as an exact contiguous substring in jdText.",
-    "- If a concept is relevant but no exact source phrase exists, skip it.",
+    "### 1. NODE GENERATION (Specific Items)",
+    "Extract 8 to 12 highly specific items from the JD and Resume.",
+    "Nodes MUST NOT be broad category names. They must be specific entities (e.g., 'React/Next.js', 'AWS Infrastructure', 'Requirement Ownership', 'Cursor/AI Pipeline', 'Tight Deadlines').",
+    "Assign each node to one of these 5 categories:",
+    "- 'TechAlignment' (Direct tech stack matches)",
+    "- 'DomainTransfer' (Missing JD skills where candidate must adapt)",
+    "- 'FeatureOwnership' (End-to-end responsibilities, cross-functional syncing)",
+    "- 'Velocity' (AI tools, CI/CD, fast implementation skills)",
+    "- 'Risk' (Organizational or deadline constraints from JD)",
+    "",
+    "### 2. EDGE GENERATION (Rich Multi-Depth Relationships)",
+    "DO NOT create simple 1-to-1 isolated pairs (Depth 1). You must build a rich, interconnected web (Depth > 1) demonstrating cause-and-effect.",
+    "Example of Multi-Depth: Node 1 (Core TS Knowledge) -> Node 2 (AWS Adaptation) -> Node 3 (Feature Ownership) -> Node 4 (Neutralizing Tight Deadlines).",
+    "",
+    "### CRITICAL EDGE RULE: NO DUPLICATES & PRIORITIZATION ###",
+    "- DO NOT create multiple edges in the same direction between the exact same pair of nodes (e.g., do not output both a dashed n1->n2 and a solid n1->n2).",
+    "- If multiple relationships exist between two nodes, you MUST choose the SINGLE most powerful `visual_intent` based on this strict hierarchy:",
+    "  1. `animated` (Highest Priority): If it mitigates a risk, this is the ultimate selling point.",
+    "  2. `solid` (Medium Priority): Direct, undeniable impact.",
+    "  3. `dashed` (Lowest Priority): Indirect bridge or workaround.",
+    "- Combine the insights into the single `tooltip` text if necessary, but keep only ONE visual line.",
+    "",
+    "For each edge, assign a `visual_intent`:",
+    "- 'dashed' [Intent: Indirect Support / Knowledge Bridge] (e.g., Core skills bridging a domain gap)",
+    "- 'solid' [Intent: Direct Engine / Main Highway] (e.g., Velocity tools driving Feature Ownership)",
+    "- 'animated' [Intent: Active Defense / Striking Risks] (e.g., Ownership or Velocity actively solving a Risk node)",
     "",
     getLanguageAlignmentInstruction(responseLanguage),
     "",
     "Candidate evidence:",
     resumeEvidence,
     "",
-    "Analyze with exactly these category definitions:",
-    "1. Tech Alignment: identify JD tech stack requirements and generate graph connections showing how candidate's experience maps to these requirements. Insight should infer company needs. Proof should connect candidate experience to graph nodes.",
-    "2. Domain Transfer: identify JD skills where candidate has transferable experience and create graph edges showing the transfer path. Insight should explain the transfer mechanism. Proof should show the connection strength.",
-    "3. Feature Ownership: identify phrases indicating end-to-end ownership and create graph nodes showing the ownership lifecycle. Insight should show the ownership scope. Proof should map the lifecycle stages.",
-    "4. Velocity & Pipeline Acceleration: identify process phrases and create graph edges showing acceleration paths. Insight should show velocity gains. Proof should map acceleration factors.",
-    "5. Risk: identify risk factors and create graph nodes showing risk mitigation paths. Insight should state the risk. Proof should show mitigation edges.",
-    "",
-    "Graph generation rules:",
-    "- Each result must include meaningful graph_data with 2-4 connections and a strength value between 50-100.",
-    "- Connections should reference other node IDs or candidate capability keys.",
-    "- Strength should reflect the confidence and depth of the relationship (higher = stronger connection).",
-    "- Create a multi-depth graph where nodes connect to form a relationship network.",
-    "",
-    "Selection rules:",
-    "- Prefer 6-10 high-signal results if enough JD text exists.",
-    "- Cover at least Tech Alignment, Domain Transfer, Feature Ownership, and Velocity when exact JD phrases support them.",
-    "- Use Risk only for meaningful gaps or constraints, not as filler.",
-    "- Avoid duplicate or overlapping keywords.",
-    "- The badge must be short and category-specific.",
-    "",
-    "Return only JSON matching the schema.",
+    "CRITICAL: Return ONLY valid JSON matching the schema exactly.",
+    "- Use 'nodes' array with 8-12 specific items",
+    "- Use 'edges' array with rich multi-depth relationships (minimum 10 edges)",
+    "- Each edge must have: source, target, visual_intent, and tooltip",
+    "- Tooltip format: '[Dashed: Bridging] ...' or '[Solid: Direct Engine] ...' or '[Animated: Active Defense] ...'",
     "",
     "jdText:",
     jdText,

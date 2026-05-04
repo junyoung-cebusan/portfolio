@@ -8,7 +8,6 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/button";
 import { AppHeader, CareerShell } from "@/components/career-ui";
 import { HeaderDisplayTools } from "@/components/header-display-tools";
-import { LocaleToggle } from "@/components/locale-toggle";
 import { Switch } from "@/components/switch";
 import { cn } from "@/lib/shadcn/utils";
 import { useAppLocale } from "@/lib/i18n/use-app-locale";
@@ -51,7 +50,7 @@ export function DetailExperience() {
   const graphQuery = useGraphAnalysisQuery(jdText, locale);
 
   const highlightResults = highlightQuery.data ?? [];
-  const graphResults = graphQuery.data ?? [];
+  const graphResults = graphQuery.data;
 
   return (
     <CareerShell className="flex h-dvh flex-col overflow-hidden">
@@ -120,7 +119,6 @@ export function DetailExperience() {
           </div>
 
           <div className="flex items-center gap-3">
-            <LocaleToggle />
             <HeaderDisplayTools />
           </div>
         </div>
@@ -145,15 +143,18 @@ export function DetailExperience() {
         <div className="flex min-w-0 min-h-0 w-full flex-1 transition-all duration-300 ease-out">
           {isGraphView ? (
             <section className="flex min-w-0 min-h-0 w-full flex-1 animate-in fade-in duration-300">
-              {graphQuery.isPending ? (
+              {graphQuery.isFetching ? (
                 <GraphViewSkeleton />
               ) : (
-                <GraphView results={graphResults} />
+                <GraphView
+                  nodes={graphResults?.nodes}
+                  edges={graphResults?.edges}
+                />
               )}
             </section>
           ) : (
             <section className="flex min-w-0 min-h-0 w-full flex-1 animate-in fade-in duration-300">
-              {highlightQuery.isPending ? (
+              {highlightQuery.isFetching ? (
                 <TextViewSkeleton />
               ) : (
                 <TextView jdText={jdText} results={highlightResults} />

@@ -63,7 +63,7 @@ export type DetailAnalysisResult = {
     };
 };
 
-export type DetailAnalysisCategory = 'Tech Alignment' | 'Domain Transfer' | 'Feature Ownership' | 'Velocity & Pipeline Acceleration' | 'Risk';
+export type DetailAnalysisCategory = 'TechAlignment' | 'DomainTransfer' | 'FeatureOwnership' | 'Velocity' | 'Risk';
 
 export type PresetId = 'tech-alignment' | 'domain-transfer' | 'ownership' | 'velocity';
 

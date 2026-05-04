@@ -12,10 +12,12 @@ import { NextIntlClientProvider } from "next-intl";
 
 import { defaultLocale, isLocale, messages, type Locale } from "./messages";
 
-type AppLocaleContextValue = {
+export type AppLocaleContextValue = {
   locale: Locale;
   setLocale: (locale: Locale) => void;
 };
+
+export const LOCALE: Locale[] = ["en", "ja"] as const;
 
 const AppLocaleContext = createContext<AppLocaleContextValue | null>(null);
 const LOCALE_STORAGE_KEY = "young-portfolio:locale";

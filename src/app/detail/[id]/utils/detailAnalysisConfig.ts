@@ -9,11 +9,28 @@ import {
 } from "lucide-react";
 
 export type DetailAnalysisCategory =
-  | "Tech Alignment"
-  | "Domain Transfer"
-  | "Feature Ownership"
-  | "Velocity & Pipeline Acceleration"
+  | "TechAlignment"
+  | "DomainTransfer"
+  | "FeatureOwnership"
+  | "Velocity"
   | "Risk";
+
+// Mapping old category names (with spaces) to new format (without spaces)
+const categoryNameMap: Record<string, DetailAnalysisCategory> = {
+  "Tech Alignment": "TechAlignment",
+  "Domain Transfer": "DomainTransfer",
+  "Feature Ownership": "FeatureOwnership",
+  "Velocity & Pipeline Acceleration": "Velocity",
+  Velocity: "Velocity",
+  TechAlignment: "TechAlignment",
+  DomainTransfer: "DomainTransfer",
+  FeatureOwnership: "FeatureOwnership",
+  Risk: "Risk",
+};
+
+export function normalizeCategory(category: string): DetailAnalysisCategory {
+  return categoryNameMap[category] ?? (category as DetailAnalysisCategory);
+}
 
 export type DetailAnalysisTone =
   | "cyan"
@@ -69,7 +86,7 @@ export const detailJDText = "";
 export const analysisResults: AnalysisResult[] = [];
 
 export const analysisCategoryMeta = {
-  "Tech Alignment": {
+  TechAlignment: {
     title: "Tech Alignment",
     label: "Tech",
     translationKey: "techAlignment",
@@ -77,7 +94,7 @@ export const analysisCategoryMeta = {
     color: "#06b6d4",
     icon: CheckCircle2,
   },
-  "Domain Transfer": {
+  DomainTransfer: {
     title: "Domain Transfer",
     label: "Domain",
     translationKey: "domainTransfer",
@@ -85,7 +102,7 @@ export const analysisCategoryMeta = {
     color: "#a855f7",
     icon: BriefcaseBusiness,
   },
-  "Feature Ownership": {
+  FeatureOwnership: {
     title: "Feature Ownership",
     label: "Ownership",
     translationKey: "featureOwnership",
@@ -93,8 +110,8 @@ export const analysisCategoryMeta = {
     color: "#10b981",
     icon: Network,
   },
-  "Velocity & Pipeline Acceleration": {
-    title: "Velocity & Pipeline Acceleration",
+  Velocity: {
+    title: "Velocity",
     label: "Velocity",
     translationKey: "velocity",
     tone: "amber",

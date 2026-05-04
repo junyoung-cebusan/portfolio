@@ -7,8 +7,6 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/button";
 import { AppHeader, IconTile } from "@/components/career-ui";
 import { HeaderDisplayTools } from "@/components/header-display-tools";
-import { LocaleToggle } from "@/components/locale-toggle";
-import { Separator } from "@/components/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip";
 import { cn } from "@/lib/shadcn/utils";
 
@@ -94,13 +92,7 @@ export function Header({
         </div>
 
         <div className="flex shrink-0 items-center gap-3">
-          <LocaleToggle />
           <HeaderDisplayTools />
-
-          <Separator
-            orientation="vertical"
-            className="hidden h-6 bg-border dark:bg-slate-700 sm:block"
-          />
 
           <Tooltip>
             <TooltipTrigger asChild>

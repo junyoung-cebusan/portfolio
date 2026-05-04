@@ -28,22 +28,22 @@ const DETAIL_ANALYSIS_MAX_TOKENS = 1_000;
 
 function getGraphData(category: DetailAnalysisCategory) {
   switch (category) {
-    case "Tech Alignment":
+    case "TechAlignment":
       return {
         connections: ["frontend_mastery", "architecture_stability"],
         strength: 94,
       };
-    case "Domain Transfer":
+    case "DomainTransfer":
       return {
         connections: ["domain_translation", "data_ui_experience"],
         strength: 78,
       };
-    case "Feature Ownership":
+    case "FeatureOwnership":
       return {
         connections: ["feature_lead", "cross_functional_coordination"],
         strength: 92,
       };
-    case "Velocity & Pipeline Acceleration":
+    case "Velocity":
       return {
         connections: ["ai_velocity_workflows", "quality_under_pressure"],
         strength: 88,

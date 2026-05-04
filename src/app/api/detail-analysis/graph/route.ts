@@ -1,4 +1,3 @@
-import type { AnalysisResult } from "@/app/detail/[id]/utils/detailAnalysisConfig";
 import {
   detailAnalysisRequestSchema,
   type ApiErrorResponse,
@@ -20,48 +19,7 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const DETAIL_GRAPH_TIMEOUT_MS = 60_000;
-const DETAIL_GRAPH_MAX_TOKENS = 1_000;
-
-function normalizeGraphResults(
-  jdText: string,
-  rawResults: RawDetailGraphResult[],
-): AnalysisResult[] {
-  const usedRanges: Array<{ start: number; end: number }> = [];
-
-  return rawResults.reduce<AnalysisResult[]>((results, rawResult) => {
-    const start = jdText.indexOf(rawResult.keyword);
-
-    if (start === -1) {
-      return results;
-    }
-
-    const end = start + rawResult.keyword.length;
-    const overlaps = usedRanges.some(
-      (range) => start < range.end && end > range.start,
-    );
-
-    if (overlaps) {
-      return results;
-    }
-
-    usedRanges.push({ start, end });
-    results.push({
-      id: `node_${(results.length + 1).toString().padStart(2, "0")}`,
-      keyword: rawResult.keyword,
-      category: rawResult.category,
-      badge: rawResult.badge,
-      insight: rawResult.insight,
-      proof: rawResult.proof,
-      source_range: { start, end },
-      graph_data: {
-        connections: rawResult.graph_data.connections,
-        strength: rawResult.graph_data.strength,
-      },
-    });
-
-    return results;
-  }, []);
-}
+const DETAIL_GRAPH_MAX_TOKENS = 1_500;
 
 function extractJSONObject(text: string) {
   const trimmed = text
@@ -113,8 +71,9 @@ async function runDetailGraph(jdText: string, locale: Locale) {
 
   const result = detailGraphSchema.parse(
     JSON.parse(extractJSONObject(content)),
-  );
-  return normalizeGraphResults(jdText, result.analysis_results);
+  ) as RawDetailGraphResult;
+
+  return result;
 }
 
 export async function POST(req: Request) {
@@ -122,11 +81,9 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { jdText, locale = defaultLocale } =
       detailAnalysisRequestSchema.parse(body);
-    const analysisResults = await runDetailGraph(jdText, locale);
+    const graphData = await runDetailGraph(jdText, locale);
 
-    return Response.json({
-      analysis_results: analysisResults,
-    });
+    return Response.json(graphData);
   } catch (error) {
     console.error("[api/detail-analysis/graph] request failed", error);
 

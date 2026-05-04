@@ -502,7 +502,7 @@ export function MetricTile({
 type EmptyHeroProps = ComponentProps<"div"> & {
   icon: LucideIcon;
   title: string;
-  description: string;
+  description: ReactNode;
 };
 
 export function EmptyHero({

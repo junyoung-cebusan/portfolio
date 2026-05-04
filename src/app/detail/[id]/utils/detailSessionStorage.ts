@@ -18,6 +18,28 @@ export type StoredAnalysisResults = {
   updatedAt: string;
 };
 
+// New type for graph data (nodes/edges format)
+export type GraphData = {
+  nodes: Array<{
+    id: string;
+    label: string;
+    category: string;
+    detail: string;
+  }>;
+  edges: Array<{
+    source: string;
+    target: string;
+    visual_intent: "dashed" | "solid" | "animated";
+    tooltip: string;
+  }>;
+};
+
+export type StoredGraphResults = {
+  jdText: string;
+  graphData: GraphData;
+  updatedAt: string;
+};
+
 export function createDetailJDSnapshot(
   jdText: string,
   title = "Current Job Description",
@@ -141,10 +163,10 @@ export function loadHighlightResults(): StoredAnalysisResults | null {
   }
 }
 
-export function saveGraphResults(results: AnalysisResult[], jdText: string) {
-  const stored: StoredAnalysisResults = {
+export function saveGraphResults(graphData: GraphData, jdText: string) {
+  const stored: StoredGraphResults = {
     jdText,
-    results,
+    graphData,
     updatedAt: new Date().toISOString(),
   };
   window.sessionStorage.setItem(
@@ -154,18 +176,23 @@ export function saveGraphResults(results: AnalysisResult[], jdText: string) {
   window.dispatchEvent(new Event(DETAIL_ANALYSIS_STORAGE_EVENT));
 }
 
-export function loadGraphResults(): StoredAnalysisResults | null {
+export function loadGraphResults(): StoredGraphResults | null {
   const raw = window.sessionStorage.getItem(DETAIL_GRAPH_STORAGE_KEY);
   if (!raw) return null;
 
   try {
-    const parsed = JSON.parse(raw) as Partial<StoredAnalysisResults>;
-    if (typeof parsed.jdText !== "string" || !Array.isArray(parsed.results)) {
+    const parsed = JSON.parse(raw) as Partial<StoredGraphResults>;
+    if (
+      typeof parsed.jdText !== "string" ||
+      !parsed.graphData ||
+      !Array.isArray(parsed.graphData.nodes) ||
+      !Array.isArray(parsed.graphData.edges)
+    ) {
       return null;
     }
     return {
       jdText: parsed.jdText,
-      results: parsed.results as AnalysisResult[],
+      graphData: parsed.graphData as GraphData,
       updatedAt:
         typeof parsed.updatedAt === "string"
           ? parsed.updatedAt
@@ -174,4 +201,15 @@ export function loadGraphResults(): StoredAnalysisResults | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * Clears the highlight and graph analysis results from session storage.
+ * This should be called when a new JD file is uploaded to prevent stale analysis
+ * results from being displayed for a different job description.
+ */
+export function clearDetailAnalysisResults() {
+  window.sessionStorage.removeItem(DETAIL_HIGHLIGHT_STORAGE_KEY);
+  window.sessionStorage.removeItem(DETAIL_GRAPH_STORAGE_KEY);
+  window.dispatchEvent(new Event(DETAIL_ANALYSIS_STORAGE_EVENT));
 }

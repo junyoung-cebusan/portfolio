@@ -15,41 +15,6 @@ import type { ROSynergyAnalysis } from "@/lib/llm/preset-analysis-schema";
 
 const areaIcons = [Target, Users, Calendar, TrendingUp] as const;
 
-const defaultROAreas = [
-  {
-    icon: Target,
-    title: "Requirement Ownership",
-    description: "Owned spec-in clarification through delivery decisions",
-    alignment: 95,
-    evidence:
-      "Translated ambiguous requirements into executable scope, schedules, and implementation plans.",
-  },
-  {
-    icon: Users,
-    title: "Cross-functional Coordination",
-    description: "Managed dependencies across design, backend, QA, and product",
-    alignment: 92,
-    evidence:
-      "Coordinated stakeholder feedback and dependency resolution without waiting for handoffs.",
-  },
-  {
-    icon: Calendar,
-    title: "Lifecycle Delivery",
-    description: "Carried feature work from planning through release",
-    alignment: 88,
-    evidence:
-      "Maintained delivery plans while following implementation, testing, and deployment readiness.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Lead-level Execution Fit",
-    description: "Balanced technical depth with ownership accountability",
-    alignment: 90,
-    evidence:
-      "Mentored developers, set team practices, and stayed accountable for outcome quality.",
-  },
-];
-
 type FeatureOwnershipCardProps = {
   data?: Partial<ROSynergyAnalysis>;
 };
@@ -57,16 +22,13 @@ type FeatureOwnershipCardProps = {
 export function FeatureOwnershipCard({ data }: FeatureOwnershipCardProps) {
   const tCategory = useTranslations("analysis.categories.featureOwnership");
   const tPreset = useTranslations("analysis.presets");
-  const roAreas = data?.areas?.length ? data.areas : defaultROAreas;
+  const roAreas = data?.areas?.length ? data.areas : null;
 
   return (
     <AnalysisCard tone="emerald">
       <AnalysisCardHeader
         title={tCategory("title")}
-        description={
-          data?.summary ??
-          tCategory("description")
-        }
+        description={data?.summary ?? tCategory("description")}
         action={
           <GradientBadge tone="emerald">
             {data?.fitLabel ?? tPreset("strongFit")}
@@ -85,7 +47,7 @@ export function FeatureOwnershipCard({ data }: FeatureOwnershipCardProps) {
         </CareerPanel>
 
         <div className="space-y-4">
-          {roAreas.map((area, index) => {
+          {roAreas?.map((area, index) => {
             const AreaIcon = areaIcons[index % areaIcons.length];
 
             return (

@@ -5,10 +5,11 @@ import {
   EdgeLabelRenderer,
   type Edge,
   type EdgeProps,
-  getBezierPath,
+  getSmoothStepPath,
 } from "@xyflow/react";
-import { Link2 } from "lucide-react";
+import { Link2, ArrowRight, Shield } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState, useCallback, useRef } from "react";
 
 import { Button } from "@/components/button";
 import {
@@ -19,9 +20,38 @@ import {
 } from "@/components/popover";
 
 type CustomEdgeData = {
-  label?: string;
-  context?: string;
+  visual_intent?: "dashed" | "solid" | "animated";
+  tooltip?: string;
 };
+
+const intentConfig = {
+  dashed: {
+    icon: Link2,
+    label: "Bridging",
+    className:
+      "hover:border-purple-500 hover:bg-purple-50 hover:text-purple-700 dark:hover:bg-purple-900/30 dark:hover:text-purple-300 dark:data-[state=open]:bg-purple-900/30 dark:data-[state=open]:text-purple-300",
+    iconClassName:
+      "text-purple-600 group-hover:text-purple-600 group-data-[state=open]:text-purple-600 dark:text-purple-400 dark:group-hover:text-purple-400 dark:group-data-[state=open]:text-purple-400",
+  },
+  solid: {
+    icon: ArrowRight,
+    label: "Direct Engine",
+    className:
+      "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-blue-900/30 dark:hover:text-blue-300 dark:data-[state=open]:bg-blue-900/30 dark:data-[state=open]:text-blue-300",
+    iconClassName:
+      "text-blue-600 group-hover:text-blue-600 group-data-[state=open]:text-blue-600 dark:text-blue-400 dark:group-hover:text-blue-400 dark:group-data-[state=open]:text-blue-400",
+  },
+  animated: {
+    icon: Shield,
+    label: "Active Defense",
+    className:
+      "hover:border-red-500 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:data-[state=open]:bg-red-900/30 dark:data-[state=open]:text-red-300",
+    iconClassName:
+      "text-red-600 group-hover:text-red-600 group-data-[state=open]:text-red-600 dark:text-red-400 dark:group-hover:text-red-400 dark:group-data-[state=open]:text-red-400",
+  },
+};
+
+const HOVER_DELAY = 150;
 
 export function CustomEdge({
   sourceX,
@@ -35,51 +65,117 @@ export function CustomEdge({
   data,
 }: EdgeProps<Edge<CustomEdgeData>>) {
   const tDetail = useTranslations("detail");
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
     sourcePosition,
     targetX,
     targetY,
     targetPosition,
+    borderRadius: 16,
   });
+
+  const [isOpen, setIsOpen] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const intent = data?.visual_intent || "solid";
+  const config = intentConfig[intent] || intentConfig.solid;
+  const Icon = config.icon;
+
+  const handleMouseEnter = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setIsOpen(true);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    timeoutRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, HOVER_DELAY);
+  }, []);
+
+  const handlePopoverMouseEnter = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  }, []);
+
+  const handlePopoverMouseLeave = useCallback(() => {
+    timeoutRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, HOVER_DELAY);
+  }, []);
+
+  const handleOpenChange = useCallback((open: boolean) => {
+    // Only allow opening via hover, ignore close events from clicks
+    if (open) {
+      setIsOpen(true);
+    }
+    // Don't close on click - only hover leave should close
+  }, []);
 
   return (
     <>
-      <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
+      {/* Group wrapper - only this handles mouse events to prevent flickering */}
+      <g onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        {/* Invisible wide path for hover detection */}
+        <path
+          d={edgePath}
+          fill="none"
+          stroke="transparent"
+          strokeWidth={40}
+          style={{ pointerEvents: "none" }}
+        />
+        {/* Visible edge path */}
+        <BaseEdge
+          path={edgePath}
+          markerEnd={markerEnd}
+          style={{
+            ...style,
+            transition: "stroke-width 0.2s",
+            strokeWidth: isOpen ? 3 : 2,
+            pointerEvents: "none",
+          }}
+        />
+      </g>
       <EdgeLabelRenderer>
         <div
           style={{
             position: "absolute",
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            pointerEvents: "all",
           }}
           className="nodrag nopan"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
-          <Popover>
+          <Popover open={isOpen} onOpenChange={handleOpenChange}>
             <PopoverTrigger asChild>
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
-                aria-label={data?.label ?? tDetail("connectionBetweenNodes")}
-                className="group h-7 max-w-32 rounded-full border-2 border-slate-300 bg-white px-2 py-0 text-[10px] font-semibold leading-none text-slate-700 shadow-lg transition-all hover:scale-110 hover:border-cyan-500 hover:bg-cyan-50 hover:text-cyan-700 hover:shadow-cyan-500/30 data-[state=open]:scale-110 data-[state=open]:border-cyan-500 data-[state=open]:bg-cyan-50 data-[state=open]:text-cyan-700 data-[state=open]:shadow-cyan-500/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-cyan-300 dark:hover:shadow-cyan-500/50 dark:data-[state=open]:bg-slate-700 dark:data-[state=open]:text-cyan-300 dark:data-[state=open]:shadow-cyan-500/50"
+                aria-label={data?.tooltip ?? tDetail("connectionBetweenNodes")}
+                className={`group h-6 w-6 rounded-full border-2 border-slate-300 bg-white p-0 shadow-lg transition-all hover:scale-125 dark:border-slate-700 dark:bg-slate-800 ${config.className}`}
                 style={{
                   borderColor: style?.stroke || "#64748b",
                 }}
               >
-                <Link2
-                  className="h-3 w-3 text-slate-600 transition-colors group-hover:text-cyan-600 group-data-[state=open]:text-cyan-600 dark:text-slate-400 dark:group-hover:text-cyan-400 dark:group-data-[state=open]:text-cyan-400"
+                <Icon
+                  className={`h-3 w-3 transition-colors ${config.iconClassName}`}
                   strokeWidth={2.5}
                 />
-                {data?.label && <span className="truncate">{data.label}</span>}
               </Button>
             </PopoverTrigger>
             <PopoverContent
               className="max-w-xs rounded-lg border border-border bg-popover px-4 py-3 text-sm leading-relaxed text-popover-foreground shadow-2xl dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
               sideOffset={8}
+              onMouseEnter={handlePopoverMouseEnter}
+              onMouseLeave={handlePopoverMouseLeave}
             >
-              {data?.context ?? tDetail("connectionBetweenNodes")}
+              {data?.tooltip ?? tDetail("connectionBetweenNodes")}
               <PopoverArrow className="fill-popover dark:fill-slate-800" />
             </PopoverContent>
           </Popover>

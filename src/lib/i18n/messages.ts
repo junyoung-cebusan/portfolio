@@ -58,9 +58,9 @@ export const messages = {
       hintInactive:
         "Once a JD is detected, the Analysis Tools below will be activated.",
       privacy:
-        "Built as Junyoung Hwang's portfolio assistant. For your privacy, all resumes and JDs are processed securely within your browser session and are never saved to our servers.",
+        "Built as <link>Junyoung Hwang</link>'s portfolio assistant. For your privacy, all resumes and JDs are processed securely within your browser session and are never saved to our servers.",
       heroDescription:
-        "AI-powered portfolio-to-role fit analysis for Junyoung Hwang.",
+        "AI-powered portfolio-to-role fit analysis for <link>Junyoung Hwang</link>.",
       quickActionQuestion:
         "JD detected. Which perspective should I analyze first?",
       responseFallback: "I could not generate a response. Please try again.",
@@ -203,7 +203,7 @@ export const messages = {
       keepKeywords:
         "Keep exact JD keywords verbatim when exact extraction is required.",
       glossary:
-        "Terminology glossary: Tech Alignment, Domain Transfer, Feature Ownership, Velocity & Pipeline Acceleration, Risk, JD Requirement, AI Insight, Correlation Proof, Evidence, Alignment, Fit Score, Matched Skills, Missing Skills.",
+        "Terminology glossary: TechAlignment, DomainTransfer, FeatureOwnership, Velocity, Risk, JD Requirement, AI Insight, Correlation Proof, Evidence, Alignment, Fit Score, Matched Skills, Missing Skills.",
     },
   },
   ja: {
@@ -260,9 +260,9 @@ export const messages = {
         "分析ツールが有効です。カードを選ぶと構造化スコア、送信すると自然文チャットになります。",
       hintInactive: "JDが検出されると、下の分析ツールが有効になります。",
       privacy:
-        "Junyoung Hwangのポートフォリオアシスタントとして構築されています。プライバシー保護のため、レジュメとJDはブラウザセッション内で安全に処理され、サーバーには保存されません。",
+        "<link>Junyoung Hwang</link>のポートフォリオアシスタントとして構築されています。プライバシー保護のため、レジュメとJDはブラウザセッション内で安全に処理され、サーバーには保存されません。",
       heroDescription:
-        "Junyoung Hwang向けの、AIによるポートフォリオと求人ロールの適合分析。",
+        "<link>Junyoung Hwang</link>向けの、AIによるポートフォリオと求人ロールの適合分析。",
       quickActionQuestion: "JDを検出しました。まずどの視点で分析しますか？",
       responseFallback: "回答を生成できませんでした。もう一度お試しください。",
       aiServiceError:
@@ -404,7 +404,7 @@ export const messages = {
       keepKeywords:
         "JDから抜き出す keyword など、原文一致が要求される値は翻訳しないこと。",
       glossary:
-        "用語集: Tech Alignment=技術適合, Domain Transfer=ドメイン転用, Feature Ownership=機能オーナーシップ, Velocity & Pipeline Acceleration=開発速度・パイプライン加速, Risk=リスク, JD Requirement=JD要件, AI Insight=AI洞察, Correlation Proof=相関根拠, Evidence=根拠, Alignment=適合度, Fit Score=適合スコア, Matched Skills=一致スキル, Missing Skills=不足スキル。",
+        "用語集: TechAlignment=技術適合, DomainTransfer=ドメイン転用, FeatureOwnership=機能オーナーシップ, Velocity=開発速度・パイプライン加速, Risk=リスク, JD Requirement=JD要件, AI Insight=AI洞察, Correlation Proof=相関根拠, Evidence=根拠, Alignment=適合度, Fit Score=適合スコア, Matched Skills=一致スキル, Missing Skills=不足スキル。",
     },
   },
 } as const;

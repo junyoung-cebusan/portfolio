@@ -378,10 +378,10 @@
       "DetailAnalysisCategory": {
         "type": "string",
         "enum": [
-          "Tech Alignment",
-          "Domain Transfer",
-          "Feature Ownership",
-          "Velocity & Pipeline Acceleration",
+          "TechAlignment",
+          "DomainTransfer",
+          "FeatureOwnership",
+          "Velocity",
           "Risk"
         ]
       },

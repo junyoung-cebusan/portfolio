@@ -3,18 +3,15 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/react-query/query-utils";
-import { messages, type Locale } from "@/lib/i18n/messages";
-import type { AnalysisResult } from "../utils/detailAnalysisConfig";
+import { type Locale } from "@/lib/i18n/messages";
 import {
   loadGraphResults,
   loadHighlightResults,
   saveGraphResults,
   saveHighlightResults,
+  type GraphData,
 } from "../utils/detailSessionStorage";
-import {
-  createDetailHighlight,
-  createDetailGraph,
-} from "@/lib/api/generated/sdk.gen";
+import { createDetailHighlight } from "@/lib/api/generated/sdk.gen";
 
 async function fetchHighlightAnalysis(jdText: string, locale: Locale) {
   // Try sessionStorage first
@@ -41,21 +38,30 @@ async function fetchGraphAnalysis(jdText: string, locale: Locale) {
   // Try sessionStorage first
   const stored = loadGraphResults();
   if (stored && stored.jdText === jdText) {
-    return stored.results;
+    return stored.graphData;
   }
 
-  // Fetch from API using SDK
-  const response = await createDetailGraph({
-    body: { jdText, locale },
+  // Fetch from API directly (response format changed to nodes/edges)
+  const response = await fetch("/api/detail-analysis/graph", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ jdText, locale }),
   });
 
-  const data = response.data;
-  if (!data) {
+  if (!response.ok) {
     throw new Error("Failed to fetch graph analysis");
   }
 
-  saveGraphResults(data.analysis_results, jdText);
-  return data.analysis_results;
+  const data = await response.json();
+
+  // New API returns { nodes: [...], edges: [...] }
+  const graphData: GraphData = {
+    nodes: data.nodes || [],
+    edges: data.edges || [],
+  };
+
+  saveGraphResults(graphData, jdText);
+  return graphData;
 }
 
 export function useHighlightAnalysisQuery(
