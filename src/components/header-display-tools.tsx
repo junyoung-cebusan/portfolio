@@ -2,8 +2,8 @@
 
 import { EllipsisVertical, Moon, Sun, Languages } from "lucide-react";
 import { useTheme } from "@wrksz/themes/client";
-import { useTranslations } from "next-intl";
-
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter, usePathname } from "@/lib/i18n/routing";
 import { Button } from "@/components/button";
 import {
   DropdownMenu,
@@ -17,9 +17,8 @@ import {
 } from "@/components/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip";
 import { cn } from "@/lib/shadcn/utils";
-import { LOCALE, useAppLocale } from "@/lib/i18n/use-app-locale";
 import { ToggleGroup, ToggleGroupItem } from "@/components/toggle-group";
-import type { Locale } from "@/lib/i18n/messages";
+import { locales, type Locale } from "@/lib/i18n/messages";
 
 // Common tooltip styles extracted to avoid repetition
 const tooltipContentClasses =
@@ -49,8 +48,18 @@ function useThemeToggle() {
 
 // Locale switcher - desktop view with toggle group
 function LocaleSwitcher() {
+  const locale = useLocale();
   const tLocal = useTranslations("locale");
-  const { locale, setLocale } = useAppLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleChangeLanguage = (value: string) => {
+    if (value && value !== locale) {
+      router.replace(pathname, { locale: value as Locale });
+      // Force refresh to re-render server components with new locale
+      router.refresh();
+    }
+  };
 
   return (
     <Tooltip>
@@ -69,9 +78,7 @@ function LocaleSwitcher() {
           <ToggleGroup
             type="single"
             value={locale}
-            onValueChange={(value) => {
-              if (value) setLocale(value as Locale);
-            }}
+            onValueChange={handleChangeLanguage}
             aria-label={tLocal("label")}
             className="gap-1"
           >
@@ -137,9 +144,18 @@ function ThemeToggle() {
 function MobileMenu() {
   const t = useTranslations("display");
   const tLocal = useTranslations("locale");
-  const { locale, setLocale } = useAppLocale();
+  const locale = useLocale();
   const { toggleTheme, ThemeIcon, modeLabel } = useThemeToggle();
+  const router = useRouter();
+  const pathname = usePathname();
 
+  const handleChangeLanguage = (value: string) => {
+    if (value && value !== locale) {
+      router.push(pathname, { locale: value as Locale });
+      // Force refresh to re-render server components with new locale
+      router.refresh();
+    }
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -164,9 +180,9 @@ function MobileMenu() {
 
         <DropdownMenuRadioGroup
           value={locale}
-          onValueChange={(value) => setLocale(value as Locale)}
+          onValueChange={handleChangeLanguage}
         >
-          {LOCALE.map((code) => (
+          {locales.map((code) => (
             <DropdownMenuRadioItem
               key={code}
               value={code}

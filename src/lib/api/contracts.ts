@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { AnalysisResult } from "@/app/detail/[id]/utils/detailAnalysisConfig";
+import type { AnalysisResult } from "@/app/[locale]/detail/[id]/utils/detailAnalysisConfig";
 import type { Locale } from "@/lib/i18n/messages";
 import type { LLMChatMessage } from "@/lib/llm/openai-compatible";
 import type { PresetId } from "@/lib/llm/preset-analysis-schema";
@@ -51,9 +51,7 @@ export const detailAnalysisRequestSchema = z.object({
   locale: z.enum(["en", "ja"]).default("ja"),
 });
 
-export type DetailAnalysisRequest = z.infer<
-  typeof detailAnalysisRequestSchema
->;
+export type DetailAnalysisRequest = z.infer<typeof detailAnalysisRequestSchema>;
 
 export type DetailAnalysisResponse = {
   analysis_results: AnalysisResult[];

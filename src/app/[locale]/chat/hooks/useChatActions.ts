@@ -1,12 +1,11 @@
 import { ChangeEvent, RefObject, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import {
   clearDetailAnalysisResults,
   createDetailJDSnapshot,
   saveDetailJDSnapshot,
-} from "@/app/detail/[id]/utils/detailSessionStorage";
-import { useAppLocale } from "@/lib/i18n/use-app-locale";
+} from "@/app/[locale]/detail/[id]/utils/detailSessionStorage";
 import type { JDMatchAnalysis } from "@/lib/llm/jd-match-schema";
 import type { PresetId } from "@/lib/llm/preset-analysis-schema";
 
@@ -21,7 +20,7 @@ import { useAnalyzeJDMutation } from "./useAnalyzeJDMutation";
 import { isAcceptedJDFile, useJDFileDrop } from "./useJDFileDrop";
 import { useReadJDDocumentMutation } from "./useReadJDDocumentMutation";
 import { useScrollToBottom } from "./useScrollToBottom";
-import { useDetailCacheReset } from "@/app/detail/[id]/hooks/useDetailCacheReset";
+import { useDetailCacheReset } from "@/app/[locale]/detail/[id]/hooks/useDetailCacheReset";
 
 interface UseChatActionsProps {
   session: ChatSession;
@@ -61,7 +60,7 @@ export function useChatActions({
 }: UseChatActionsProps): UseChatActionsReturn {
   const tCommon = useTranslations("common");
   const tChat = useTranslations("chat");
-  const { locale } = useAppLocale();
+  const locale = useLocale();
   const { resetDetailCache } = useDetailCacheReset();
 
   const [input, setInput] = useState("");

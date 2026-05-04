@@ -418,3 +418,7 @@ export type Messages = WidenMessages<(typeof messages)[typeof defaultLocale]>;
 export function isLocale(value: unknown): value is Locale {
   return typeof value === "string" && locales.includes(value as Locale);
 }
+
+export function getMessages(locale: Locale): (typeof messages)[Locale] {
+  return messages[locale];
+}

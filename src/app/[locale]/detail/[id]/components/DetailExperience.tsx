@@ -3,14 +3,13 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowLeft, Network, TextSelect } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { Button } from "@/components/button";
 import { AppHeader, CareerShell } from "@/components/career-ui";
 import { HeaderDisplayTools } from "@/components/header-display-tools";
 import { Switch } from "@/components/switch";
 import { cn } from "@/lib/shadcn/utils";
-import { useAppLocale } from "@/lib/i18n/use-app-locale";
 
 import {
   getEmptyDetailJDSnapshot,
@@ -27,11 +26,11 @@ import {
   useHighlightAnalysisQuery,
   useGraphAnalysisQuery,
 } from "../hooks/useDetailAnalysisQuery";
-import { useClientHydration } from "@/app/chat/hooks/useClientHydration";
+import { useClientHydration } from "@/app/[locale]/chat/hooks/useClientHydration";
 
 export function DetailExperience() {
   const t = useTranslations("common");
-  const { locale } = useAppLocale();
+  const locale = useLocale();
   const [isGraphView, setIsGraphView] = useState(false);
 
   const storedSnapshot = useClientHydration(

@@ -1,7 +1,7 @@
 import type {
   AnalysisResult,
   DetailAnalysisCategory,
-} from "@/app/detail/[id]/utils/detailAnalysisConfig";
+} from "@/app/[locale]/detail/[id]/utils/detailAnalysisConfig";
 import {
   detailAnalysisRequestSchema,
   type ApiErrorResponse,

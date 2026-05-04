@@ -1,4 +1,4 @@
-import type { AnalysisResult } from "@/app/detail/[id]/utils/detailAnalysisConfig";
+import type { AnalysisResult } from "@/app/[locale]/detail/[id]/utils/detailAnalysisConfig";
 import {
   detailAnalysisRequestSchema,
   type ApiErrorResponse,

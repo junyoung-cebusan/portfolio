@@ -7,7 +7,7 @@ import { CareerShell } from "@/components/career-ui";
 import {
   createDetailJDSnapshot,
   saveDetailJDSnapshot,
-} from "@/app/detail/[id]/utils/detailSessionStorage";
+} from "@/app/[locale]/detail/[id]/utils/detailSessionStorage";
 
 import { ChatArea, Header, Sidebar } from "./components";
 import { ChatAreaStorageLoading } from "./components/ChatAreaStorageLoading";
