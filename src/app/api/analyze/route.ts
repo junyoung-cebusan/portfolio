@@ -209,7 +209,7 @@ function getStreamErrorObject(error: unknown, preset?: PresetId) {
           },
         ],
       };
-    case "ro-synergy":
+    case "ownership":
       return {
         fitLabel: "Retry Needed",
         summary,
@@ -437,10 +437,9 @@ export async function POST(req: Request) {
     const result = await getJDTextFromRequest(req);
 
     if (!result.ok) {
-      return Response.json(
-        { error: result.error } satisfies ApiErrorResponse,
-        { status: result.status },
-      );
+      return Response.json({ error: result.error } satisfies ApiErrorResponse, {
+        status: result.status,
+      });
     }
 
     requestInput = result;

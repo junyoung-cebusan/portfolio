@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowLeft, Network, TextSelect } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -24,13 +24,17 @@ import { GraphView } from "./GraphView";
 import GraphViewSkeleton from "./GraphViewSkeleton";
 import { TextView } from "./TextView";
 import { TextViewSkeleton } from "./TextViewSkeleton";
-import { useDetailAnalysisQuery } from "../hooks/useDetailAnalysisQuery";
+import {
+  useHighlightAnalysisQuery,
+  useGraphAnalysisQuery,
+} from "../hooks/useDetailAnalysisQuery";
 import { useClientHydration } from "@/app/chat/hooks/useClientHydration";
 
 export function DetailExperience() {
   const t = useTranslations("common");
   const { locale } = useAppLocale();
   const [isGraphView, setIsGraphView] = useState(false);
+
   const storedSnapshot = useClientHydration(
     subscribeToDetailStorage,
     getStoredDetailSnapshot,
@@ -40,10 +44,14 @@ export function DetailExperience() {
     () => parseDetailJDSnapshot(storedSnapshot) ?? getEmptyDetailJDSnapshot(),
     [storedSnapshot],
   );
-  const textAnalysisQuery = useDetailAnalysisQuery(snapshot.jdText, locale);
-  const results = textAnalysisQuery.data ?? [];
-  const isInitialAnalysisLoading =
-    textAnalysisQuery.isLoading && !textAnalysisQuery.data;
+
+  const jdText = snapshot.jdText;
+
+  const highlightQuery = useHighlightAnalysisQuery(jdText, locale);
+  const graphQuery = useGraphAnalysisQuery(jdText, locale);
+
+  const highlightResults = highlightQuery.data ?? [];
+  const graphResults = graphQuery.data ?? [];
 
   return (
     <CareerShell className="flex h-dvh flex-col overflow-hidden">
@@ -137,18 +145,18 @@ export function DetailExperience() {
         <div className="flex min-w-0 min-h-0 w-full flex-1 transition-all duration-300 ease-out">
           {isGraphView ? (
             <section className="flex min-w-0 min-h-0 w-full flex-1 animate-in fade-in duration-300">
-              {isInitialAnalysisLoading ? (
+              {graphQuery.isPending ? (
                 <GraphViewSkeleton />
               ) : (
-                <GraphView results={results} />
+                <GraphView results={graphResults} />
               )}
             </section>
           ) : (
             <section className="flex min-w-0 min-h-0 w-full flex-1 animate-in fade-in duration-300">
-              {isInitialAnalysisLoading ? (
+              {highlightQuery.isPending ? (
                 <TextViewSkeleton />
               ) : (
-                <TextView jdText={snapshot.jdText} results={results} />
+                <TextView jdText={jdText} results={highlightResults} />
               )}
             </section>
           )}

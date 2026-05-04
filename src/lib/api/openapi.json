@@ -88,10 +88,10 @@
         }
       }
     },
-    "/api/detail-analysis": {
+    "/api/detail-analysis/highlight": {
       "post": {
-        "operationId": "createDetailAnalysis",
-        "summary": "Create detailed JD analysis data",
+        "operationId": "createDetailHighlight",
+        "summary": "Create highlight extraction data",
         "requestBody": {
           "required": true,
           "content": {
@@ -104,7 +104,38 @@
         },
         "responses": {
           "200": {
-            "description": "Detailed analysis result",
+            "description": "Highlight extraction result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailAnalysisResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/api/detail-analysis/graph": {
+      "post": {
+        "operationId": "createDetailGraph",
+        "summary": "Create graph relationship data",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetailAnalysisRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Graph relationship result",
             "content": {
               "application/json": {
                 "schema": {
@@ -264,6 +295,11 @@
           "jdText": {
             "type": "string",
             "minLength": 1
+          },
+          "locale": {
+            "type": "string",
+            "enum": ["en", "ja"],
+            "default": "ja"
           }
         }
       },
@@ -351,12 +387,7 @@
       },
       "PresetId": {
         "type": "string",
-        "enum": [
-          "tech-alignment",
-          "domain-transfer",
-          "ro-synergy",
-          "velocity"
-        ]
+        "enum": ["tech-alignment", "domain-transfer", "ownership", "velocity"]
       },
       "ReadDocumentResponse": {
         "type": "object",

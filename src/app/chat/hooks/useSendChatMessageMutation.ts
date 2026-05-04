@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/react-query/query-utils";
 import type { ChatApiMessage } from "../types";
+import { createChatCompletion } from "@/lib/api/generated/sdk.gen";
 
 type SendChatMessageInput = {
   messages: ChatApiMessage[];
@@ -8,24 +9,23 @@ type SendChatMessageInput = {
 };
 
 async function sendChatMessage({ messages, onChunk }: SendChatMessageInput) {
-  const response = await fetch("/api/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ messages }),
+  const response = await createChatCompletion({
+    body: { messages },
+    throwOnError: true,
   });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Failed to send message.");
+  const data = response.data;
+  if (!data) {
+    throw new Error("Failed to send message.");
   }
 
-  if (!response.body) {
+  // Handle streaming response
+  const responseBody = response.response?.body;
+  if (!responseBody) {
     throw new Error("The chat response did not include a stream.");
   }
 
-  const reader = response.body.getReader();
+  const reader = responseBody.getReader();
   const decoder = new TextDecoder();
   let assistantContent = "";
 

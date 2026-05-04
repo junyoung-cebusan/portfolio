@@ -15,7 +15,12 @@ export type DetailAnalysisCategory =
   | "Velocity & Pipeline Acceleration"
   | "Risk";
 
-export type DetailAnalysisTone = "cyan" | "purple" | "emerald" | "amber" | "red";
+export type DetailAnalysisTone =
+  | "cyan"
+  | "purple"
+  | "emerald"
+  | "amber"
+  | "red";
 export type DetailAnalysisTranslationKey =
   | "techAlignment"
   | "domainTransfer"
@@ -105,75 +110,3 @@ export const analysisCategoryMeta = {
     icon: AlertTriangle,
   },
 } as const satisfies Record<DetailAnalysisCategory, DetailAnalysisMeta>;
-
-export const candidateGraphNodes = [
-  {
-    id: "frontend_mastery",
-    label: "8+ Years HTML / CSS / JS, 4+ Years TS",
-    labelKey: "frontendMastery",
-    category: "Tech Alignment",
-    icon: CheckCircle2,
-  },
-  {
-    id: "architecture_stability",
-    label: "Tech Debt & Scalable Systems",
-    labelKey: "architectureStability",
-    category: "Tech Alignment",
-    icon: CheckCircle2,
-  },
-  {
-    id: "domain_translation",
-    label: "Domain Challenge Translation",
-    labelKey: "domainTranslation",
-    category: "Domain Transfer",
-    icon: BriefcaseBusiness,
-  },
-  {
-    id: "data_ui_experience",
-    label: "Data-Facing UI Readiness",
-    labelKey: "dataUiExperience",
-    category: "Domain Transfer",
-    icon: Database,
-  },
-  {
-    id: "feature_lead",
-    label: "Feature Lead",
-    labelKey: "featureLead",
-    category: "Feature Ownership",
-    icon: Network,
-  },
-  {
-    id: "cross_functional_coordination",
-    label: "Cross-functional Coordination",
-    labelKey: "crossFunctionalCoordination",
-    category: "Feature Ownership",
-    icon: Network,
-  },
-  {
-    id: "ai_velocity_workflows",
-    label: "Cursor / AI Agents",
-    labelKey: "aiVelocityWorkflows",
-    category: "Velocity & Pipeline Acceleration",
-    icon: Bot,
-  },
-  {
-    id: "quality_under_pressure",
-    label: "3.5x Quality Pipeline",
-    labelKey: "qualityUnderPressure",
-    category: "Velocity & Pipeline Acceleration",
-    icon: Bot,
-  },
-  {
-    id: "risk_mitigation",
-    label: "Risk Mitigation Discipline",
-    labelKey: "riskMitigation",
-    category: "Risk",
-    icon: AlertTriangle,
-  },
-] as const satisfies readonly {
-  id: string;
-  label: string;
-  labelKey: CandidateGraphNodeLabelKey;
-  category: DetailAnalysisCategory;
-  icon: LucideIcon;
-}[];

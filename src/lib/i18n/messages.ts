@@ -68,8 +68,7 @@ export const messages = {
         "Sorry, I could not reach the AI service. Please try again in a moment.",
       invalidFile: "Sorry, I can only read PDF or .docx files.",
       readingJd: "Reading uploaded JD...",
-      jdReady:
-        "JD ready: extracted {count} characters from {fileName}.",
+      jdReady: "JD ready: extracted {count} characters from {fileName}.",
       readDocumentError:
         "Sorry, I could not read that document. Please upload a PDF or .docx file.",
       structuredAnalysisError:
@@ -172,13 +171,11 @@ export const messages = {
         velocityAccelerator: "Velocity Accelerator: {accelerator}",
         keyVelocityMultipliers: "Key Velocity Multipliers",
         noComparableData: "No comparable data",
-        noComparableRequirement:
-          "No comparable {unit} requirement provided",
+        noComparableRequirement: "No comparable {unit} requirement provided",
         exactMatch: "Exact Match: {actual} {unit}",
         noExplicitBaseline:
           "No explicit JD baseline / candidate has {actual} {unit}",
-        efficiencySurplus:
-          "+{delta} {unit} Efficiency Surplus",
+        efficiencySurplus: "+{delta} {unit} Efficiency Surplus",
         learningGap: "{delta} {unit} Learning Gap",
         jdRequirementLabel: "JD Requirement",
         actual: "Actual",
@@ -198,17 +195,6 @@ export const messages = {
       correlationProof: "Correlation Proof",
       clickHighlights: "Click highlighted keywords for analysis",
       noHighlights: "No exact JD keyword matches found for detail analysis",
-      graphNodes: {
-        frontendMastery: "8+ Years HTML / CSS / JS, 4+ Years TS",
-        architectureStability: "Tech Debt & Scalable Systems",
-        domainTranslation: "Domain Challenge Translation",
-        dataUiExperience: "Data-Facing UI Readiness",
-        featureLead: "Feature Lead",
-        crossFunctionalCoordination: "Cross-functional Coordination",
-        aiVelocityWorkflows: "Cursor / AI Agents",
-        qualityUnderPressure: "3.5x Quality Pipeline",
-        riskMitigation: "Risk Mitigation Discipline",
-      },
     },
     prompt: {
       outputLanguage: "Output language: English.",
@@ -253,7 +239,8 @@ export const messages = {
       detailViewMode: "詳細表示モード",
       closeSidebar: "サイドバーを閉じる",
       openSidebar: "サイドバーを開く",
-      uploadJdToEnableDetail: "詳細分析を有効にするにはJDをアップロードしてください",
+      uploadJdToEnableDetail:
+        "詳細分析を有効にするにはJDをアップロードしてください",
       createNewAnalysisToStart: "新規分析を作成して開始してください。",
       unsupportedFileUpload: "未対応ファイルをアップロード",
       uploadedFile: "アップロード: {fileName}",
@@ -271,21 +258,18 @@ export const messages = {
         "まず求人要件（PDF/Word）をアップロードするか、JD本文を下に貼り付けてください。",
       hintActive:
         "分析ツールが有効です。カードを選ぶと構造化スコア、送信すると自然文チャットになります。",
-      hintInactive:
-        "JDが検出されると、下の分析ツールが有効になります。",
+      hintInactive: "JDが検出されると、下の分析ツールが有効になります。",
       privacy:
         "Junyoung Hwangのポートフォリオアシスタントとして構築されています。プライバシー保護のため、レジュメとJDはブラウザセッション内で安全に処理され、サーバーには保存されません。",
       heroDescription:
         "Junyoung Hwang向けの、AIによるポートフォリオと求人ロールの適合分析。",
-      quickActionQuestion:
-        "JDを検出しました。まずどの視点で分析しますか？",
+      quickActionQuestion: "JDを検出しました。まずどの視点で分析しますか？",
       responseFallback: "回答を生成できませんでした。もう一度お試しください。",
       aiServiceError:
         "AIサービスに接続できませんでした。少し時間を置いて再試行してください。",
       invalidFile: "PDFまたは.docxファイルのみ読み取れます。",
       readingJd: "アップロードされたJDを読み取り中...",
-      jdReady:
-        "JD準備完了: {fileName}から{count}文字を抽出しました。",
+      jdReady: "JD準備完了: {fileName}から{count}文字を抽出しました。",
       readDocumentError:
         "ドキュメントを読み取れませんでした。PDFまたは.docxファイルをアップロードしてください。",
       structuredAnalysisError:
@@ -319,12 +303,12 @@ export const messages = {
     errors: {
       aiTimeout:
         "AI応答がタイムアウトしました。短いJDまたはより絞った質問で再試行してください。",
-      aiInterrupted:
-        "AI応答が完了前に中断されました。もう一度お試しください。",
+      aiInterrupted: "AI応答が完了前に中断されました。もう一度お試しください。",
       aiRequestFailed: "AIリクエストに失敗しました。もう一度お試しください。",
       failedToAnalyze: "求人要件の分析に失敗しました。",
       missingStream: "分析レスポンスにストリームが含まれていません。",
-      failedToReadDocument: "アップロードされたドキュメントの読み取りに失敗しました。",
+      failedToReadDocument:
+        "アップロードされたドキュメントの読み取りに失敗しました。",
       failedDetailAnalysis: "詳細分析の実行に失敗しました。",
     },
     analysis: {
@@ -359,8 +343,7 @@ export const messages = {
           title: "開発速度",
           fullTitle: "開発速度・パイプライン加速",
           label: "速度",
-          description:
-            "キャパシティ余力とSDLCパイプライン加速を分析します。",
+          description: "キャパシティ余力とSDLCパイプライン加速を分析します。",
         },
         risk: {
           title: "リスク",
@@ -388,13 +371,11 @@ export const messages = {
         velocityAccelerator: "開発速度アクセラレーター: {accelerator}",
         keyVelocityMultipliers: "主要な速度向上要因",
         noComparableData: "比較可能なデータなし",
-        noComparableRequirement:
-          "比較可能な{unit}要件は提示されていません",
+        noComparableRequirement: "比較可能な{unit}要件は提示されていません",
         exactMatch: "完全一致: {actual} {unit}",
         noExplicitBaseline:
           "JDに明示的な基準なし / 候補者は{actual} {unit}を保有",
-        efficiencySurplus:
-          "+{delta} {unit}のキャパシティ余力",
+        efficiencySurplus: "+{delta} {unit}のキャパシティ余力",
         learningGap: "{delta} {unit}の学習ギャップ",
         jdRequirementLabel: "JD要件",
         actual: "実績",
@@ -413,18 +394,8 @@ export const messages = {
       aiInsight: "AI洞察",
       correlationProof: "相関根拠",
       clickHighlights: "ハイライトされたキーワードをクリックして分析を確認",
-      noHighlights: "詳細分析に使える完全一致のJDキーワードは見つかりませんでした",
-      graphNodes: {
-        frontendMastery: "HTML / CSS / JS 8年以上、TS 4年以上",
-        architectureStability: "技術負債とスケーラブルシステム",
-        domainTranslation: "ドメイン課題の転用",
-        dataUiExperience: "データUI対応力",
-        featureLead: "機能リード",
-        crossFunctionalCoordination: "部門横断調整",
-        aiVelocityWorkflows: "Cursor / AIエージェント",
-        qualityUnderPressure: "3.5倍の品質パイプライン",
-        riskMitigation: "リスク軽減の規律",
-      },
+      noHighlights:
+        "詳細分析に使える完全一致のJDキーワードは見つかりませんでした",
     },
     prompt: {
       outputLanguage: "出力言語: 日本語。",

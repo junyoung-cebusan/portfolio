@@ -41,7 +41,8 @@ function AnalysisResult({
   const matchedSkills = genericAnalysis?.matchedSkills ?? [];
   const missingSkills = genericAnalysis?.missingSkills ?? [];
   const fallbackContent = message.content.trim();
-  const isPresetAnalysisLoading = Boolean(message.presetId) && !analysis && isLoading;
+  const isPresetAnalysisLoading =
+    Boolean(message.presetId) && !analysis && isLoading;
 
   if (isPresetAnalysisLoading) {
     return <PresetAnalysisSkeleton />;
@@ -69,7 +70,7 @@ function AnalysisResult({
           data={analysis as Partial<DomainTransferAnalysis>}
         />
       );
-    case "ro-synergy":
+    case "ownership":
       return (
         <FeatureOwnershipCard data={analysis as Partial<ROSynergyAnalysis>} />
       );
@@ -161,7 +162,7 @@ export function MessageList({
         return <TechAlignmentCard />;
       case "domain-transfer":
         return <DomainTransferCard />;
-      case "ro-synergy":
+      case "ownership":
         return <FeatureOwnershipCard />;
       case "velocity":
         return <VelocityCard />;

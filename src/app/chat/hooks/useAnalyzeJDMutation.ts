@@ -4,6 +4,7 @@ import type { ApiError } from "@/lib/api/generated";
 import { queryKeys } from "@/lib/react-query/query-utils";
 import type { PresetId } from "@/lib/llm/preset-analysis-schema";
 import { messages, type Locale } from "@/lib/i18n/messages";
+import { analyzeJobDescription } from "@/lib/api/generated/sdk.gen";
 
 type AnalyzeJDInput = {
   mode: "analyze" | "chat";
@@ -39,21 +40,6 @@ function getFriendlyRequestError(error: unknown, locale: Locale) {
   return t.aiRequestFailed;
 }
 
-async function getResponseError(response: Response, locale: Locale) {
-  const t = messages[locale].errors;
-  const contentType = response.headers.get("content-type") ?? "";
-
-  if (contentType.includes("application/json")) {
-    const body = (await response.json()) as { error?: unknown };
-    return typeof body.error === "string"
-      ? body.error
-      : t.failedToAnalyze;
-  }
-
-  const errorText = await response.text();
-  return errorText || t.failedToAnalyze;
-}
-
 async function analyzeJD({
   mode,
   jdText,
@@ -64,71 +50,69 @@ async function analyzeJD({
   onChunk,
   onMode,
 }: AnalyzeJDInput) {
-  let response: Response;
-  let responseBody: ReadableStream<Uint8Array> | null | undefined;
-
   try {
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("mode", mode);
-      if (message) formData.append("message", message);
-      if (preset) formData.append("preset", preset);
-      if (jdText) formData.append("jdText", jdText);
-      formData.append("locale", locale);
+    const sdkResponse = await analyzeJobDescription({
+      body: file
+        ? ({ file, mode, message, preset, jdText } as never)
+        : { jdText, message, mode, preset },
+      headers: file
+        ? { "Content-Type": "multipart/form-data" }
+        : { "Content-Type": "application/json" },
+      throwOnError: false,
+      // This tells client-fetch not to consume the stream automatically
+      parseAs: "stream",
+    });
 
-      response = await fetch("/api/analyze", {
-        method: "POST",
-        body: formData,
-      });
-      responseBody = response.body;
-    } else {
-      response = await fetch("/api/analyze", {
-        method: "POST",
-        body: JSON.stringify({ mode, jdText, message, preset, locale }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      responseBody = response.body;
+    const response = sdkResponse.response;
+    if (!response) {
+      throw new Error("No response from SDK");
     }
+
+    if (!response.ok) {
+      const contentType = response.headers.get("content-type") ?? "";
+      if (contentType.includes("application/json")) {
+        const body = (await response.json()) as { error?: unknown };
+        throw new Error(
+          typeof body.error === "string" ? body.error : "Failed to analyze",
+        );
+      }
+      const errorText = await response.text();
+      throw new Error(errorText || "Failed to analyze");
+    }
+
+    const responseBody = response.body;
+    if (!responseBody) {
+      throw new Error(messages[locale].errors.missingStream);
+    }
+
+    onMode?.(response.headers.get("X-Analysis-Mode") ?? mode);
+
+    const reader = responseBody.getReader();
+    const decoder = new TextDecoder();
+    let analysisContent = "";
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        analysisContent += decoder.decode(value, { stream: true });
+        onChunk(analysisContent);
+      }
+
+      analysisContent += decoder.decode();
+    } catch (error) {
+      if (analysisContent.trim()) {
+        return analysisContent;
+      }
+
+      throw new Error(getFriendlyRequestError(error, locale));
+    }
+
+    return analysisContent;
   } catch (error) {
     throw new Error(getFriendlyRequestError(error, locale));
   }
-
-  if (!response.ok) {
-    throw new Error(await getResponseError(response, locale));
-  }
-
-  if (!responseBody) {
-    throw new Error(messages[locale].errors.missingStream);
-  }
-
-  onMode?.(response.headers.get("X-Analysis-Mode") ?? mode);
-
-  const reader = responseBody.getReader();
-  const decoder = new TextDecoder();
-  let analysisContent = "";
-
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      analysisContent += decoder.decode(value, { stream: true });
-      onChunk(analysisContent);
-    }
-
-    analysisContent += decoder.decode();
-  } catch (error) {
-    if (analysisContent.trim()) {
-      return analysisContent;
-    }
-
-    throw new Error(getFriendlyRequestError(error, locale));
-  }
-
-  return analysisContent;
 }
 
 export function useAnalyzeJDMutation(sessionId: string) {

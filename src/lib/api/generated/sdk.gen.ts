@@ -2,7 +2,7 @@
 
 import { type Client, formDataBodySerializer, type Options as Options2, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AnalyzeJobDescriptionData, AnalyzeJobDescriptionErrors, AnalyzeJobDescriptionResponses, CreateChatCompletionData, CreateChatCompletionErrors, CreateChatCompletionResponses, CreateDetailAnalysisData, CreateDetailAnalysisErrors, CreateDetailAnalysisResponses, ReadDocumentData, ReadDocumentErrors, ReadDocumentResponses } from './types.gen';
+import type { AnalyzeJobDescriptionData, AnalyzeJobDescriptionErrors, AnalyzeJobDescriptionResponses, CreateChatCompletionData, CreateChatCompletionErrors, CreateChatCompletionResponses, CreateDetailGraphData, CreateDetailGraphErrors, CreateDetailGraphResponses, CreateDetailHighlightData, CreateDetailHighlightErrors, CreateDetailHighlightResponses, ReadDocumentData, ReadDocumentErrors, ReadDocumentResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -43,10 +43,22 @@ export const createChatCompletion = <ThrowOnError extends boolean = false>(optio
 });
 
 /**
- * Create detailed JD analysis data
+ * Create highlight extraction data
  */
-export const createDetailAnalysis = <ThrowOnError extends boolean = false>(options: Options<CreateDetailAnalysisData, ThrowOnError>) => (options.client ?? client).post<CreateDetailAnalysisResponses, CreateDetailAnalysisErrors, ThrowOnError>({
-    url: '/api/detail-analysis',
+export const createDetailHighlight = <ThrowOnError extends boolean = false>(options: Options<CreateDetailHighlightData, ThrowOnError>) => (options.client ?? client).post<CreateDetailHighlightResponses, CreateDetailHighlightErrors, ThrowOnError>({
+    url: '/api/detail-analysis/highlight',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Create graph relationship data
+ */
+export const createDetailGraph = <ThrowOnError extends boolean = false>(options: Options<CreateDetailGraphData, ThrowOnError>) => (options.client ?? client).post<CreateDetailGraphResponses, CreateDetailGraphErrors, ThrowOnError>({
+    url: '/api/detail-analysis/graph',
     ...options,
     headers: {
         'Content-Type': 'application/json',

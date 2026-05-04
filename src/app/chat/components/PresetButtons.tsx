@@ -27,7 +27,7 @@ const presets = [
     tone: "purple",
   },
   {
-    id: "ro-synergy" satisfies PresetId,
+    id: "ownership" satisfies PresetId,
     icon: Target,
     labelKey: "featureOwnership.title",
     descriptionKey: "featureOwnership.description",

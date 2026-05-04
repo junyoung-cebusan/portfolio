@@ -19,7 +19,6 @@ import { CareerPanel, LegendItem } from "@/components/career-ui";
 import {
   analysisResults,
   analysisCategoryMeta,
-  candidateGraphNodes,
   type AnalysisResult,
   type CandidateGraphNodeLabelKey,
   type DetailAnalysisTranslationKey,
@@ -86,22 +85,6 @@ function buildGraph(
     },
   );
 
-  const candidateNodes: Node<GraphNodeData>[] = candidateGraphNodes.map(
-    (node, index) => {
-      const meta = analysisCategoryMeta[node.category];
-
-      return {
-        id: node.id,
-        data: { label: translations.graphNodeLabel(node.labelKey) },
-        position: {
-          x: 90 + (index % 4) * 230,
-          y: 560 + Math.floor(index / 4) * 110,
-        },
-        style: getNodeStyle(meta.color),
-      };
-    },
-  );
-
   const nodes: Node<GraphNodeData>[] = [
     {
       id: "jd_requirements",
@@ -110,7 +93,6 @@ function buildGraph(
       style: getNodeStyle("#0ea5e9", true),
     },
     ...requirementNodes,
-    ...candidateNodes,
   ];
 
   const requirementEdges: Edge[] = results.map((result) => {
@@ -164,10 +146,7 @@ export function GraphView({ results = analysisResults }: GraphViewProps) {
     () =>
       buildGraph(results, {
         categoryTitle: (key) => tCategories(`${key}.title`),
-        graphNodeLabel: (key) =>
-          key === "jdRequirements"
-            ? tDetail("jdRequirements")
-            : tDetail(`graphNodes.${key}`),
+        graphNodeLabel: () => tDetail("jdRequirements"),
       }),
     [results, tCategories, tDetail],
   );

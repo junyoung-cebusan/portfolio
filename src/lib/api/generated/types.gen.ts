@@ -39,6 +39,7 @@ export type ChatRequest = {
 
 export type DetailAnalysisRequest = {
     jdText: string;
+    locale?: 'en' | 'ja';
 };
 
 export type DetailAnalysisResponse = {
@@ -64,7 +65,7 @@ export type DetailAnalysisResult = {
 
 export type DetailAnalysisCategory = 'Tech Alignment' | 'Domain Transfer' | 'Feature Ownership' | 'Velocity & Pipeline Acceleration' | 'Risk';
 
-export type PresetId = 'tech-alignment' | 'domain-transfer' | 'ro-synergy' | 'velocity';
+export type PresetId = 'tech-alignment' | 'domain-transfer' | 'ownership' | 'velocity';
 
 export type ReadDocumentResponse = {
     title: string;
@@ -129,30 +130,55 @@ export type CreateChatCompletionResponses = {
 
 export type CreateChatCompletionResponse = CreateChatCompletionResponses[keyof CreateChatCompletionResponses];
 
-export type CreateDetailAnalysisData = {
+export type CreateDetailHighlightData = {
     body: DetailAnalysisRequest;
     path?: never;
     query?: never;
-    url: '/api/detail-analysis';
+    url: '/api/detail-analysis/highlight';
 };
 
-export type CreateDetailAnalysisErrors = {
+export type CreateDetailHighlightErrors = {
     /**
      * API error response
      */
     500: ApiError;
 };
 
-export type CreateDetailAnalysisError = CreateDetailAnalysisErrors[keyof CreateDetailAnalysisErrors];
+export type CreateDetailHighlightError = CreateDetailHighlightErrors[keyof CreateDetailHighlightErrors];
 
-export type CreateDetailAnalysisResponses = {
+export type CreateDetailHighlightResponses = {
     /**
-     * Detailed analysis result
+     * Highlight extraction result
      */
     200: DetailAnalysisResponse;
 };
 
-export type CreateDetailAnalysisResponse = CreateDetailAnalysisResponses[keyof CreateDetailAnalysisResponses];
+export type CreateDetailHighlightResponse = CreateDetailHighlightResponses[keyof CreateDetailHighlightResponses];
+
+export type CreateDetailGraphData = {
+    body: DetailAnalysisRequest;
+    path?: never;
+    query?: never;
+    url: '/api/detail-analysis/graph';
+};
+
+export type CreateDetailGraphErrors = {
+    /**
+     * API error response
+     */
+    500: ApiError;
+};
+
+export type CreateDetailGraphError = CreateDetailGraphErrors[keyof CreateDetailGraphErrors];
+
+export type CreateDetailGraphResponses = {
+    /**
+     * Graph relationship result
+     */
+    200: DetailAnalysisResponse;
+};
+
+export type CreateDetailGraphResponse = CreateDetailGraphResponses[keyof CreateDetailGraphResponses];
 
 export type ReadDocumentData = {
     body: {
