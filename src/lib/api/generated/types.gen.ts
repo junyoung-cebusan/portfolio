@@ -39,7 +39,6 @@ export type ChatRequest = {
 
 export type DetailAnalysisRequest = {
     jdText: string;
-    locale?: 'en' | 'ja';
 };
 
 export type DetailAnalysisResponse = {
@@ -64,6 +63,22 @@ export type DetailAnalysisResult = {
 };
 
 export type DetailAnalysisCategory = 'TechAlignment' | 'DomainTransfer' | 'FeatureOwnership' | 'Velocity' | 'Risk';
+
+export type GraphResponse = {
+    nodes: Array<{
+        id: string;
+        label: string;
+        category: DetailAnalysisCategory;
+        flow_level: number;
+        detail: string;
+    }>;
+    edges: Array<{
+        source: string;
+        target: string;
+        visual_intent: 'dashed' | 'solid' | 'animated';
+        tooltip: string;
+    }>;
+};
 
 export type PresetId = 'tech-alignment' | 'domain-transfer' | 'ownership' | 'velocity';
 
@@ -175,7 +190,7 @@ export type CreateDetailGraphResponses = {
     /**
      * Graph relationship result
      */
-    200: DetailAnalysisResponse;
+    200: GraphResponse;
 };
 
 export type CreateDetailGraphResponse = CreateDetailGraphResponses[keyof CreateDetailGraphResponses];

@@ -3,7 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/react-query/query-utils";
-import { type Locale } from "@/lib/i18n/messages";
 import {
   loadGraphResults,
   loadHighlightResults,
@@ -11,18 +10,22 @@ import {
   saveHighlightResults,
   type GraphData,
 } from "../utils/detailSessionStorage";
-import { createDetailHighlight } from "@/lib/api/generated/sdk.gen";
+import {
+  createDetailHighlight,
+  createDetailGraph,
+} from "@/lib/api/generated/sdk.gen";
+import type { GraphResponse } from "@/lib/api/generated/types.gen";
 
-async function fetchHighlightAnalysis(jdText: string, locale: Locale) {
+async function fetchHighlightAnalysis(jdText: string) {
   // Try sessionStorage first
   const stored = loadHighlightResults();
   if (stored && stored.jdText === jdText) {
     return stored.results;
   }
 
-  // Fetch from API using SDK
+  // Fetch from API using SDK - locale is determined by jdText language on server
   const response = await createDetailHighlight({
-    body: { jdText, locale },
+    body: { jdText },
   });
 
   const data = response.data;
@@ -34,56 +37,39 @@ async function fetchHighlightAnalysis(jdText: string, locale: Locale) {
   return data.analysis_results;
 }
 
-async function fetchGraphAnalysis(jdText: string, locale: Locale) {
+async function fetchGraphAnalysis(jdText: string) {
   // Try sessionStorage first
   const stored = loadGraphResults();
   if (stored && stored.jdText === jdText) {
     return stored.graphData;
   }
 
-  // Fetch from API directly (response format changed to nodes/edges)
-  const response = await fetch("/api/detail-analysis/graph", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ jdText, locale }),
+  // Fetch from API using SDK - locale is determined by jdText language on server
+  const response = await createDetailGraph({
+    body: { jdText },
   });
 
-  if (!response.ok) {
+  const data = response.data as GraphResponse | undefined;
+  if (!data) {
     throw new Error("Failed to fetch graph analysis");
   }
 
-  const data = await response.json();
-
-  // New API returns { nodes: [...], edges: [...] }
-  const graphData: GraphData = {
-    nodes: data.nodes || [],
-    edges: data.edges || [],
-  };
-
-  saveGraphResults(graphData, jdText);
-  return graphData;
+  saveGraphResults(data, jdText);
+  return data;
 }
 
-export function useHighlightAnalysisQuery(
-  jdText: string,
-  locale: Locale,
-  enabled = true,
-) {
+export function useHighlightAnalysisQuery(jdText: string, enabled = true) {
   return useQuery({
-    queryKey: queryKeys.detail.highlight(jdText, locale),
-    queryFn: () => fetchHighlightAnalysis(jdText, locale),
+    queryKey: queryKeys.detail.highlight(jdText),
+    queryFn: () => fetchHighlightAnalysis(jdText),
     enabled: Boolean(jdText.trim()) && enabled,
   });
 }
 
-export function useGraphAnalysisQuery(
-  jdText: string,
-  locale: Locale,
-  enabled = true,
-) {
+export function useGraphAnalysisQuery(jdText: string, enabled = true) {
   return useQuery({
-    queryKey: queryKeys.detail.graph(jdText, locale),
-    queryFn: () => fetchGraphAnalysis(jdText, locale),
+    queryKey: queryKeys.detail.graph(jdText),
+    queryFn: () => fetchGraphAnalysis(jdText),
     enabled: Boolean(jdText.trim()) && enabled,
   });
 }

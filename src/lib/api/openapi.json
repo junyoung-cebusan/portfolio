@@ -139,7 +139,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DetailAnalysisResponse"
+                  "$ref": "#/components/schemas/GraphResponse"
                 }
               }
             }
@@ -295,11 +295,6 @@
           "jdText": {
             "type": "string",
             "minLength": 1
-          },
-          "locale": {
-            "type": "string",
-            "enum": ["en", "ja"],
-            "default": "ja"
           }
         }
       },
@@ -384,6 +379,44 @@
           "Velocity",
           "Risk"
         ]
+      },
+      "GraphResponse": {
+        "type": "object",
+        "required": ["nodes", "edges"],
+        "properties": {
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "label", "category", "flow_level", "detail"],
+              "properties": {
+                "id": { "type": "string" },
+                "label": { "type": "string" },
+                "category": {
+                  "$ref": "#/components/schemas/DetailAnalysisCategory"
+                },
+                "flow_level": { "type": "number" },
+                "detail": { "type": "string" }
+              }
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["source", "target", "visual_intent", "tooltip"],
+              "properties": {
+                "source": { "type": "string" },
+                "target": { "type": "string" },
+                "visual_intent": {
+                  "type": "string",
+                  "enum": ["dashed", "solid", "animated"]
+                },
+                "tooltip": { "type": "string" }
+              }
+            }
+          }
+        }
       },
       "PresetId": {
         "type": "string",

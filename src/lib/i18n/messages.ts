@@ -122,13 +122,13 @@ export const messages = {
       categories: {
         techAlignment: {
           title: "Tech Alignment",
-          label: "Tech",
+          label: "Tech Alignment",
           description:
             "Direct JD-to-CV stack overlap with architecture impact proof.",
         },
         domainTransfer: {
           title: "Domain Transfer",
-          label: "Domain",
+          label: "Domain Transfer",
           description:
             "Gap-aware transfer analysis with practical ramp-up proof.",
         },
@@ -139,15 +139,15 @@ export const messages = {
             "End-to-end lifecycle ownership and cross-functional delivery.",
         },
         velocity: {
-          title: "Velocity",
+          title: "Velocity & Pipeline Acceleration",
           fullTitle: "Velocity & Pipeline Acceleration",
           label: "Velocity",
           description:
             "Capacity margin and SDLC pipeline acceleration analysis.",
         },
         risk: {
-          title: "Risk",
-          label: "Risk",
+          title: "Risk Management",
+          label: "Risk Management",
         },
       },
       presets: {
@@ -188,7 +188,8 @@ export const messages = {
     detail: {
       jdAnalysis: "JD Analysis",
       correlationNetwork: "Correlation Network",
-      graphDescription: "Interactive skill ecosystem visualization",
+      graphDescription:
+        "Multi-layered relationship graph between JD requirements and candidate capabilities",
       connectionBetweenNodes: "Connection between nodes",
       jdRequirements: "JD Requirements",
       aiInsight: "AI Insight",
@@ -323,31 +324,31 @@ export const messages = {
       categories: {
         techAlignment: {
           title: "技術適合",
-          label: "技術",
+          label: "技術適合",
           description:
             "JDとCVの技術スタック一致度を、アーキテクチャ影響まで分析します。",
         },
         domainTransfer: {
-          title: "ドメイン転用",
-          label: "ドメイン",
+          title: "ドメイン適用",
+          label: "ドメイン適用",
           description:
             "ギャップを明示し、実務的なキャッチアップ根拠を分析します。",
         },
         featureOwnership: {
-          title: "機能オーナーシップ",
+          title: "オーナーシップ",
           label: "オーナーシップ",
           description:
             "要件整理からリリースまでの自走力と部門横断デリバリーを分析します。",
         },
         velocity: {
-          title: "開発速度",
+          title: "開発速度・パイプライン加速",
           fullTitle: "開発速度・パイプライン加速",
-          label: "速度",
+          label: "開発速度・パイプライン加速",
           description: "キャパシティ余力とSDLCパイプライン加速を分析します。",
         },
         risk: {
-          title: "リスク",
-          label: "リスク",
+          title: "リスク管理",
+          label: "リスク管理",
         },
       },
       presets: {
@@ -388,7 +389,8 @@ export const messages = {
     detail: {
       jdAnalysis: "JD分析",
       correlationNetwork: "相関ネットワーク",
-      graphDescription: "スキルエコシステムのインタラクティブ可視化",
+      graphDescription:
+        "JD要件と候補者の能力における多層的リレーションシップグラフ",
       connectionBetweenNodes: "ノード間の接続",
       jdRequirements: "JD要件",
       aiInsight: "AI洞察",

@@ -8,14 +8,15 @@ import {
   collectChatCompletionText,
   hasLLMConfig,
 } from "@/lib/llm/openai-compatible";
+import { extractJSONObject } from "@/lib/llm/extract-json";
 import {
   buildDetailHighlightPrompt,
   buildDetailHighlightSystemPrompt,
   detailHighlightSchema,
+  getTextLanguage,
   type RawDetailHighlightResult,
 } from "@/lib/analysis/prompts";
 import { getCandidateEvidenceForLanguage } from "@/lib/analysis/candidate-evidence";
-import { defaultLocale, type Locale } from "@/lib/i18n/messages";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -64,27 +65,12 @@ function normalizeHighlightResults(
   }, []);
 }
 
-function extractJSONObject(text: string) {
-  const trimmed = text
-    .trim()
-    .replace(/^```(?:json)?\s*/i, "")
-    .replace(/\s*```$/i, "");
-  const start = trimmed.indexOf("{");
-  const end = trimmed.lastIndexOf("}");
-
-  if (start === -1 || end === -1 || end <= start) {
-    throw new Error("The local LLM did not return a JSON object.");
-  }
-
-  return trimmed.slice(start, end + 1);
-}
-
-async function runDetailHighlight(jdText: string, locale: Locale) {
+async function runDetailHighlight(jdText: string) {
   if (!hasLLMConfig()) {
     throw new Error("Missing detail analysis provider configuration.");
   }
 
-  const responseLanguage = locale;
+  const responseLanguage = getTextLanguage(jdText || "");
   const candidateEvidence =
     await getCandidateEvidenceForLanguage(responseLanguage);
   const content = await collectChatCompletionText({
@@ -121,9 +107,8 @@ async function runDetailHighlight(jdText: string, locale: Locale) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { jdText, locale = defaultLocale } =
-      detailAnalysisRequestSchema.parse(body);
-    const analysisResults = await runDetailHighlight(jdText, locale);
+    const { jdText } = detailAnalysisRequestSchema.parse(body);
+    const analysisResults = await runDetailHighlight(jdText);
 
     return Response.json({
       analysis_results: analysisResults,

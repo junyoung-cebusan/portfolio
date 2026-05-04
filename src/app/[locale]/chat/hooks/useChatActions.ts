@@ -256,7 +256,7 @@ export function useChatActions({
     // Reset React Query cache for detail analysis queries
     // so that loading state is properly shown
     if (jdText) {
-      resetDetailCache(jdText, locale);
+      resetDetailCache(jdText);
     }
 
     setIsReadingDocument(true);

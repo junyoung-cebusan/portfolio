@@ -48,7 +48,7 @@ export type AnalyzeRequestInput =
 
 export const detailAnalysisRequestSchema = z.object({
   jdText: z.string().trim().min(1),
-  locale: z.enum(["en", "ja"]).default("ja"),
+  locale: z.enum(["en", "ja"]).optional(),
 });
 
 export type DetailAnalysisRequest = z.infer<typeof detailAnalysisRequestSchema>;

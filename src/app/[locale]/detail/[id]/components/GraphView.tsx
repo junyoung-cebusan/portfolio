@@ -23,6 +23,7 @@ import {
 } from "../utils/graphLayout";
 import CustomEdge from "./CustomEdge";
 import { CustomBackground } from "./CustomBackground";
+import { GraphResponse } from "@/lib/api/generated";
 
 const graphControlsStyle = {
   "--xy-controls-button-background-color": "var(--graph-controls-background)",
@@ -33,25 +34,9 @@ const graphControlsStyle = {
   "--xy-controls-button-color-hover": "var(--graph-controls-color-hover)",
 } as CSSProperties;
 
-export function GraphView({
-  nodes = [],
-  edges = [],
-}: {
-  nodes?: Array<{
-    id: string;
-    label: string;
-    category: string;
-    detail: string;
-    flow_level?: number;
-  }>;
-  edges?: Array<{
-    source: string;
-    target: string;
-    visual_intent: "dashed" | "solid" | "animated";
-    tooltip: string;
-  }>;
-}) {
+export function GraphView({ nodes, edges }: GraphResponse) {
   const tCategories = useTranslations("analysis.categories");
+  const tDetail = useTranslations("detail");
 
   const initialGraph = useMemo(
     () => buildGraphFromNodesEdges(nodes, edges),
@@ -82,11 +67,10 @@ export function GraphView({
       <div className="mb-4 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <h2 className="text-xl font-bold text-foreground dark:text-slate-100">
-            Correlation Network
+            {tDetail("correlationNetwork")}
           </h2>
           <p className="text-sm text-muted-foreground dark:text-slate-400">
-            Multi-layered relationship graph between JD requirements and
-            candidate capabilities
+            {tDetail("graphDescription")}
           </p>
         </div>
         <div className="flex flex-wrap gap-3 text-xs">

@@ -20,6 +20,7 @@ import {
   presetAnalysisSchemas,
   type PresetId,
 } from "@/lib/llm/preset-analysis-schema";
+import { extractJSONObject } from "@/lib/llm/extract-json";
 import {
   buildChatPrompt,
   buildStructuredSystemPrompt,
@@ -294,21 +295,6 @@ function getStreamErrorObject(error: unknown, preset?: PresetId) {
         missingSkills: [],
       };
   }
-}
-
-function extractJSONObject(text: string) {
-  const trimmed = text
-    .trim()
-    .replace(/^```(?:json)?\s*/i, "")
-    .replace(/\s*```$/i, "");
-  const start = trimmed.indexOf("{");
-  const end = trimmed.lastIndexOf("}");
-
-  if (start === -1 || end === -1 || end <= start) {
-    throw new Error("The local LLM did not return a complete JSON object.");
-  }
-
-  return trimmed.slice(start, end + 1);
 }
 
 async function streamLocalText(

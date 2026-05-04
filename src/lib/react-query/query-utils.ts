@@ -11,12 +11,11 @@ const chatKeys = {
 
 const detailKeys = {
   all: ["detail"] as const,
-  analysis: (jdText: string, locale: string) =>
-    [...detailKeys.all, "analysis", locale, jdText] as const,
-  highlight: (jdText: string, locale: string) =>
-    [...detailKeys.all, "highlight", locale, jdText] as const,
-  graph: (jdText: string, locale: string) =>
-    [...detailKeys.all, "graph", locale, jdText] as const,
+  analysis: (jdText: string) =>
+    [...detailKeys.all, "analysis", jdText] as const,
+  highlight: (jdText: string) =>
+    [...detailKeys.all, "highlight", jdText] as const,
+  graph: (jdText: string) => [...detailKeys.all, "graph", jdText] as const,
 };
 
 export const queryKeys = {

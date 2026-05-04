@@ -142,10 +142,13 @@ export function TextView({
         className,
       )}
     >
-      <div className="flex shrink-0 flex-col items-start justify-between gap-2 pb-2 sm:flex-row sm:gap-4">
-        <h2 className="text-2xl font-bold text-foreground dark:text-slate-100">
-          {tDetail("jdAnalysis")}
-        </h2>
+      <div className="flex shrink-0 flex-col sm:items-center justify-between gap-2 pb-2 sm:flex-row sm:gap-4 sm:flex-wrap">
+        <div className="min-w-0">
+          <h2 className="text-xl font-bold text-foreground dark:text-slate-100">
+            {" "}
+            {tDetail("jdAnalysis")}
+          </h2>
+        </div>
         <div className="flex flex-wrap gap-2">
           {Object.entries(analysisCategoryMeta).map(([category, meta]) => (
             <StatusPill key={category} tone={meta.tone}>

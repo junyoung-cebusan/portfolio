@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowLeft, Network, TextSelect } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/button";
 import { AppHeader, CareerShell } from "@/components/career-ui";
@@ -30,7 +30,6 @@ import { useClientHydration } from "@/app/[locale]/chat/hooks/useClientHydration
 
 export function DetailExperience() {
   const t = useTranslations("common");
-  const locale = useLocale();
   const [isGraphView, setIsGraphView] = useState(false);
 
   const storedSnapshot = useClientHydration(
@@ -45,8 +44,8 @@ export function DetailExperience() {
 
   const jdText = snapshot.jdText;
 
-  const highlightQuery = useHighlightAnalysisQuery(jdText, locale);
-  const graphQuery = useGraphAnalysisQuery(jdText, locale);
+  const highlightQuery = useHighlightAnalysisQuery(jdText);
+  const graphQuery = useGraphAnalysisQuery(jdText);
 
   const highlightResults = highlightQuery.data ?? [];
   const graphResults = graphQuery.data;
@@ -146,8 +145,8 @@ export function DetailExperience() {
                 <GraphViewSkeleton />
               ) : (
                 <GraphView
-                  nodes={graphResults?.nodes}
-                  edges={graphResults?.edges}
+                  nodes={graphResults?.nodes ?? []}
+                  edges={graphResults?.edges ?? []}
                 />
               )}
             </section>

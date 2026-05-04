@@ -1,3 +1,4 @@
+import type { GraphResponse } from "@/lib/api/generated/types.gen";
 import type { AnalysisResult } from "./detailAnalysisConfig";
 import { detailJDText } from "./detailAnalysisConfig";
 
@@ -18,25 +19,12 @@ export type StoredAnalysisResults = {
   updatedAt: string;
 };
 
-// New type for graph data (nodes/edges format)
-export type GraphData = {
-  nodes: Array<{
-    id: string;
-    label: string;
-    category: string;
-    detail: string;
-  }>;
-  edges: Array<{
-    source: string;
-    target: string;
-    visual_intent: "dashed" | "solid" | "animated";
-    tooltip: string;
-  }>;
-};
+// Use GraphResponse type from generated SDK
+export type GraphData = GraphResponse;
 
 export type StoredGraphResults = {
   jdText: string;
-  graphData: GraphData;
+  graphData: GraphResponse;
   updatedAt: string;
 };
 
@@ -163,7 +151,7 @@ export function loadHighlightResults(): StoredAnalysisResults | null {
   }
 }
 
-export function saveGraphResults(graphData: GraphData, jdText: string) {
+export function saveGraphResults(graphData: GraphResponse, jdText: string) {
   const stored: StoredGraphResults = {
     jdText,
     graphData,
@@ -192,7 +180,7 @@ export function loadGraphResults(): StoredGraphResults | null {
     }
     return {
       jdText: parsed.jdText,
-      graphData: parsed.graphData as GraphData,
+      graphData: parsed.graphData,
       updatedAt:
         typeof parsed.updatedAt === "string"
           ? parsed.updatedAt
