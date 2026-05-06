@@ -20,7 +20,7 @@ This is a simple AI-powered application designed to analyze and match CVs with J
 - **Development**: Next.js App router
 - **Design**: Figma AI design generator
 - **Coding Agent**: Codex gpt 5.5, OpenRouter Tencent: Hy3 preview (free)
-- **AI Analysis**: gpt-oss:120b-cloud
+- **AI Analysis**: Ollama cloud gpt-oss:120b-cloud
 
 ## Running the code
 
