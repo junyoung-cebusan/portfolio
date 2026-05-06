@@ -15,6 +15,13 @@ This is a simple AI-powered application designed to analyze and match CVs with J
 - AI-based matching between CV and JD.
 - Comparison analysis and relationship reporting.
 
+### ⚙️ Development & AI Tools
+
+- **Development**: Next.js App router
+- **Design**: Figma AI design generator
+- **Coding Agent**: Codex gpt 5.5, Openrouter Tencent: Hy3 preview (free)
+- **AI Analysis**: gpt-oss:120b-cloud
+
 ## Running the code
 
 Run `yarn install` to install the dependencies.
