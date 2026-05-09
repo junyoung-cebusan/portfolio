@@ -2,7 +2,7 @@
 
 This is a simple AI-powered application designed to analyze and match CVs with JDs. It was created by Junyoung Hwang for portfolio purposes.
 
-AIを用いて**自身の職務経歴（ファン・ジュンヨン）**とJD（求人情報）の分析・マッチングを行う、ポートフォリオとして制作されたシンプルなアプリケーションです。
+AIを用いて自身の職務経歴（ファン・ジュンヨン）とJD（求人情報）の分析・マッチングを行う、ポートフォリオとして制作されたシンプルなアプリケーションです。
 
 ### 🚀 Live Demo
 
@@ -17,7 +17,7 @@ AIを用いて**自身の職務経歴（ファン・ジュンヨン）**とJD（
 - AI-based matching between Junyoung Hwang's CV and JD.
 - Comparison analysis and relationship reporting.
 
-- AIによる**自身の職務経歴（ファン・ジュンヨン）**とJD（求人要件）の適合度分析
+- AIによる自身の職務経歴（ファン・ジュンヨン）とJD（求人要件）の適合度分析
 - 比較分析および関連性レポートの生成
 
 ### ⚙️ Development & AI Tools
