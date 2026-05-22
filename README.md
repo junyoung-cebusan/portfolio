@@ -10,7 +10,7 @@ AIを用いて自身の職務経歴（ファン・ジュンヨン）とJD（求�
 
 ### 🎨 Design Reference
 
-- [Figma Design](https://www.figma.com/design/lFux1ZLJk0AXfHsZ2IrHXs/AI-Career-Agent-Dashboard)
+- [Figma Design]([https://www.figma.com/design/lFux1ZLJk0AXfHsZ2IrHXs/AI-Career-Agent-Dashboard](https://www.figma.com/make/lFux1ZLJk0AXfHsZ2IrHXs/AI-Career-Agent-Dashboard?t=mUOk5VVA381NiN4x-20&fullscreen=1&preview-route=%2Fchat))
 
 ### 🛠 Core Features
 
