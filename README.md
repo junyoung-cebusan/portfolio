@@ -8,10 +8,6 @@ AIを用いて自身の職務経歴（ファン・ジュンヨン）とJD（求�
 
 - [https://portfolio-brown-zeta-11.vercel.app](https://portfolio-brown-zeta-11.vercel.app)
 
-### 🎨 Design Reference
-
-- [Figma Design](https://www.figma.com/make/lFux1ZLJk0AXfHsZ2IrHXs/AI-Career-Agent-Dashboard?t=mUOk5VVA381NiN4x-20&fullscreen=1&preview-route=%2Fchat)
-
 ### 🛠 Core Features
 
 - AI-based matching between Junyoung Hwang's CV and JD.
