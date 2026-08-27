@@ -8,7 +8,7 @@ AIを用いて自身の職務経歴（ファン・ジュンヨン）とJD（求�
 
 - [https://portfolio-brown-zeta-11.vercel.app](https://portfolio-brown-zeta-11.vercel.app)
 
-<img width="1280" height="714" alt="ezgif-6c4abeab7de86829" src="https://github.com/user-attachments/assets/6c2ca4f5-0dbf-43f9-80aa-71437c973096" />
+<img width="1280" height="714" alt="ezgif-31b77715d268081e" src="https://github.com/user-attachments/assets/ba74021d-3174-433e-9bd3-6473ed1dd7f4" />
 
 ### 🛠 Core Features
 
